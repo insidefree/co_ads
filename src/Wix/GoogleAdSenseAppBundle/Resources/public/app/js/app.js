@@ -5,7 +5,7 @@ angular.module('adSenseApp', ['adSenseApp.filters', 'adSenseApp.services', 'adSe
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/settings',{
             templateUrl: '/bundles/wixgoogleadsenseapp/app/partials/settings.html',
-            controller: MyCtrl1
+            controller: SettingsCtrl
         });
 
         $routeProvider.otherwise({
