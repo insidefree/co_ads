@@ -5,7 +5,7 @@
             <img src="/bundles/wixgoogleadsenseapp/app/images/settings/logo_drive.jpg" alt="Google Drive">
         </a>
         <div data-ng-hide="user.connected" class="connect">
-            <p class="description">Display your Google Drive documents on your website. Simply connect to your Google account.</p>
+            <p class="description">App info text</p>
             <a data-ng-click="connect()" class="connect_button action_links">Connect Account</a>
             <p class="create_account">Don't have an account? <a target="_blank" href="https://drive.google.com/start">Create one</a>
         </div>
@@ -19,69 +19,110 @@
     </div>
 
     <!-- accordion -->
-    <div ui-accordion data-ui-height-style="fill" data-ui-header="div > h2">
-        <!-- settings -->
+    <div data-ui-accordion data-ui-height-style="fill" data-ui-header="div > h2">
+        <!-- type settings -->
         <div class="box_style clearfix">
-	        <h2 class="box_title">Files</h2>
-	        <div>
-	            <!-- breadcrumb -->
-	            <ul class="breadcrumb">
-	                <li data-ng-repeat="folder in breadcrumb" data-ng-class="{active: $last}">
-	                    <span data-ng-show="$last">{{ folder.title }}</span>
-	                    <a data-ng-click="open(folder)" data-ng-hide="$last">{{ folder.title }}</a>
-	                    <span data-ng-hide="$last" class="divider">/</span>
-	                </li>
-                    <a ng-click="refresh()" style="float: right;">
-                        <img src="/bundles/wixgoogleadsenseapp/app/images/refresh.png" alt="refresh" title="refresh" />
-                    </a>
-	            </ul>
+            <h2 class="box_title">Type</h2>
+            <div>
+                <ul>
+                    <li class="style_setting">
+                        <div class="color">
+                            <div>
+                                <label class="colorPicker_label" for="">Background Color</label>
+                                <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+                            </div>
+                            <div>
+                                <input data-ng-model="user.enableShadow" id="shadow" type="checkbox" />
+                                <label for="shadow">Enable shadow</label>
+                            </div>
+                        </div>
+                        <div class="opacity">
+                            <input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />
+                            <label for="opacity">Opacity</label>
+                            <div data-ng-model="user.backgroundOpacity" data-ng-disabled="user.backgroundHasOpacity == false" data-ui-slider> </div>
+                            <span class="opacity_count">{{ user.backgroundOpacity }}</span>
+                        </div>
+                    </li>
+                    <li class="style_setting">
+                        <label for="">Corner Radius</label>
+                        <div class="radius">
+                    	<span class="radius_topleft ui-spinner-wrapper">
+                    		<input data-ng-model="user.cornerRadiusTopLeft" id="radius_topleft" type="text" data-ui-spinner max="10" min="0" />
+                    		<label style="border-top-left-radius:{{ user.cornerRadiusTopLeft }}px;" for="radius_topleft">Border radius top left</label>
+                    	</span>
+                    	<span class="radius_topright ui-spinner-wrapper">
+                    		<label style="border-top-right-radius:{{ user.cornerRadiusTopRight }}px;" for="radius_topright">Border radius top right</label>
+                    		<input data-ng-model="user.cornerRadiusTopRight" id="radius_topright" type="text" data-ui-spinner max="10" min="0" />
+                    	</span>
+                    	<span class="radius_bottomleft ui-spinner-wrapper">
+                    		<input data-ng-model="user.cornerRadiusBottomLeft" id="radius_bottomleft" type="text" data-ui-spinner max="10" min="0" />
+                    		<label style="border-bottom-left-radius:{{ user.cornerRadiusBottomLeft }}px;" for="radius_bottomleft">Border radius bottom left</label>
+                    	</span>
+                    	<span class="radius_bottomright ui-spinner-wrapper">
+                    		<label style="border-bottom-right-radius:{{ user.cornerRadiusBottomRight  }}px;" for="radius_bottomright">Border radius bottom right</label>
+                    		<input data-ng-model="user.cornerRadiusBottomRight" id="radius_bottomright" type="text" data-ui-spinner max="10" min="0" />
+                    	</span>
+                            <input data-ng-change="lock()" data-ng-model="user.lockCornersTogether" id="lock_radius" type="checkbox" />
+                            <label for="lock_radius">Lock corners together</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-	            <!-- list of files -->
-	            <div class="files" data-ng-show="files.length" style="height: 265px; overflow: auto;" data-ng-scroll="load()" data-j-scroll-pane="files.length">
-	                <table class="table table-hover table-condensed" style="table-layout: fixed;">
-	                    <tbody>
-                            <!-- folders -->
-                            <tr data-ng-click="open(folder)" data-ng-repeat="folder in files | filter:{mimeType: 'application/vnd.google-apps.folder'} | orderBy: order:reverse" style="cursor: pointer;">
-                                <td style="width: 40px;"><img data-ng-src="{{ folder.iconLink }}"></td>
-                                <td style="width: 100%;">{{ folder.title }}</td>
-                                <td style="width: 210px;"></td>
-                            </tr>
-                            <!-- files -->
-                            <tr data-ng-class="{ selected: doc.id == user.activeFileId, private: doc.id == user.activeFileId && !doc.permission }" data-ng-click="activate(doc)" data-ng-repeat="doc in files | filter:{mimeType: '!application/vnd.google-apps.folder'} | orderBy: order:reverse" style="cursor: pointer;">
-                                <td style="width: 40px;"><img data-ng-src="{{ doc.iconLink }}"></td>
-                                <td style="width: 100%;">{{ doc.title }}</a></td>
-                                <td style="width: 210px;" class="file-permissions">
-                                    <div class="inline_block" data-ng-show="doc.id == user.activeFileId && !user.default" style="width:210px;">
-                                        <label><input type="radio" data-ng-change="change('reader')" data-ng-model="doc.permission" value="reader"/> Read only</label>
-                                        <label><input type="radio" data-ng-change="change('writer')" data-ng-model="doc.permission" value="writer"/> Editable</label>
-
-                                        <div class="private_notification" data-ng-show="!doc.permission">
-                                            <img data-bt-tooltip data-bt-placement="left" title="The file you selected is defined as <b>private</b>. This means that your site users will <b>not be able to view it<b>. You can change the file permission in the App Setting." src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/exclamation_icon.png" width="20" height="20" alt="notice"/>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-	                    </tbody>
-	                </table>
-	            </div>
-                <!-- empty folder -->
-                <div data-ng-show="!files.length" style="display: none;">
-                    <div data-ng-show="isRoot()" class="empty_folder_msg">
-                        <div>Your Google Drive has no files</div>
-                        <a target="_blank" href="https://drive.google.com/?tab=mo&authuser=0#my-drive">Click here to open your Google Drive</a>
-                    </div>
-                    <div data-ng-show="!isRoot()" class="empty_folder_msg">
-                        This is an empty folder
-                    </div>
-                </div>
-
-
-	        </div>
-    	</div>
-
-        <!-- colors -->
+        <!-- layout settings -->
         <div class="box_style clearfix">
-	        <h2 class="box_title">Style</h2>
+            <h2 class="box_title">Layout</h2>
+            <div>
+                <ul>
+                    <li class="style_setting">
+                        <div class="color">
+                            <div>
+                                <label class="colorPicker_label" for="">Background Color</label>
+                                <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+                            </div>
+                            <div>
+                                <input data-ng-model="user.enableShadow" id="shadow" type="checkbox" />
+                                <label for="shadow">Enable shadow</label>
+                            </div>
+                        </div>
+                        <div class="opacity">
+                            <input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />
+                            <label for="opacity">Opacity</label>
+                            <div data-ng-model="user.backgroundOpacity" data-ng-disabled="user.backgroundHasOpacity == false" data-ui-slider> </div>
+                            <span class="opacity_count">{{ user.backgroundOpacity }}</span>
+                        </div>
+                    </li>
+                    <li class="style_setting">
+                        <label for="">Corner Radius</label>
+                        <div class="radius">
+                    	<span class="radius_topleft ui-spinner-wrapper">
+                    		<input data-ng-model="user.cornerRadiusTopLeft" id="radius_topleft" type="text" data-ui-spinner max="10" min="0" />
+                    		<label style="border-top-left-radius:{{ user.cornerRadiusTopLeft }}px;" for="radius_topleft">Border radius top left</label>
+                    	</span>
+                    	<span class="radius_topright ui-spinner-wrapper">
+                    		<label style="border-top-right-radius:{{ user.cornerRadiusTopRight }}px;" for="radius_topright">Border radius top right</label>
+                    		<input data-ng-model="user.cornerRadiusTopRight" id="radius_topright" type="text" data-ui-spinner max="10" min="0" />
+                    	</span>
+                    	<span class="radius_bottomleft ui-spinner-wrapper">
+                    		<input data-ng-model="user.cornerRadiusBottomLeft" id="radius_bottomleft" type="text" data-ui-spinner max="10" min="0" />
+                    		<label style="border-bottom-left-radius:{{ user.cornerRadiusBottomLeft }}px;" for="radius_bottomleft">Border radius bottom left</label>
+                    	</span>
+                    	<span class="radius_bottomright ui-spinner-wrapper">
+                    		<label style="border-bottom-right-radius:{{ user.cornerRadiusBottomRight  }}px;" for="radius_bottomright">Border radius bottom right</label>
+                    		<input data-ng-model="user.cornerRadiusBottomRight" id="radius_bottomright" type="text" data-ui-spinner max="10" min="0" />
+                    	</span>
+                            <input data-ng-change="lock()" data-ng-model="user.lockCornersTogether" id="lock_radius" type="checkbox" />
+                            <label for="lock_radius">Lock corners together</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- style settings -->
+        <div class="box_style clearfix">
+            <h2 class="box_title">Style</h2>
             <div>
                 <ul>
                     <li class="style_setting">

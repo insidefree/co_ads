@@ -39,14 +39,22 @@
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-<!-- application scripts -->
+<!-- jquery-ui modules -->
+{% javascripts
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/app.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/services.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/filters.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/directives.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<!-- application modules -->
 {% javascripts
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/app.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/services.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/controllers.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/filters.js'
-'@WixGoogleAdSenseAppBundle/Resources/public/app/js/directives.js'
-'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui-module.js' %}
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/directives.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 </body>
