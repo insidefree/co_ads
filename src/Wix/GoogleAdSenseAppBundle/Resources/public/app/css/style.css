@@ -1,0 +1,31 @@
+/* ****************************************************************************************************************************** */
+/* Genral rules */
+/* ****************************************************************************************************************************** */
+html, body {
+  height: 100%;
+  background: transparent;
+  font-family: "helvetica55", helvetica, arial, sans-serif;
+  color: #4c4c4c;
+  font-size: 14px; }
+
+#container {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 15px;
+  width: 980px;
+  min-height: 100%;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  background: white; }
+
+a,
+a:hover,
+a:visited {
+  color: #00ff99; }
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0; }

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-ng-app="adSenseApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <title>Google AdSense App</title>
+    {% stylesheets filter='cssrewrite'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/bootstrap/css/bootstrap.css'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/colorpicker/colorPicker.css'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/emphasize.css'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/master.css'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/settings.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+</head>
+<body>
+
+<!-- container for the drive app -->
+<div data-ng-view></div>
+
+<!-- initial payload -->
+<script></script>
+
+<!-- wix sdk -->
+<script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.16.0/js/Wix.js"></script>
+
+<!-- fos js routing bundle -->
+<script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+<!-- dependency scripts -->
+{% javascripts
+'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery/jquery.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery-ui/js/jquery-ui.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/bootstrap/js/bootstrap.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/colorpicker/jquery.colorPicker.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/angular/angular.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/angular/angular-resource.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<!-- application scripts -->
+{% javascripts
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/app.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/services.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/controllers.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/filters.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/directives.js'
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui-module.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+</body>
+</html>

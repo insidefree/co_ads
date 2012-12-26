@@ -1,0 +1,290 @@
+/* ============================================================================= */
+/* HTML5 Boilerplate nuggets */
+/* ============================================================================= */
+.enter:after {
+  content: '\A';
+  white-space: pre; }
+
+/* image replacement */
+.ir {
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+  background-color: transparent;
+  border: none; }
+
+.nir {
+  /* dimenstions of image are required */
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  display: inline-block; }
+
+.nir:before {
+  content: "";
+  /* image path required */
+  display: inline-block;
+  font-size: 0;
+  line-height: 0; }
+
+/* Hide from both screenreaders and browsers */
+.hidden {
+  display: none !important;
+  visibility: hidden; }
+
+/* Hide visually, but available for screenreaders */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  /* allow element to be focusable when navigated to via the keyboard */
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible {
+  visibility: hidden; }
+
+/* ============================================================================= */
+/* Custom nuggets of gold */
+/* ============================================================================= */
+/*inline-block*/
+.inline_block {
+  font-size: 0;
+  text-align: left; }
+
+.inline_block > * {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  vertical-align: top;
+  font-size: 14px;
+  /*for font-size: 0 inline fix*/
+  height: 20px;
+  line-height: 20px; }
+
+/* general data list rules */
+dt, dd {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  margin: 0; }
+
+dd {
+  background-image: expression(this.runtimeStyle.backgroundImage="none",this.innerHTML = "<b class=after></b>"+this.innerHTML); }
+
+dd.after, dd:after {
+  content: '\A';
+  white-space: pre; }
+
+/* general flexible box rules */
+/*general navigation rules*/
+.nav ul, ol {
+  font-size: 0;
+  text-align: center;
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+
+.nav ul li, ol li {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  vertical-align: top;
+  font-size: 14px;
+  /*for font-size: 0 inline fix*/ }
+
+.nav ul li a, ol li a {
+  display: block;
+  padding: 0 10px; }
+
+.nav ul li:hover a {
+  color: #444; }
+
+/*clearfix*/
+.clearfix {
+  *zoom: 1; }
+
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table; }
+
+.clearfix:after {
+  clear: both; }
+
+/*navigation_seperator*/
+.navigation_seperator {
+  position: relative; }
+
+.navigation_seperator > * {
+  background-image: expression(this.runtimeStyle.backgroundImage="none",this.innerHTML = "<b class=before></b><b class=after></b>"+this.innerHTML); }
+
+.navigation_seperator > * .after,
+.navigation_seperator > *:after {
+  content: "";
+  border-right: 1px solid #b743c2;
+  height: 8px;
+  display: block;
+  position: absolute;
+  bottom: 7px; }
+
+.navigation_seperator > *:first-child .after,
+.navigation_seperator > *:first-child:after {
+  border: none; }
+
+.equal_nav {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  box-pack: justify; }
+
+.equal_nav > * {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1; }
+
+/* combo boxes */
+.combobox {
+  text-align: left; }
+
+.combobox h3 {
+  height: 35px;
+  line-height: 35px;
+  margin: 0; }
+
+.combobox ul {
+  list-style: none;
+  margin: 0 35px 0 15px; }
+
+.combobox ul li {
+  width: 200px;
+  overflow: hidden;
+  background: #fff;
+  padding-left: 10px;
+  font-size: 16px;
+  height: 35px;
+  line-height: 35px;
+  position: relative;
+  z-index: 4; }
+
+.combobox > ul > li:after {
+  content: url("../images/buttons/button_select_arrow.png");
+  height: 35px;
+  width: 36px;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2; }
+
+/* second level ul */
+.combobox > ul > ul {
+  display: none;
+  position: absolute;
+  z-index: 3;
+  padding-top: 10px;
+  margin-top: -15px 0 0;
+  -webkit-border-radius: 0 0 10px 10px;
+  -moz-border-radius: 0 0 10px 10px;
+  -ms-border-radius: 0 0 10px 10px;
+  -o-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px; }
+
+.combobox > ul:hover > ul {
+  display: block; }
+
+.combobox > ul > ul > li {
+  width: 150px;
+  border: 1px solid #ccc;
+  border-width: 0 1px 1px; }
+
+.combobox > ul > ul > li:hover {
+  cursor: pointer; }
+
+/* ============================================================================= */
+/* Site specific nuggets of gold */
+/* ============================================================================= */
+.action_links {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  background: #45a1d2;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(50%, #45a1d2), color-stop(50%, #338fbe));
+  background: -webkit-linear-gradient(#45a1d2 50%, #338fbe 50%);
+  background: -moz-linear-gradient(#45a1d2 50%, #338fbe 50%);
+  background: -o-linear-gradient(#45a1d2 50%, #338fbe 50%);
+  background: linear-gradient(#45a1d2 50%, #338fbe 50%);
+  height: 29px;
+  line-height: 29px;
+  text-align: center;
+  color: #fff !important;
+  padding: 0 10px;
+  border: 1px solid #c4c4c4;
+  display: inline-block; }
+  .action_links:hover {
+    -webkit-box-shadow: 1px 2px 2px #aaaaaa;
+    -moz-box-shadow: 1px 2px 2px #aaaaaa;
+    box-shadow: 1px 2px 2px #aaaaaa; }
+  .action_links:active {
+    -webkit-box-shadow: 0 2px 1px #aaaaaa inset;
+    -moz-box-shadow: 0 2px 1px #aaaaaa inset;
+    box-shadow: 0 2px 1px #aaaaaa inset; }
+
+input[type="text"] {
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 10px;
+  color: #b2b2b2; }
+
+/* checkbox styling */
+input[type="checkbox"] {
+  display: none; }
+
+input[type="checkbox"] + label:before {
+  content: "";
+  margin-right: 7px;
+  position: relative;
+  top: 1px;
+  background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wHFgwSKsQv4sYAAAC3SURBVCjPpdKxCoMwEIDhvyVFB4WOwg2Sh8huN0f7pHV0q3seIoPNXmgKZlC6lQpFqA3cELjvuDsONr7dOI7Hrusu3vtqLVFE+rquz2ma3gF2bdteY4yVMQat9VfknMNaS5IkfdM0J4C9934VAWitMcbw2ZUCKMuSeZ5XZyqKYvFXACE8f16OAniEsA1O07QN5lm2DWb573APcBsGDkqtxm0YllBEemstzrmvlWOM7wMQkf7vk3sBPPdPYf7zwMwAAAAASUVORK5CYII=') top left no-repeat;
+  height: 13px;
+  width: 14px;
+  display: inline-block; }
+
+label.checked:before,
+input[type="checkbox"]:checked + label:before {
+  background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAbFJREFUeNqMkj9IAnEUx7+adUl3aSFRaPRnKmhwMRAcDKIMopCiLZCGliB0agxqCgInt6IIoj9L1pKbQUOQgxANtajhPyKUwpQ7u7z8PeoorPDBF+699/083t09KIqCeuU5L+1g80Wx7hWiGlEUjaFQ6CSdTjvxT1xy9sRhrqf3K9cEg8GwJElOm80GjuN+hYL3IpauWtTcPyr4EAgElFgspvwV0WxZMW6kFaylSJ7T/A5bW8smXL8YoFlNoM+fQjQjoVKpkPIlGe6DRzwXy4D8Bgvy8I8ZfIwh8OyuBLzLSOREuPczyORe8VosYmQrRTXWM+je4W27grFZ+6yCy1agVStXp8p4yEmY2HvE4skTbjIi1VjveKoJeub5DAK7qu995NajVSfTSrdZEUc3RXpmWnVwGGjX/PhgBPI8j+FeA/ZnTbTWd604BHhsbeSpAQWBJ40PmbA9Z6b1mKYHeaxPWtR+DZhKJtGo05EW7B3wz3TDatFjd75frTMPi0KhQEegNZvNF5FIBPF4XJ3mdXYivDwIo76BctZjHuYVBCFBl1PvyTHI5XK5q9dFv+NDgAEA6rf7aDrTxE8AAAAASUVORK5CYII=') top left no-repeat;
+  height: 13px;
+  width: 14px;
+  display: inline-block; }
+
+input[type="checkbox"] + label:first-child {
+  text-indent: 0; }

@@ -1,0 +1,6 @@
+services:
+    wix_bridge:
+        class: %wix_api.service%
+        arguments: [%wix_api.config%, @logger]
+        tags:
+          - { name: monolog.logger, channel: wix }
