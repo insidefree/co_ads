@@ -80,26 +80,24 @@ class SettingsController extends AppController
             throw new PermissionsDeniedException('access denied.');
         }
 
-        die(print_r($this->getRequest()->request->all(), true));
-//
-//        $data = json_decode($data = $this->getRequest()->request->all());
-//
-//        if ($data === null) {
-//            throw new MissingParametersException(sprintf('Missing or not properly configured data (%s).', $data));
-//        }
-//
-//        $user = $this->getUserDocument();
-//
-//        $user->setUpdatedAt(new \DateTime());
-//
-//        // update stuff for the user
-//
-//        $this->getDocumentManager()->persist($user);
-//        $this->getDocumentManager()->flush();
-//
-//        $serializer = $this->getSerializer();
-//
-//        return new JsonResponse(json_decode($serializer->serialize($user, 'json')));
+        $data = json_decode($this->getRequest()->getContent());
+
+        if ($data === null) {
+            throw new MissingParametersException(sprintf('Missing or not properly configured data (%s).', $data));
+        }
+
+        $user = $this->getUserDocument();
+
+        $user->setUpdatedAt(new \DateTime());
+
+        // update stuff for the user
+
+        $this->getDocumentManager()->persist($user);
+        $this->getDocumentManager()->flush();
+
+        $serializer = $this->getSerializer();
+
+        return new JsonResponse(json_decode($serializer->serialize($user, 'json')));
     }
 
     /**
