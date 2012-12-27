@@ -37,3 +37,8 @@ google_apio_auth2:
 
     preferences:
         use_objects: true
+
+# Wix Google AdSense Configuration
+wix_google_ad_sense_app:
+    user:
+        refresh_token: 1/p07b2UfCbppOv9avZ7PWpYaVC5LbD-dPAgUooD4qV8I

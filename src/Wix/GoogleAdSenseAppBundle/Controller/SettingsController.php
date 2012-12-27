@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * @Route("/settings")
  */
-class SettingsController extends Controller
+class SettingsController extends AppController
 {
     /**
      * @Route("/", name="settings", options={"expose"=true})

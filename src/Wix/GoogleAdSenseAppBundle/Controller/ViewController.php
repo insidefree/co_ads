@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * @Route("/view")
  */
-class ViewController extends Controller
+class ViewController extends AppController
 {
     /**
      * @Route("/", name="view", options={"expose"=true})

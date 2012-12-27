@@ -5,7 +5,7 @@
  * UserComponent.php
  */
 
-namespace Wix\GoogleDriveBundle\Document;
+namespace Wix\GoogleAdSenseAppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Validator\Constraints as Assert;
