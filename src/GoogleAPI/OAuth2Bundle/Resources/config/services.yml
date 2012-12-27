@@ -1,4 +1,4 @@
-#services:
-#    google_drive:
-#        class: GoogleApi\DriveBundle\Service\GoogleDrive
-#        arguments: [%google_api_drive.config%]
+services:
+    google_oauth2:
+        class: GoogleAPI\OAuth2Bundle\Service\GoogleService
+        arguments: [%google_api_oauth2.config%]

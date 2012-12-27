@@ -24,3 +24,16 @@ assetic:
 
 #swiftmailer:
 #    delivery_address: me@example.com
+
+# Google OAuth2 Configuration
+google_apio_auth2:
+    keys:
+        client_id: 229411630214.apps.googleusercontent.com
+        client_secret: DCCnikrtH5RNVT3_qmSVvjbz
+        redirect_uri: http://local.adsense.apps.wix.com/app_dev.php/settings/redirect
+
+    scopes:
+        [ https://www.googleapis.com/auth/adsensehost ]
+
+    preferences:
+        use_objects: true
