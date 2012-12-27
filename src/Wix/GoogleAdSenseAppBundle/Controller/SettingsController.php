@@ -6,11 +6,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Wix\GoogleAdSenseAppBundle\Exceptions\PermissionsDeniedException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\MissingAuthorizationCodeException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\InvalidTokenReceivedException;
+use Wix\GoogleAdSenseAppBundle\Exceptions\MissingParametersException;
 use Wix\GoogleAdSenseAppBundle\Document\Token;
+
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/settings")
@@ -24,7 +32,35 @@ class SettingsController extends AppController
      */
     public function indexAction()
     {
-        return array('name' => 'Ronen');
+        $user = $this->getUserDocument();
+
+        return array('user' => $user);
+    }
+
+    /**
+     * @Route("/user", name="user", options={"expose"=true})
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function userAction()
+    {
+        $user = $this->getUserDocument();
+
+        $serializer = $this->getSerializer();
+
+        return new JsonResponse(array(
+            'user' => json_decode($serializer->serialize($user, 'json'))
+        ));
+    }
+
+    /**
+     * @return Serializer
+     */
+    protected function getSerializer()
+    {
+        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
+
+        return $serializer;
     }
 
     /**
@@ -83,7 +119,8 @@ class SettingsController extends AppController
     /**
      * @throws MissingParametersException
      */
-    private function setInstanceAndCompIdFromState() {
+    private function setInstanceAndCompIdFromState()
+    {
         $state = $this->getRequest()->query->get('state');
 
         if ($state === null) {
