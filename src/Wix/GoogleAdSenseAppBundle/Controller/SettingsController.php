@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class SettingsController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/", name="settings", options={"expose"=true})
      * @Template()
      */
     public function indexAction()

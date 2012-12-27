@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ViewController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/", name="view", options={"expose"=true})
      * @Template()
      */
     public function indexAction()

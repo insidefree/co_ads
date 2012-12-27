@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Wix\APIBundle\WixAPIBundle(),
+            new GoogleAPI\OAuth2Bundle\GoogleAPIOAuth2Bundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
