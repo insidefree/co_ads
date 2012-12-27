@@ -40,32 +40,6 @@ class SettingsController extends AppController
     }
 
     /**
-     * @Route("/user", name="user", options={"expose"=true})
-     * @Method({"GET"})
-     * @Template()
-     */
-    public function userAction()
-    {
-        $user = $this->getUserDocument();
-
-        $serializer = $this->getSerializer();
-
-        return new JsonResponse(array(
-            'user' => json_decode($serializer->serialize($user, 'json'))
-        ));
-    }
-
-    /**
-     * @return Serializer
-     */
-    protected function getSerializer()
-    {
-        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
-
-        return $serializer;
-    }
-
-    /**
      * @Route("/authenticate", name="authenticate", options={"expose"=true})
      * @Method({"GET"})
      * @Template()
@@ -80,6 +54,52 @@ class SettingsController extends AppController
         return new RedirectResponse(
             $this->getClient()->createAuthUrl()
         );
+    }
+
+    /**
+     * @Route("/user", name="user", options={"expose"=true})
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function userAction()
+    {
+        $user = $this->getUserDocument();
+
+        $serializer = $this->getSerializer();
+
+        return new JsonResponse(json_decode($serializer->serialize($user, 'json')));
+    }
+
+    /**
+     * @Route("/user", name="save", options={"expose"=true})
+     * @Method({"POST"})
+     */
+    public function saveAction()
+    {
+        if ($this->getInstance()->isOwner() === false) {
+            throw new PermissionsDeniedException('access denied.');
+        }
+
+        die(print_r($this->getRequest()->request->all(), true));
+//
+//        $data = json_decode($data = $this->getRequest()->request->all());
+//
+//        if ($data === null) {
+//            throw new MissingParametersException(sprintf('Missing or not properly configured data (%s).', $data));
+//        }
+//
+//        $user = $this->getUserDocument();
+//
+//        $user->setUpdatedAt(new \DateTime());
+//
+//        // update stuff for the user
+//
+//        $this->getDocumentManager()->persist($user);
+//        $this->getDocumentManager()->flush();
+//
+//        $serializer = $this->getSerializer();
+//
+//        return new JsonResponse(json_decode($serializer->serialize($user, 'json')));
     }
 
     /**
@@ -119,9 +139,19 @@ class SettingsController extends AppController
     }
 
     /**
+     * @return Serializer
+     */
+    protected function getSerializer()
+    {
+        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
+
+        return $serializer;
+    }
+
+    /**
      * @throws MissingParametersException
      */
-    private function setInstanceAndCompIdFromState()
+    protected function setInstanceAndCompIdFromState()
     {
         $state = $this->getRequest()->query->get('state');
 
