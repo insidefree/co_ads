@@ -34,7 +34,9 @@ class SettingsController extends AppController
     {
         $user = $this->getUserDocument();
 
-        return array('user' => $user);
+        $serializer = $this->getSerializer();
+
+        return array('user' => $serializer->serialize($user, 'json'));
     }
 
     /**

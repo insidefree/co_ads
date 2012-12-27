@@ -373,6 +373,7 @@ angular.module('ngResource', ['ng']).
 
           var value = this instanceof Resource ? this : (action.isArray ? [] : new Resource(data));
           $http({
+            cache: action.cache || true, // ronena
             method: action.method,
             url: route.url(extend({}, extractParams(data, action.params || {}), params)),
             data: data
