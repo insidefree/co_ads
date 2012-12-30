@@ -91,6 +91,8 @@ class SettingsController extends AppController
         $user->setUpdatedAt(new \DateTime());
 
         // update stuff for the user
+        $user->setBackgroundTransparent($data->backgroundTransparent);
+        $user->setBackgroundColor($data->backgroundColor);
 
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();

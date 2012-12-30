@@ -186,7 +186,7 @@ class AppController extends Controller
         }
 
         if ($full === false) {
-            $componentId = preg_replace("/^(TPWdgt|TPSttngs)/", "", $componentId);
+            $componentId = intval(preg_replace("/^(TPWdgt|TPSttngs)/", "", $componentId));
         }
 
         return $componentId;
@@ -205,7 +205,7 @@ class AppController extends Controller
         $user = $this->getRepository('WixGoogleAdSenseAppBundle:User')
           ->findOneBy(array(
                 'instanceId' => $instanceId,
-                'componentId' => $componentId,
+                'componentId' => (string) $componentId,
             ));
 
         if ($user === null) {

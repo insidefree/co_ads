@@ -19,7 +19,7 @@
     </div>
 
     <!-- accordion -->
-    <div data-ui-accordion data-ui-height-style="fill" data-ui-header="div > h2">
+    <div data-ui-accordion data-ui-height-style="auto" data-ui-header="div > h2">
         <!-- type settings -->
         <div class="box_style clearfix">
             <h2 class="box_title">Type</h2>
@@ -131,39 +131,46 @@
                                 <label class="colorPicker_label" for="">Background Color</label>
                                 <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
                             </div>
-                            <div>
-                                <input data-ng-model="user.enableShadow" id="shadow" type="checkbox" />
-                                <label for="shadow">Enable shadow</label>
-                            </div>
                         </div>
-                        <div class="opacity">
-                            <input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />
-                            <label for="opacity">Opacity</label>
-                            <div data-ng-model="user.backgroundOpacity" data-ng-disabled="user.backgroundHasOpacity == false" data-ui-slider> </div>
-                            <span class="opacity_count">{{ user.backgroundOpacity }}</span>
+                        <div class="transparent">
+                            <input data-ng-model="user.backgroundTransparent" id="backgroundTransparent" type="checkbox" />
+                            <label for="backgroundTransparent">Transparent</label>
                         </div>
                     </li>
                     <li class="style_setting">
-                        <label for="">Corner Radius</label>
-                        <div class="radius">
-                    	<span class="radius_topleft ui-spinner-wrapper">
-                    		<input data-ng-model="user.cornerRadiusTopLeft" id="radius_topleft" type="text" data-ui-spinner max="10" min="0" />
-                    		<label for="radius_topleft">Border radius top left</label>
-                    	</span>
-                    	<span class="radius_topright ui-spinner-wrapper">
-                    		<label for="radius_topright">Border radius top right</label>
-                    		<input data-ng-model="user.cornerRadiusTopRight" id="radius_topright" type="text" data-ui-spinner max="10" min="0" />
-                    	</span>
-                    	<span class="radius_bottomleft ui-spinner-wrapper">
-                    		<input data-ng-model="user.cornerRadiusBottomLeft" id="radius_bottomleft" type="text" data-ui-spinner max="10" min="0" />
-                    		<label for="radius_bottomleft">Border radius bottom left</label>
-                    	</span>
-                    	<span class="radius_bottomright ui-spinner-wrapper">
-                    		<label for="radius_bottomright">Border radius bottom right</label>
-                    		<input data-ng-model="user.cornerRadiusBottomRight" id="radius_bottomright" type="text" data-ui-spinner max="10" min="0" />
-                    	</span>
-                            <input data-ng-change="lock()" data-ng-model="user.lockCornersTogether" id="lock_radius" type="checkbox" />
-                            <label for="lock_radius">Lock corners together</label>
+                        <div class="color">
+                            <div>
+                                <label class="colorPicker_label" for="">Title</label>
+                                <input data-ng-model="user.titleColor" type="text" data-ui-colorpicker />
+                            </div>
+                        </div>
+                    </li>
+                    <li class="style_setting">
+                        <div class="color">
+                            <div>
+                                <label class="colorPicker_label" for="">Text</label>
+                                <input data-ng-model="user.textColor" type="text" data-ui-colorpicker />
+                            </div>
+                        </div>
+                    </li>
+                    <li class="style_setting">
+                        <div class="color">
+                            <div>
+                                <label class="colorPicker_label" for="">URL</label>
+                                <input data-ng-model="user.urlColor" type="text" data-ui-colorpicker />
+                            </div>
+                        </div>
+                    </li>
+                    <li class="style_setting">
+                        <div class="color">
+                            <div>
+                                <label class="colorPicker_label" for="">Border</label>
+                                <input data-ng-model="user.borderColor" type="text" data-ui-colorpicker />
+                            </div>
+                        </div>
+                        <div class="transparent">
+                            <input data-ng-model="user.borderTransparent" id="borderTransparent" type="checkbox" />
+                            <label for="borderTransparent">Transparent</label>
                         </div>
                     </li>
                 </ul>
