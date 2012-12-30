@@ -12,8 +12,9 @@ preferred_syntax = :scss
 sprite_engine = :oily_png
 project_type = :stand_alone
 environment = :development
-output_style = :nested
-line_comments = false
+output_style = :compressed
+#line_comments = false
+#sass_options = {:debug_info => true}
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
