@@ -17,6 +17,12 @@ angular.module('adSenseApp.services', [])
         return object;
     }])
     /**
+     * wix sdk servers as an api to communicate with wix's editor.
+     */
+    .factory('WixSDK', ['$window', function($window) {
+        return $window.Wix;
+    }])
+    /**
      * serves as a router to generate routes to a symfony2 backend. appends the instance for every request if it's available.
      */
     .factory('Router', ['$window', 'QueryParams', function($window, QueryParams) {

@@ -10,10 +10,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Wix\GoogleAdSenseAppBundle\Exceptions\PermissionsDeniedException;
-use Wix\GoogleAdSenseAppBundle\Exceptions\MissingAuthorizationCodeException;
-use Wix\GoogleAdSenseAppBundle\Exceptions\InvalidTokenReceivedException;
+use Wix\GoogleAdSenseAppBundle\Exceptions\MissingTokenException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\MissingParametersException;
-use Wix\GoogleAdSenseAppBundle\Document\Token;
+use Wix\GoogleAdSenseAppBundle\Exceptions\MissingAfcAdClientException;
+use Wix\GoogleAdSenseAppBundle\Exceptions\AssociationRejectedException;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -32,11 +32,77 @@ class SettingsController extends AppController
      */
     public function indexAction()
     {
-        $user = $this->getUserDocument();
+        $service = $this->getService();
 
-        $serializer = $this->getSerializer();
+        $adClient = $this->getAfcAdClient($service->accounts_adclients->listAccountsAdclients($this->getAccountId()));
 
-        return array('user' => $serializer->serialize($user, 'json'));
+        if ($adClient === null) {
+            throw new MissingAfcAdClientException('could not find an ad client with product code of: AFC (adsense for content)');
+        }
+
+        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $adClient->getId());
+
+        if ($adUnits->getItems() === 0) {
+//        $adUnit = $this->getDefaultAdUnit(sprintf('Wix ad unit #%s', $this->getInstance()->getInstanceId()));
+//        $result = $service->accounts_adunits->insert($this->getAccountId(), $client->getId(), $adUnit);
+        }
+
+        $adUnit = $adUnits->getItems()[0];
+
+        return array('adUnit' => $this->getSerializer()->serialize($adUnit, 'json'));
+    }
+
+    /**
+     * @param $name
+     * @return \Google_AdUnit
+     */
+    protected function getDefaultAdUnit($name)
+    {
+        $adUnit = new \Google_AdUnit();
+
+        $adUnit->setName($name);
+
+        $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
+        $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
+        $backupOption->setType('COLOR');
+        $backupOption->setColor('ffffff');
+        $contentAdsSettings->setBackupOption($backupOption);
+        $contentAdsSettings->setSize('SIZE_200_200');
+        $contentAdsSettings->setType('TEXT');
+        $adUnit->setContentAdsSettings($contentAdsSettings);
+
+        $customStyle = new \Google_AdStyle();
+        $colors = new \Google_AdStyleColors();
+        $colors->setBackground('ffffff');
+        $colors->setBorder('000000');
+        $colors->setText('000000');
+        $colors->setTitle('000000');
+        $colors->setUrl('0000ff');
+        $customStyle->setColors($colors);
+        $customStyle->setCorners('SQUARE');
+        $font = new \Google_AdStyleFont();
+        $font->setFamily('ACCOUNT_DEFAULT_FAMILY');
+        $font->setSize('ACCOUNT_DEFAULT_SIZE');
+        $customStyle->setFont($font);
+        $adUnit->setCustomStyle($customStyle);
+
+        return $adUnit;
+    }
+
+    /**
+     * @param $clients
+     * @internal param $adclients
+     * @return null
+     */
+    protected function getAfcAdClient($clients)
+    {
+        foreach($clients->getItems() as $client) {
+            if ($client->getProductCode() === 'AFC') {
+                return $client;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -46,32 +112,41 @@ class SettingsController extends AppController
      */
     public function authenticateAction()
     {
-        $instance = $this->getRequest()->query->get('instance');
-        $compId = $this->getComponentId(true);
+        $service = $this->getService();
+        $session = $service->associationsessions->start('AFC', 'http://www.just.a.test.com');
 
-        $this->getClient()->setState('instance=' . $instance . '&compId=' . $compId);
-
-        return new RedirectResponse(
-            $this->getClient()->createAuthUrl()
-        );
+        return new RedirectResponse($session->getRedirectUrl());
     }
 
     /**
-     * @Route("/user", name="user", options={"expose"=true})
+     * @Route("/adunit", name="adunit", options={"expose"=true})
      * @Method({"GET"})
      * @Template()
      */
-    public function userAction()
+    public function adUnitAction()
     {
-        $user = $this->getUserDocument();
+        $service = $this->getService();
 
-        $serializer = $this->getSerializer();
+        $adClient = $this->getAfcAdClient($service->accounts_adclients->listAccountsAdclients($this->getAccountId()));
 
-        return new JsonResponse(json_decode($serializer->serialize($user, 'json')));
+        if ($adClient === null) {
+            throw new MissingAfcAdClientException('could not find an ad client with product code of: AFC (adsense for content)');
+        }
+
+        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $adClient->getId());
+
+        if ($adUnits->getItems() === 0) {
+//        $adUnit = $this->getDefaultAdUnit(sprintf('Wix ad unit #%s', $this->getInstance()->getInstanceId()));
+//        $result = $service->accounts_adunits->insert($this->getAccountId(), $client->getId(), $adUnit);
+        }
+
+        $adUnit = $adUnits->getItems()[0];
+
+        return new JsonResponse($adUnit);
     }
 
     /**
-     * @Route("/user", name="save", options={"expose"=true})
+     * @Route("/adunit", name="save", options={"expose"=true})
      * @Method({"POST"})
      */
     public function saveAction()
@@ -79,27 +154,6 @@ class SettingsController extends AppController
         if ($this->getInstance()->isOwner() === false) {
             throw new PermissionsDeniedException('access denied.');
         }
-
-        $data = json_decode($this->getRequest()->getContent());
-
-        if ($data === null) {
-            throw new MissingParametersException(sprintf('Missing or not properly configured data (%s).', $data));
-        }
-
-        $user = $this->getUserDocument();
-
-        $user->setUpdatedAt(new \DateTime());
-
-        // update stuff for the user
-        $user->setBackgroundTransparent($data->backgroundTransparent);
-        $user->setBackgroundColor($data->backgroundColor);
-
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
-
-        $serializer = $this->getSerializer();
-
-        return new JsonResponse(json_decode($serializer->serialize($user, 'json')));
     }
 
     /**
@@ -109,33 +163,25 @@ class SettingsController extends AppController
      */
     public function redirectAction()
     {
-        $this->setInstanceAndCompIdFromState();
-
-        if ($this->getInstance()->isOwner() === false) {
+       if ($this->getInstance()->isOwner() === false) {
             throw new PermissionsDeniedException('access denied.');
         }
 
-        if (($code = $this->getRequest()->get('code')) === null) {
-            throw new MissingAuthorizationCodeException('Missing or invalid authorization code.');
+//        $token = $this->getRequest()->query->get('token');
+        $token = 'AKH2dBpeo9YghIlHGrVFLa9zQcXtuFe8ahZMgn_00rFinv2rggtKl3VLm0QXZ753Mphpwc-OCcFZBZYyl1YOzF3_0aXb8XZI52J5nNt0fmX1X5heEDEnn4B3uIQLf31qNTnJB-EpGKWmyGlaLBqAvB23sAYbe3cn422egvyzw1PX8Cxg1-2paCPx4HItQoNJFRLbtI9bdhsC4NihU1CYIgTkzmp2PYJf_Q';
+
+        if ($token === null) {
+            throw new MissingTokenException('could not find a token query string parameter.');
         }
 
-        if (($jsonToken = $this->getClient()->authenticate($code)) === null) {
-            throw new InvalidTokenReceivedException('Could not receive token from google.');
+        $association = $this->getService()->associationsessions->verify($token);
+
+        if ($association->getStatus() === 'REJECTED') {
+            // todo handle rejection in a more subtle way
+            throw new AssociationRejectedException('the association was rejected.');
         }
 
-        $user = $this->getUserDocument();
-
-        $token = new Token(json_decode($jsonToken)->refresh_token);
-        $token->setAccessToken($jsonToken);
-
-        $user->setToken($token);
-        $user->setSignedAt(new \DateTime());
-
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->persist($token);
-        $this->getDocumentManager()->flush();
-
-        return array();
+        // do stuff with the association
     }
 
     /**
@@ -146,22 +192,5 @@ class SettingsController extends AppController
         $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
 
         return $serializer;
-    }
-
-    /**
-     * @throws MissingParametersException
-     */
-    protected function setInstanceAndCompIdFromState()
-    {
-        $state = $this->getRequest()->query->get('state');
-
-        if ($state === null) {
-            throw new MissingParametersException('Missing state query string parameter.');
-        }
-
-        parse_str($state, $params);
-
-        $this->getRequest()->query->set('instance', $params['instance']);
-        $this->getRequest()->query->set('compId', $params['compId']);
     }
 }

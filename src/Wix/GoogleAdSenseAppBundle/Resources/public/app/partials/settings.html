@@ -28,7 +28,7 @@
                     <li>
                         <div class="text">
                             <div>
-                                <input data-ng-model="user.type" type="radio" value="text" />
+                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT" />
                                 <label for="">Text</label>
                             </div>
                             <div>
@@ -40,7 +40,7 @@
                     <li>
                         <div class="image">
                             <div>
-                                <input data-ng-model="user.type" type="radio" value="image" />
+                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="IMAGE" />
                                 <label for="">Image</label>
                             </div>
                             <div>
@@ -52,7 +52,7 @@
                     <li>
                         <div class="video">
                             <div>
-                                <input data-ng-model="user.type" type="radio" value="video" />
+                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="VIDEO" />
                                 <label for="">Video</label>
                             </div>
                             <div>
@@ -64,7 +64,7 @@
                     <li>
                         <div class="links">
                             <div>
-                                <input data-ng-model="user.type" type="radio" value="links" />
+                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="LINKS" />
                                 <label for="">Links</label>
                             </div>
                             <div>
@@ -84,7 +84,7 @@
                     <li>
                         <div class="rectangle">
                             <div>
-                                <input data-ng-model="user.layout" type="radio" value="rectangle" />
+                                <input data-ng-model="size" type="radio" value="rectangle" />
                                 <label for="">Rectangle</label>
                             </div>
                             <div>
@@ -96,7 +96,7 @@
                     <li>
                         <div class="skyscraper">
                             <div>
-                                <input data-ng-model="user.layout" type="radio" value="skyscraper" />
+                                <input data-ng-model="size" type="radio" value="skyscraper" />
                                 <label for="">Skyscraper</label>
                             </div>
                             <div>
@@ -108,7 +108,7 @@
                     <li>
                         <div class="banner">
                             <div>
-                                <input data-ng-model="user.layout" type="radio" value="banner" />
+                                <input data-ng-model="size" type="radio" value="banner" />
                                 <label for="">Banner</label>
                             </div>
                             <div>
@@ -129,19 +129,15 @@
                         <div class="color">
                             <div>
                                 <label class="colorPicker_label" for="">Background Color</label>
-                                <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+                                <input data-ng-model="adUnit.customStyle.colors.background" type="text" data-ui-colorpicker />
                             </div>
-                        </div>
-                        <div class="transparent">
-                            <input data-ng-model="user.backgroundTransparent" id="backgroundTransparent" type="checkbox" />
-                            <label for="backgroundTransparent">Transparent</label>
                         </div>
                     </li>
                     <li class="style_setting">
                         <div class="color">
                             <div>
                                 <label class="colorPicker_label" for="">Title</label>
-                                <input data-ng-model="user.titleColor" type="text" data-ui-colorpicker />
+                                <input data-ng-model="adUnit.customStyle.colors.title" type="text" data-ui-colorpicker />
                             </div>
                         </div>
                     </li>
@@ -149,7 +145,7 @@
                         <div class="color">
                             <div>
                                 <label class="colorPicker_label" for="">Text</label>
-                                <input data-ng-model="user.textColor" type="text" data-ui-colorpicker />
+                                <input data-ng-model="adUnit.customStyle.colors.text" type="text" data-ui-colorpicker />
                             </div>
                         </div>
                     </li>
@@ -157,7 +153,7 @@
                         <div class="color">
                             <div>
                                 <label class="colorPicker_label" for="">URL</label>
-                                <input data-ng-model="user.urlColor" type="text" data-ui-colorpicker />
+                                <input data-ng-model="adUnit.customStyle.colors.url" type="text" data-ui-colorpicker />
                             </div>
                         </div>
                     </li>
@@ -165,12 +161,8 @@
                         <div class="color">
                             <div>
                                 <label class="colorPicker_label" for="">Border</label>
-                                <input data-ng-model="user.borderColor" type="text" data-ui-colorpicker />
+                                <input data-ng-model="adUnit.customStyle.colors.border" type="text" data-ui-colorpicker />
                             </div>
-                        </div>
-                        <div class="transparent">
-                            <input data-ng-model="user.borderTransparent" id="borderTransparent" type="checkbox" />
-                            <label for="borderTransparent">Transparent</label>
                         </div>
                     </li>
                 </ul>

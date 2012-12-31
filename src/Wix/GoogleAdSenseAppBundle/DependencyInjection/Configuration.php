@@ -27,12 +27,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->fixXmlConfig('scope')
             ->children()
-                ->arrayNode('user')
-                    ->children()
-                        ->scalarNode('refresh_token')
-                            ->isRequired()
-                        ->end()
-                    ->end()
+                ->scalarNode('refresh_token')
+                    ->isRequired()
                 ->end()
             ->end()
         ;

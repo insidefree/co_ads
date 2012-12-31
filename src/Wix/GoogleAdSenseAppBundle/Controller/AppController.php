@@ -40,6 +40,14 @@ class AppController extends Controller
     private $manager;
 
     /**
+     * @return string
+     */
+    protected function getAccountId()
+    {
+        return 'pub-4373694264490992';
+    }
+
+    /**
      * @return Instance
      * @throws \Exception
      */
@@ -64,25 +72,22 @@ class AppController extends Controller
     {
         if ($this->client === null) {
             $this->client = $this->get('google_oauth2')->getClient();
-
-            $token = $this->getUserToken($this->getUserDocument());
-
-            // set an access token if we have one
-            if ($token->getAccessToken() !== null) {
-                $this->client->setAccessToken($token->getAccessToken());
-            }
-
-            // renew the access token if it expired and save the new one
-            if ($this->client->isAccessTokenExpired()) {
-                $this->client->refreshToken($token->getRefreshToken());
-
-                $token->setAccessToken($this->client->getAccessToken());
-                $this->getDocumentManager()->persist($token);
-                $this->getDocumentManager()->flush($token);
-            }
+            $this->client->refreshToken($this->getConfig()['refresh_token']);
         }
 
         return $this->client;
+    }
+
+    /**
+     * @return \Google_AdsensehostService
+     */
+    protected function getService()
+    {
+        if ($this->service === null) {
+            $this->service = $this->get('google_oauth2')->getAdSenseHostService($this->getClient());
+        }
+
+        return $this->service;
     }
 
     /**
@@ -96,52 +101,6 @@ class AppController extends Controller
     }
 
     /**
-     * @return bool
-     */
-    protected function isDefault()
-    {
-        $config = $this->getConfig();
-        $token = $this->getUserToken($this->getUserDocument());
-
-        return $token->getRefreshToken() === $config['user']['refresh_token'];
-    }
-
-    /**
-     * @param User $user
-     * @return Token
-     */
-    private function getUserToken(User $user)
-    {
-        if ($user->connected()) {
-            $token = $user->getToken();
-        } else {
-            $config = $this->getConfig();
-            $refreshToken = $config['user']['refresh_token'];
-
-            $token = $this->getDocumentManager()->getRepository('WixGoogleAdSenseAppBundle:Token')
-              ->find($refreshToken);
-
-            if ($token === null) {
-                $token = new Token($refreshToken);
-            }
-        }
-
-        return $token;
-    }
-
-    /**
-     * @return \Google_AdsensehostService
-     */
-    protected function getService()
-    {
-        if ($this->service === null) {
-            $this->service = $this->get('google_oauth2')->getService($this->getClient());
-        }
-
-        return $this->service;
-    }
-
-    /**
      * @return DocumentManager
      */
     protected function getDocumentManager()
@@ -151,6 +110,15 @@ class AppController extends Controller
         }
 
         return $this->manager;
+    }
+
+    /**
+     * @param $class
+     * @return DocumentRepository
+     */
+    protected function getRepository($class)
+    {
+        return $this->getDocumentManager()->getRepository($class);
     }
 
     /**
@@ -190,42 +158,5 @@ class AppController extends Controller
         }
 
         return $componentId;
-    }
-
-    /**
-     *
-     * @throws MissingParametersException
-     * @return User
-     */
-    protected function getUserDocument()
-    {
-        $componentId = $this->getComponentId();
-        $instanceId = $this->getInstance()->getInstanceId();
-
-        $user = $this->getRepository('WixGoogleAdSenseAppBundle:User')
-          ->findOneBy(array(
-                'instanceId' => $instanceId,
-                'componentId' => (string) $componentId,
-            ));
-
-        if ($user === null) {
-            $user = new User($instanceId, $componentId);
-        }
-
-//        if ($user->getActiveFileId() === null && $user->connected() === false) {
-//            $config = $this->container->getParameter('google_api_oauth2.config');
-//            $user->setActiveFileId($config['user']['active_file']);
-//        }
-
-        return $user;
-    }
-
-    /**
-     * @param $class
-     * @return DocumentRepository
-     */
-    protected function getRepository($class)
-    {
-        return $this->getDocumentManager()->getRepository($class);
     }
 }

@@ -79,3 +79,20 @@ wix_api:
     keys:
         app_id: 12d0391f-f7a2-9f43-153d-883f9017e252
         app_secret: 03c6f284-b212-424a-b10e-ef2f161d3345
+
+# Google OAuth2 Configuration
+google_apio_auth2:
+    keys:
+        client_id: 417424657964.apps.googleusercontent.com
+        client_secret: R1R9PiJd4j9kVT-X4xQf1y76
+        redirect_uri: http://local.adsense.apps.wix.com/app_dev.php/settings/redirect
+
+    scopes:
+        [ https://www.googleapis.com/auth/adsensehost ]
+
+    preferences:
+        use_objects: true
+
+# Wix Google AdSense Configuration
+wix_google_ad_sense_app:
+    refresh_token: 1/-tOgUd17_soJ1an9Z99Nv9vbfeCBvhAQNPeMkKA7oUo

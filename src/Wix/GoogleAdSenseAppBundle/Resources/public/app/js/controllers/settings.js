@@ -1,32 +1,27 @@
 'use strict';
 
 /* Settings Controller */
-function SettingsCtrl($scope, $window, Router, user) {
-    $scope.user = user;
-
-    $scope.$watch('user', function(newValue, oldValue) {
-        if (newValue === oldValue) {
-            return;
-        }
-
-        $scope.user.$save();
-    }, true);
+function SettingsCtrl($scope, $window, Router, adUnit) {
+    $scope.adUnit = adUnit;
 
     $scope.authenticate = function() {
-        $window.open(Router('authenticate'), 'authenticate', 'height=600, width=600');
+        $window.open(Router('authenticate'), 'authenticate', 'height=600, width=1000');
     }
 }
 
-SettingsCtrl.$inject = ['$scope', '$window', 'Router', 'user'];
+SettingsCtrl.$inject = ['$scope', '$window', 'Router', 'adUnit'];
 
 SettingsCtrl.resolve = {
-    user: ['$q', 'Users', function($q, Users) {
-        var defer = $q.defer();
+    /**
+     * resolves an ad unit so it will be available to the settings controller.
+     */
+    adUnit: ['$http', '$q', 'Router', function($http, $q,Router) {
+        var dfd = $q.defer();
 
-        Users.get({}, function(user) {
-            defer.resolve(user);
+        $http.get(Router('adunit')).success(function(response) {
+            dfd.resolve(response);
         });
 
-        return defer.promise;
+        return dfd.promise;
     }]
 };
