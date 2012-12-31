@@ -48,6 +48,14 @@ class AppController extends Controller
     }
 
     /**
+     * @return string
+     */
+    protected function getClientId()
+    {
+        return 'ca-pub-4373694264490992';
+    }
+
+    /**
      * @return Instance
      * @throws \Exception
      */

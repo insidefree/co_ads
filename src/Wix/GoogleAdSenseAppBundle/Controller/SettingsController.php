@@ -43,7 +43,7 @@ class SettingsController extends AppController
         $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $adClient->getId());
 
         if ($adUnits->getItems() === 0) {
-//        $adUnit = $this->getDefaultAdUnit(sprintf('Wix ad unit #%s', $this->getInstance()->getInstanceId()));
+//        $adUnit = $this->getDefaultAdUnit();
 //        $result = $service->accounts_adunits->insert($this->getAccountId(), $client->getId(), $adUnit);
         }
 
@@ -53,21 +53,20 @@ class SettingsController extends AppController
     }
 
     /**
-     * @param $name
      * @return \Google_AdUnit
      */
-    protected function getDefaultAdUnit($name)
+    protected function getDefaultAdUnit()
     {
         $adUnit = new \Google_AdUnit();
 
-        $adUnit->setName($name);
+        $adUnit->setName(sprintf('Wix ad unit #%s', $this->getInstance()->getInstanceId()));
 
         $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
         $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
         $backupOption->setType('COLOR');
         $backupOption->setColor('ffffff');
         $contentAdsSettings->setBackupOption($backupOption);
-        $contentAdsSettings->setSize('SIZE_200_200');
+        $contentAdsSettings->setSize('SIZE_300_250');
         $contentAdsSettings->setType('TEXT');
         $adUnit->setContentAdsSettings($contentAdsSettings);
 
@@ -154,6 +153,29 @@ class SettingsController extends AppController
         if ($this->getInstance()->isOwner() === false) {
             throw new PermissionsDeniedException('access denied.');
         }
+
+        $data = json_decode($this->getRequest()->getContent());
+
+        if (empty($data)) {
+            throw new MissingParametersException('could not find request data (expecting request payload to be sent)');
+        }
+
+        $service = $this->getService();
+        $serializer = $this->getSerializer();
+
+        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getClientId());
+        $adUnit = $adUnits->getItems()[0];
+
+        // todo build these objects in a better way, maybe by writing a normalizer for the serializer component
+        $adUnit->getContentAdsSettings()->setType($data->contentAdsSettings->type);
+        $adUnit->getContentAdsSettings()->setSize($data->contentAdsSettings->size);
+        $adUnit->getCustomStyle()->setCorners($data->customStyle->corners);
+        $adUnit->getCustomStyle()->setColors($serializer->deserialize(json_encode($data->customStyle->colors), '\Google_AdStyleColors', 'json'));
+        $adUnit->getCustomStyle()->setFont($serializer->deserialize(json_encode($data->customStyle->font), '\Google_AdStyleFont', 'json'));
+
+        $result = $service->accounts_adunits->update($this->getAccountId(), $this->getClientId(), $adUnit);
+
+        return new JsonResponse($result);
     }
 
     /**

@@ -5,14 +5,9 @@
     <meta name="robots" content="noindex">
     <meta>
     <title>Google AdSense App</title>
-    {% stylesheets filter='cssrewrite'
-    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/emphasize.css'
-    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/master.css'
-    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/settings.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
 </head>
 <body>
+
 <!-- adsense advertisement -->
 <div class="drive_widget_main">
     <script type="text/javascript"><!--
@@ -27,9 +22,6 @@
             src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </script>
 </div>
-
-<!-- wix sdk -->
-<script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.16.0/js/Wix.js"></script>
 
 </body>
 </html>

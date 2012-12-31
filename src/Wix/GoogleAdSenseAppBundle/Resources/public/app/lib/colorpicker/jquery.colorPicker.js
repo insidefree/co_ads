@@ -180,7 +180,8 @@
                         g = pad(c[1].toString(16)),
                         b = pad(c[2].toString(16));
 
-                    return '#' + r + g + b;
+//                    return '#' + r + g + b;
+                    return r + g + b; // ronena
                 }
 
             // Otherwise we wont do anything.

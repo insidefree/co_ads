@@ -1,15 +1,24 @@
 'use strict';
 
 /* Settings Controller */
-function SettingsCtrl($scope, $window, Router, adUnit) {
+function SettingsCtrl($scope, $window, $http, Router, adUnit) {
     $scope.adUnit = adUnit;
+
+    console.log(adUnit);
+
+    $scope.$watch('adUnit', function(adUnit, oldAdUnit) {
+        if (adUnit === oldAdUnit) {
+            return;
+        }
+        $http.post(Router('save'), adUnit);
+    }, true);
 
     $scope.authenticate = function() {
         $window.open(Router('authenticate'), 'authenticate', 'height=600, width=1000');
     }
 }
 
-SettingsCtrl.$inject = ['$scope', '$window', 'Router', 'adUnit'];
+SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit'];
 
 SettingsCtrl.resolve = {
     /**
