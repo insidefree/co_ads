@@ -25,7 +25,7 @@
             <h2 class="box_title">Type</h2>
             <div>
                 <ul>
-                    <li class="style_setting">
+                    <li>
                         <div class="text">
                             <div>
                                 <input data-ng-model="user.type" type="radio" value="text" />
@@ -35,7 +35,9 @@
                                 <img src="" alt="">
                             </div>
                         </div>
+                    </li>
 
+                    <li>
                         <div class="image">
                             <div>
                                 <input data-ng-model="user.type" type="radio" value="image" />
@@ -45,7 +47,9 @@
                                 <img src="" alt="">
                             </div>
                         </div>
+                    </li>
 
+                    <li>
                         <div class="video">
                             <div>
                                 <input data-ng-model="user.type" type="radio" value="video" />
@@ -55,7 +59,9 @@
                                 <img src="" alt="">
                             </div>
                         </div>
+                    </li>
 
+                    <li>
                         <div class="links">
                             <div>
                                 <input data-ng-model="user.type" type="radio" value="links" />
@@ -75,45 +81,39 @@
             <h2 class="box_title">Layout</h2>
             <div>
                 <ul>
-                    <li class="style_setting">
-                        <div class="color">
+                    <li>
+                        <div class="rectangle">
                             <div>
-                                <label class="colorPicker_label" for="">Background Color</label>
-                                <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+                                <input data-ng-model="user.layout" type="radio" value="rectangle" />
+                                <label for="">Rectangle</label>
                             </div>
                             <div>
-                                <input data-ng-model="user.enableShadow" id="shadow" type="checkbox" />
-                                <label for="shadow">Enable shadow</label>
+                                <img src="" alt="">
                             </div>
-                        </div>
-                        <div class="opacity">
-                            <input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />
-                            <label for="opacity">Opacity</label>
-                            <div data-ng-model="user.backgroundOpacity" data-ng-disabled="user.backgroundHasOpacity == false" data-ui-slider> </div>
-                            <span class="opacity_count">{{ user.backgroundOpacity }}</span>
                         </div>
                     </li>
-                    <li class="style_setting">
-                        <label for="">Corner Radius</label>
-                        <div class="radius">
-                    	<span class="radius_topleft ui-spinner-wrapper">
-                    		<input data-ng-model="user.cornerRadiusTopLeft" id="radius_topleft" type="text" data-ui-spinner max="10" min="0" />
-                    		<label for="radius_topleft">Border radius top left</label>
-                    	</span>
-                    	<span class="radius_topright ui-spinner-wrapper">
-                    		<label for="radius_topright">Border radius top right</label>
-                    		<input data-ng-model="user.cornerRadiusTopRight" id="radius_topright" type="text" data-ui-spinner max="10" min="0" />
-                    	</span>
-                    	<span class="radius_bottomleft ui-spinner-wrapper">
-                    		<input data-ng-model="user.cornerRadiusBottomLeft" id="radius_bottomleft" type="text" data-ui-spinner max="10" min="0" />
-                    		<label for="radius_bottomleft">Border radius bottom left</label>
-                    	</span>
-                    	<span class="radius_bottomright ui-spinner-wrapper">
-                    		<label for="radius_bottomright">Border radius bottom right</label>
-                    		<input data-ng-model="user.cornerRadiusBottomRight" id="radius_bottomright" type="text" data-ui-spinner max="10" min="0" />
-                    	</span>
-                            <input data-ng-change="lock()" data-ng-model="user.lockCornersTogether" id="lock_radius" type="checkbox" />
-                            <label for="lock_radius">Lock corners together</label>
+
+                    <li>
+                        <div class="skyscraper">
+                            <div>
+                                <input data-ng-model="user.layout" type="radio" value="skyscraper" />
+                                <label for="">Skyscraper</label>
+                            </div>
+                            <div>
+                                <img src="" alt="">
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="banner">
+                            <div>
+                                <input data-ng-model="user.layout" type="radio" value="banner" />
+                                <label for="">Banner</label>
+                            </div>
+                            <div>
+                                <img src="" alt="">
+                            </div>
                         </div>
                     </li>
                 </ul>

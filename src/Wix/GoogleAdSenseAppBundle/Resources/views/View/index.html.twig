@@ -1,1 +1,35 @@
-Hello {{ name }}!
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <meta>
+    <title>Google AdSense App</title>
+    {% stylesheets filter='cssrewrite'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/emphasize.css'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/master.css'
+    '@WixGoogleAdSenseAppBundle/Resources/public/app/css/settings.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+</head>
+<body>
+<!-- adsense advertisement -->
+<div class="drive_widget_main">
+    <script type="text/javascript"><!--
+        google_ad_client = "ca-pub-0450840857019094";
+        /* Test */
+        google_ad_slot = "3148936254";
+        google_ad_width = 200;
+        google_ad_height = 200;
+        //-->
+    </script>
+    <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+</div>
+
+<!-- wix sdk -->
+<script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.16.0/js/Wix.js"></script>
+
+</body>
+</html>

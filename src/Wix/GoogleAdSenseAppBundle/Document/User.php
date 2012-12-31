@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @MongoDB\Document(collection="users")
- * @MongoDB\UniqueIndex(keys={"instanceId", "componentId"})
+ * @MongoDB\UniqueIndex(keys={"instanceId"="asc", "componentId"="asc"})
  */
 class User
 {
