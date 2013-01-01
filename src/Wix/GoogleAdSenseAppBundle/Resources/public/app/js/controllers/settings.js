@@ -1,12 +1,10 @@
 'use strict';
 
 /* Settings Controller */
-function SettingsCtrl($scope, $window, $http, Router, adUnit, user, account) {
+function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
     $scope.adUnit = adUnit;
 
     $scope.user = user;
-
-    $scope.account = account;
 
     $scope.connected = function() {
         return $scope.user.accountId !== null;
@@ -25,10 +23,16 @@ function SettingsCtrl($scope, $window, $http, Router, adUnit, user, account) {
 
     $scope.authenticate = function() {
         $window.open(Router('authenticate'), 'authenticate', 'height=600, width=1000');
-    }
+    };
+
+    $scope.disconnect = function() {
+        $http.post(Router('disconnect')).success(function() {
+            $window.location.reload();
+        });
+    };
 }
 
-SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit', 'user', 'account'];
+SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit', 'user'];
 
 SettingsCtrl.resolve = {
     /**
@@ -47,15 +51,6 @@ SettingsCtrl.resolve = {
         var dfd = $q.defer();
 
         $http.get(Router('getUser')).success(function(response) {
-            dfd.resolve(response);
-        });
-
-        return dfd.promise;
-    }],
-    account: ['$http', '$q', 'Router', function($http, $q, Router) {
-        var dfd = $q.defer();
-
-        $http.get(Router('getAccount')).success(function(response) {
             dfd.resolve(response);
         });
 
