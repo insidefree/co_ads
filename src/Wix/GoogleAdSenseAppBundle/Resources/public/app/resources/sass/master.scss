@@ -214,3 +214,15 @@ input[type="checkbox"] + label:before {
 label.checked:before,
 input[type="checkbox"]:checked + label:before { @include background-image("settings/btn/btn_checkbox_checked.png"); }
 input[type="checkbox"] + label:first-child { text-indent: 0; }
+
+/* checkbox styling */
+input[type="radio"] { display: none; }
+input[type="radio"] + label:before {
+	content:"";
+	margin-right: 7px;
+	position: relative;
+	top: 1px;
+	@include background-image("settings/btn/btn_radio.png"); }
+label.checked:before,
+input[type="radio"]:checked + label:before { @include background-image("settings/btn/btn_radio_checked.png"); }
+input[type="radio"] + label:first-child { text-indent: 0; }

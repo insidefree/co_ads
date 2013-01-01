@@ -2,7 +2,7 @@
     <!-- connect account -->
     <div class="box_style top_section inline_block">
         <a target="_blank" href="https://drive.google.com/start" id="logo">
-            <img src="/bundles/wixgoogleadsenseapp/app/images/settings/logo_drive.jpg" alt="Google Drive">
+            <img src="/bundles/wixgoogleadsenseapp/app/images/settings/logo.jpg" alt="Google Drive">
         </a>
         <div data-ng-hide="user.connected" class="connect">
             <p class="description">App info text</p>
@@ -25,40 +25,20 @@
             <h2 class="box_title">Type</h2>
             <div>
                 <ul>
-                    <li>
-                        <div class="text">
-                            <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT" />
-                                <label for="">Text</label>
-                            </div>
-                            <div>
-                                <img src="" alt="">
-                            </div>
-                        </div>
+                    <li class="text">
+						<img src="images/settings/ge/ge_type_text.png" alt="">
+						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text" name="BannerType" id="TypeText"/>
+						<label for="TypeText">Text</label>
                     </li>
-
-                    <li>
-                        <div class="image">
-                            <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="IMAGE" />
-                                <label for="">Image</label>
-                            </div>
-                            <div>
-                                <img src="" alt="">
-                            </div>
-                        </div>
+                    <li class="image">
+						<img src="images/settings/ge/ge_type_image.png" alt="">
+						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Image" name="BannerType" id="TypeImage"/>
+						<label for="TypeImage">Text</label>
                     </li>
-
-                    <li>
-                        <div class="video">
-                            <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT_IMAGE" />
-                                <label for="">Text and image</label>
-                            </div>
-                            <div>
-                                <img src="" alt="">
-                            </div>
-                        </div>
+                    <img src="images/settings/ge/ge_type_both.png" alt="">
+						<img src="" alt="">
+						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerType" id="TypeBoth"/>
+						<label for="TypeBoth">Text</label>
                     </li>
                 </ul>
             </div>
