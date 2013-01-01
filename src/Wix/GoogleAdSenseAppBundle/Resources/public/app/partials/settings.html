@@ -62,12 +62,14 @@
 	            <div class="cornder_radius">
 	            	<h3>Corner style</h3>
 	            	<div>
-						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerLayout" id="LayoutBanner"/>
-						<label class="straight" for="LayoutBanner">90 degrees</label>
-						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerLayout" id="LayoutBanner"/>
-						<label class="slight" for="LayoutBanner">Slightly Rounded</label>
-						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerLayout" id="LayoutBanner"/>
-						<label class="round" for="LayoutBanner">Rounded</label>
+						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="SQUARE" name="BannerLayout" id="Square"/>
+						<label class="straight" for="Square">Square</label>
+
+						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="ROUNDED" name="BannerLayout" id="Rounded"/>
+						<label class="slight" for="Rounded">Rounded</label>
+
+						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="VERY_ROUNDED" name="BannerLayout" id="VeryRounded"/>
+						<label class="round" for="VeryRounded">Very Rounded</label>
 	            	</div>
 		        </div>
 	        </div>
