@@ -141,6 +141,30 @@ class AppController extends Controller
     }
 
     /**
+     * @return null
+     * @throws \Exception
+     */
+    protected function getAdUnit()
+    {
+        $user = $this->getUserDocument();
+
+        if ($user->connected() === false) {
+            return null;
+        }
+
+        $adUnits = $this->getService()->accounts_adunits->listAccountsAdunits(
+            $user->getAccountId(),
+            $this->getAfcClientId()
+        );
+
+        if ($adUnits->getItems() === 0) {
+            throw new \Exception('could not find a wix ad unit to work with.');
+        }
+
+        return $adUnits->items[0];
+    }
+
+    /**
      * @return User
      */
     protected function getUserDocument()
@@ -155,7 +179,6 @@ class AppController extends Controller
               ));
 
         if ($user === null) {
-            print_r('check');
             $user = new User($instanceId, $componentId);
         }
 
