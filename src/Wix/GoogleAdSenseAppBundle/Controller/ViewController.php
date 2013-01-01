@@ -21,7 +21,7 @@ class ViewController extends AppController
 
         $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
 
-        $adUnit = $adUnits->getItems()[0];
+        $adUnit = $adUnits->items[0];
 
         $code = $service->accounts_adunits->getAdCode($this->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
 
