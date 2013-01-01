@@ -46,7 +46,8 @@ class AppController extends Controller
     {
         if ($this->client === null) {
             $this->client = $this->get('google_oauth2')->getClient();
-            $this->client->refreshToken($this->getConfig()['refresh_token']);
+            $config = $this->getConfig();
+            $this->client->refreshToken($config['refresh_token']);
         }
 
         return $this->client;
@@ -154,24 +155,11 @@ class AppController extends Controller
               ));
 
         if ($user === null) {
+            print_r('check');
             $user = new User($instanceId, $componentId);
         }
 
         return $user;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getAccountId()
-    {
-        $user = $this->getUserDocument();
-
-        if ($user->connected()) {
-            return $user->getAccountId();
-        }
-
-        return 'pub-4373694264490992';
     }
 
     /**

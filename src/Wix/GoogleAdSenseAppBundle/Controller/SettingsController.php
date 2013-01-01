@@ -34,54 +34,26 @@ class SettingsController extends AppController
      */
     public function indexAction()
     {
-        $service = $this->getService();
+        $user = $this->getUserDocument();
 
-        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
+        print_r($user->getInstanceId());
 
-        if ($adUnits->getItems() === 0) {
-//        $adUnit = $this->getDefaultAdUnit();
-//        $result = $service->accounts_adunits->insert($this->getAccountId(), $client->getId(), $adUnit);
+        if ($user->connected() === false) {
+            return array();
         }
 
-        $adUnit = $adUnits->getItems()[0];
+        $adUnits = $this->getService()->accounts_adunits->listAccountsAdunits(
+            $user->getAccountId(),
+            $this->getAfcClientId()
+        );
 
-        return array('adUnit' => $this->getSerializer()->serialize($adUnit, 'json'));
-    }
+        if ($adUnits->getItems() === 0) {
+            throw new \Exception('could not find a wix ad unit to work with.');
+        }
 
-    /**
-     * @return \Google_AdUnit
-     */
-    protected function getDefaultAdUnit()
-    {
-        $adUnit = new \Google_AdUnit();
+        $adUnit = $adUnits->items[0];
 
-        $adUnit->setName(sprintf('Wix ad unit for user %s #%s', $this->getInstance()->getInstanceId(), $this->getComponentId()));
-
-        $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
-        $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
-        $backupOption->setType('COLOR');
-        $backupOption->setColor('ffffff');
-        $contentAdsSettings->setBackupOption($backupOption);
-        $contentAdsSettings->setSize('SIZE_300_250');
-        $contentAdsSettings->setType('TEXT');
-        $adUnit->setContentAdsSettings($contentAdsSettings);
-
-        $customStyle = new \Google_AdStyle();
-        $colors = new \Google_AdStyleColors();
-        $colors->setBackground('ffffff');
-        $colors->setBorder('000000');
-        $colors->setText('000000');
-        $colors->setTitle('000000');
-        $colors->setUrl('0000ff');
-        $customStyle->setColors($colors);
-        $customStyle->setCorners('SQUARE');
-        $font = new \Google_AdStyleFont();
-        $font->setFamily('Arial');
-        $font->setSize('Medium');
-        $customStyle->setFont($font);
-        $adUnit->setCustomStyle($customStyle);
-
-        return $adUnit;
+        return array('adUnit' => $adUnit);
     }
 
     /**
@@ -104,26 +76,26 @@ class SettingsController extends AppController
     }
 
     /**
-     * @Route("/adunit", name="adunit", options={"expose"=true})
+     * @Route("/adunit", name="getAdUnit", options={"expose"=true})
      * @Method({"GET"})
      * @Template()
      */
-    public function adUnitAction()
+    public function getAdUnitAction()
     {
         $service = $this->getService();
 
         $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
 
-        $adUnit = $adUnits->getItems()[0];
+        $adUnit = $adUnits->items[0];
 
         return new JsonResponse($adUnit);
     }
 
     /**
-     * @Route("/adunit", name="save", options={"expose"=true})
+     * @Route("/adunit", name="saveAdUnit", options={"expose"=true})
      * @Method({"POST"})
      */
-    public function saveAction()
+    public function saveAdUnitAction()
     {
         if ($this->getInstance()->isOwner() === false) {
             throw new PermissionsDeniedException('access denied.');
@@ -139,7 +111,7 @@ class SettingsController extends AppController
         $serializer = $this->getSerializer();
 
         $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
-        $adUnit = $adUnits->getItems()[0];
+        $adUnit = $adUnits->items[0];
 
         // todo build these objects in a better way, maybe by writing a normalizer for the serializer component
         $adUnit->getContentAdsSettings()->setType($data->contentAdsSettings->type);
@@ -190,6 +162,42 @@ class SettingsController extends AppController
         $this->getDocumentManager()->flush();
 
         return array();
+    }
+
+    /**
+     * @return \Google_AdUnit
+     */
+    protected function getDefaultAdUnit()
+    {
+        $adUnit = new \Google_AdUnit();
+
+        $adUnit->setName(sprintf('Wix ad unit for user %s #%s', $this->getInstance()->getInstanceId(), $this->getComponentId()));
+
+        $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
+        $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
+        $backupOption->setType('COLOR');
+        $backupOption->setColor('ffffff');
+        $contentAdsSettings->setBackupOption($backupOption);
+        $contentAdsSettings->setSize('SIZE_300_250');
+        $contentAdsSettings->setType('TEXT');
+        $adUnit->setContentAdsSettings($contentAdsSettings);
+
+        $customStyle = new \Google_AdStyle();
+        $colors = new \Google_AdStyleColors();
+        $colors->setBackground('ffffff');
+        $colors->setBorder('000000');
+        $colors->setText('000000');
+        $colors->setTitle('000000');
+        $colors->setUrl('0000ff');
+        $customStyle->setColors($colors);
+        $customStyle->setCorners('SQUARE');
+        $font = new \Google_AdStyleFont();
+        $font->setFamily('Arial');
+        $font->setSize('Medium');
+        $customStyle->setFont($font);
+        $adUnit->setCustomStyle($customStyle);
+
+        return $adUnit;
     }
 
     /**

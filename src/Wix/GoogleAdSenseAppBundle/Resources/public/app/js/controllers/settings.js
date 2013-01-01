@@ -12,7 +12,7 @@ function SettingsCtrl($scope, $window, $http, Router, adUnit) {
         if (adUnit === oldAdUnit) {
             return;
         }
-        $http.post(Router('save'), adUnit);
+        $http.post(Router('saveAdUnit'), adUnit);
     }, true);
 
     $scope.authenticate = function() {
@@ -29,7 +29,7 @@ SettingsCtrl.resolve = {
     adUnit: ['$http', '$q', 'Router', function($http, $q,Router) {
         var dfd = $q.defer();
 
-        $http.get(Router('adunit')).success(function(response) {
+        $http.get(Router('getAdUnit')).success(function(response) {
             dfd.resolve(response);
         });
 
