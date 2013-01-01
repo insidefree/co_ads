@@ -141,7 +141,7 @@ class AppController extends Controller
     }
 
     /**
-     * @return null
+     * @return null|\Google_AdUnit
      * @throws \Exception
      */
     protected function getAdUnit()

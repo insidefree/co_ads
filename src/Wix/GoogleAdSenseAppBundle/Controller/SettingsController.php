@@ -2,7 +2,6 @@
 
 namespace Wix\GoogleAdSenseAppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -12,7 +11,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Wix\GoogleAdSenseAppBundle\Exceptions\PermissionsDeniedException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\MissingTokenException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\MissingParametersException;
-use Wix\GoogleAdSenseAppBundle\Exceptions\MissingAfcAdClientException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\AssociationRejectedException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\InvalidAssociationIdException;
 
@@ -20,7 +18,6 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Wix\GoogleAdSenseAppBundle\Document\User;
 
 /**
  * @Route("/settings")
@@ -34,9 +31,7 @@ class SettingsController extends AppController
      */
     public function indexAction()
     {
-        $adUnit = $this->getAdUnit();
-
-        return array('adUnit' => $adUnit);
+        return array();
     }
 
     /**
@@ -46,8 +41,7 @@ class SettingsController extends AppController
      */
     public function authenticateAction()
     {
-        $service = $this->getService();
-        $session = $service->associationsessions->start('AFC', 'http://local.adsense.apps.wix.com/app_dev.php/view/');
+        $session = $this->getService()->associationsessions->start('AFC', 'http://local.adsense.apps.wix.com/app_dev.php/view/');
 
         $user = $this->getUserDocument();
         $user->setAssociationIdd($session->getId());
@@ -71,6 +65,18 @@ class SettingsController extends AppController
     }
 
     /**
+     * @Route("/user", name="getUser", options={"expose"=true})
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function getUserAction()
+    {
+        $user = $this->getUserDocument();
+
+        return new JsonResponse($user);
+    }
+
+    /**
      * @Route("/adunit", name="saveAdUnit", options={"expose"=true})
      * @Method({"POST"})
      */
@@ -89,9 +95,7 @@ class SettingsController extends AppController
         }
 
         $adUnit = $this->getAdUnit();
-
-        // todo write a normalizer for the serializer component as soon as I get some time
-
+        $adUnit = $this->updateAdUnit($adUnit, $data);
 
         $result = $this->getService()->accounts_adunits->update($this->getUserDocument()->getAccountId(), $this->getAfcClientId(), $adUnit);
 
@@ -114,7 +118,7 @@ class SettingsController extends AppController
         $association = $this->getService()->associationsessions->verify($token);
 
         if ($association->getStatus() === 'REJECTED') {
-            // todo handle rejection in a more subtle way
+            // todo handle rejection in a more gentle way
             throw new AssociationRejectedException('the association was rejected.');
         }
 
@@ -140,6 +144,7 @@ class SettingsController extends AppController
      */
     protected function updateAdUnit(\Google_AdUnit $adUnit, $data)
     {
+        // todo write a normalizer for the serializer component as soon as I get some time
         $adUnit->getContentAdsSettings()->setType($data->contentAdsSettings->type);
         $adUnit->getContentAdsSettings()->setSize($data->contentAdsSettings->size);
         $adUnit->getCustomStyle()->setCorners($data->customStyle->corners);
