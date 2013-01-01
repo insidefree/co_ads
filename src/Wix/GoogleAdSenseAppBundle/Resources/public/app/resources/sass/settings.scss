@@ -121,6 +121,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 	& > div { @include inline-block(55%,auto,auto,top,auto); }
 	& > .opacity { width: 43%; }
 	label {
+		line-height: 51px;
 		display: inline-block;
 		float: none !important;
 		color: $color_darkGrey; }
@@ -167,19 +168,31 @@ ul { list-style: none; padding: 0; margin: 0; }
 	}
 }
 
+.settings_layout,
 .settings_type {
-	& > div {
-		width: 100%;
-		display:table; }
 	ul {
-	    display:table-cell;
-	    vertical-align:middle;
 		padding-top: 10px;
 		border-top: 1px solid #ccc; }
 	li {
 		@include inline-block(32%,auto,center,auto,auto);
+		margin-top: 95px;
 		label {
 			margin: 10px 0;
 			display: block;
 			width: 100%; } }
+}
+
+.settings_layout {
+	li {
+		position: relative;
+		margin-top: 180px; }
+	li:before {
+		content: "";
+		left: 50%;
+		position: absolute;
+		background: transparent inline-image("settings/bg/bg_layout.png") top left repeat;
+		border: 1px solid #ccc; }
+	.rectangle:before { @include layout-shape(60px,60px); }
+	.scraper:before { @include layout-shape(30px,90px); }
+	.banner:before { @include layout-shape(90px,30px); }
 }

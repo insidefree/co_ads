@@ -23,69 +23,42 @@
         <!-- type settings -->
         <div class="box_style clearfix settings_type">
             <h2 class="box_title">Type</h2>
-            <div>
-	            <ul>
-	                <li>
-						<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
-						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text" name="BannerType" id="TypeText"/>
-						<label for="TypeText">Text</label>
-	                </li>
-	                <li>
-						<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
-						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Image" name="BannerType" id="TypeImage"/>
-						<label for="TypeImage">Image</label>
-	                </li>
-	                <li>
-						<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
-						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerType" id="TypeBoth"/>
-						<label for="TypeBoth">Text And Image</label>
-	                </li>
-	            </ul>
-	        </div>
+            <ul>
+                <li>
+					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
+					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text" name="BannerType" id="TypeText"/>
+					<label for="TypeText">Text</label>
+                </li>
+                <li>
+					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
+					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Image" name="BannerType" id="TypeImage"/>
+					<label for="TypeImage">Image</label>
+                </li>
+                <li>
+					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
+					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerType" id="TypeBoth"/>
+					<label for="TypeBoth">Text And Image</label>
+                </li>
+            </ul>
         </div>
 
         <!-- layout settings -->
-        <div class="box_style clearfix">
+        <div class="box_style clearfix settings_layout">
             <h2 class="box_title">Layout</h2>
-            <div>
-                <ul>
-                    <li>
-                        <div class="rectangle">
-                            <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_300_250" />
-                                <label for="">Rectangle</label>
-                            </div>
-                            <div>
-                                <img src="" alt="">
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="skyscraper">
-                            <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_120_600" />
-                                <label for="">Skyscraper</label>
-                            </div>
-                            <div>
-                                <img src="" alt="">
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="banner">
-                            <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_468_60" />
-                                <label for="">Banner</label>
-                            </div>
-                            <div>
-                                <img src="" alt="">
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            <ul>
+                <li class="rectangle">
+					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text" name="BannerLayout" id="StyleRect"/>
+					<label for="StyleRect">Rectangular</label>
+                </li>
+                <li class="scraper">
+					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Image" name="BannerLayout" id="LayoutScraper"/>
+					<label for="LayoutScraper">Sky Scraper</label>
+                </li>
+                <li class="banner">
+					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerLayout" id="LayoutBanner"/>
+					<label for="LayoutBanner">Banner</label>
+                </li>
+            </ul>
         </div>
 
         <!-- style settings -->
