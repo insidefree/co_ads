@@ -53,6 +53,34 @@ class SettingsController extends AppController
     }
 
     /**
+     * @Route("/disconnect", name="disconnect", options={"expose"=true})
+     * @Method({"POST"})
+     * @Template()
+     */
+    public function disconnectAction()
+    {
+        if ($this->getInstance()->isOwner() === false) {
+            throw new PermissionsDeniedException('access denied.');
+        }
+
+        $user = $this->getUserDocument();
+
+        if ($user->connected() === false) {
+            throw new \Exception('the associated user is not connected to an AdSense account.');
+        }
+
+        $user->setAccountId(null);
+
+        $this->getDocumentManager()->persist($user);
+        $this->getDocumentManager()->flush($user);
+
+        return new JsonResponse(array(
+            'code' => 200,
+            'message' => 'disconnect successful',
+        ));
+    }
+
+    /**
      * @Route("/adunit", name="getAdUnit", options={"expose"=true})
      * @Method({"GET"})
      * @Template()
@@ -73,7 +101,23 @@ class SettingsController extends AppController
     {
         $user = $this->getUserDocument();
 
+        $user = $this->getSerializer()->normalize($user);
+
         return new JsonResponse($user);
+    }
+
+    /**
+     * @Route("/account", name="getAccount", options={"expose"=true})
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function getAccountAction()
+    {
+        $user = $this->getUserDocument();
+
+        $account = $this->getService()->accounts->get($user->getAccountId());
+
+        return new JsonResponse($account);
     }
 
     /**

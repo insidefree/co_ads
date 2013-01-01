@@ -17,13 +17,9 @@ class ViewController extends AppController
      */
     public function indexAction()
     {
-        $service = $this->getService();
+        $adUnit = $this->getAdUnit();
 
-        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
-
-        $adUnit = $adUnits->items[0];
-
-        $code = $service->accounts_adunits->getAdCode($this->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
+        $code = $this->getService()->accounts_adunits->getAdCode($this->getUserDocument()->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
 
         return array('code' => $code->getAdCode());
     }

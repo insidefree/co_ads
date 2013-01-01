@@ -3,8 +3,12 @@
 /* Settings Controller */
 function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
     $scope.adUnit = adUnit;
-    
+
     $scope.user = user;
+
+    $scope.connected = function() {
+        return $scope.user.accountId !== null;
+    };
 
     $scope.fontFamily = ['ARIAL', 'TIMES', 'VERDANA' ];
 
@@ -19,10 +23,16 @@ function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
 
     $scope.authenticate = function() {
         $window.open(Router('authenticate'), 'authenticate', 'height=600, width=1000');
-    }
+    };
+
+    $scope.disconnect = function() {
+        $http.post(Router('disconnect')).success(function() {
+            $window.location.reload();
+        });
+    };
 }
 
-SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit'];
+SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit', 'user'];
 
 SettingsCtrl.resolve = {
     /**
