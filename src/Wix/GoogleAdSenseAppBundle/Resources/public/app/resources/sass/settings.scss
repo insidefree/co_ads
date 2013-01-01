@@ -167,3 +167,19 @@ ul { list-style: none; padding: 0; margin: 0; }
 	}
 }
 
+.settings_type {
+	& > div {
+		width: 100%;
+		display:table; }
+	ul {
+	    display:table-cell;
+	    vertical-align:middle;
+		padding-top: 10px;
+		border-top: 1px solid #ccc; }
+	li {
+		@include inline-block(32%,auto,center,auto,auto);
+		label {
+			margin: 10px 0;
+			display: block;
+			width: 100%; } }
+}
