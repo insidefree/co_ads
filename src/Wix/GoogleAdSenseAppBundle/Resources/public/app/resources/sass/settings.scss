@@ -59,7 +59,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .connect {
 	position: relative;
 	height: 100%;
-	width: 377px;
+	width: 420px;
 	padding: $connect_paddingTop 0 $connect_paddingBottom $connect_paddingLeft;
 	@include box-sizing("border-box");
 	p {
@@ -247,7 +247,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 			position: absolute; }
 		label:hover { background: #eee; }
 		input:checked + label { background: #bee5ff; }
-		input:checked + label:before { border-color: #fff; }
+		input:checked + label:before { background: none; border-color: #fff; }
 		.slight:before { @include border-radius(5px 0 0 0); }
 		.round:before { @include border-radius(10px 0 0 0); }
 	}
