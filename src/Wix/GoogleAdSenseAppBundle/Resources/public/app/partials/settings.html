@@ -19,26 +19,26 @@
     </div>
 
     <!-- accordion -->
-    <div data-ui-accordion data-ui-height-style="fill" data-ui-header="div > h2">
+    <div data-ui-accordion data-ui-height-style="auto" data-ui-header="div > h2">
         <!-- type settings -->
         <div class="box_style clearfix">
             <h2 class="box_title">Type</h2>
             <div>
                 <ul>
                     <li class="text">
-						<img src="images/settings/ge/ge_type_text.png" alt="">
+						<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
 						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text" name="BannerType" id="TypeText"/>
 						<label for="TypeText">Text</label>
                     </li>
                     <li class="image">
-						<img src="images/settings/ge/ge_type_image.png" alt="">
+						<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
 						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Image" name="BannerType" id="TypeImage"/>
-						<label for="TypeImage">Text</label>
+						<label for="TypeImage">Image</label>
                     </li>
-                    <img src="images/settings/ge/ge_type_both.png" alt="">
-						<img src="" alt="">
+                    <li>
+						<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
 						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerType" id="TypeBoth"/>
-						<label for="TypeBoth">Text</label>
+						<label for="TypeBoth">Text And Image</label>
                     </li>
                 </ul>
             </div>
@@ -90,64 +90,59 @@
 
         <!-- style settings -->
         <div class="box_style clearfix">
-            <h2 class="box_title">Style</h2>
+            <h2 class="box_title">Settings</h2>
             <div>
-                <ul>
-                    <li class="style_setting">
-                        <div>
-                            <div>
-                                <label for="">Fonts</label>
-                                <select ng-model="adUnit.customStyle.font.family" ng-options="font for font in fontTypes"></select>
-                            </div>
-                            <div>
-                                <label for="">Size</label>
-                                <select ng-model="adUnit.customStyle.font.size" ng-options="font for font in fontSizes"></select>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="style_setting">
-                        <div class="color">
-                            <div>
-                                <label class="colorPicker_label" for="">Background Color</label>
-                                <input data-ng-model="adUnit.customStyle.colors.background" type="text" data-ui-colorpicker />
-                            </div>
-                        </div>
-                    </li>
-                    <li class="style_setting">
-                        <div class="color">
-                            <div>
-                                <label class="colorPicker_label" for="">Title</label>
-                                <input data-ng-model="adUnit.customStyle.colors.title" type="text" data-ui-colorpicker />
-                            </div>
-                        </div>
-                    </li>
-                    <li class="style_setting">
-                        <div class="color">
-                            <div>
-                                <label class="colorPicker_label" for="">Text</label>
-                                <input data-ng-model="adUnit.customStyle.colors.text" type="text" data-ui-colorpicker />
-                            </div>
-                        </div>
-                    </li>
-                    <li class="style_setting">
-                        <div class="color">
-                            <div>
-                                <label class="colorPicker_label" for="">URL</label>
-                                <input data-ng-model="adUnit.customStyle.colors.url" type="text" data-ui-colorpicker />
-                            </div>
-                        </div>
-                    </li>
-                    <li class="style_setting">
-                        <div class="color">
-                            <div>
-                                <label class="colorPicker_label" for="">Border</label>
-                                <input data-ng-model="adUnit.customStyle.colors.border" type="text" data-ui-colorpicker />
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
+	            <ul>
+	                <li class="style_setting">
+	                    <label for="font-type">Font</label>
+						<select data-placeholder="Font-type" id="font-type">
+							<option value="verdena">Verdena</option>
+							<option value="arial">Arial</option>
+							<option value="roman">Roman</option>
+						</select>
+	                    <label for="font-size">Size</label>
+						<select data-placeholder="Font-size" id="font-size">
+							<option value="small">Small</option>
+							<option value="medium">Medium</option>
+							<option value="large">Large</option>
+							<option value="extra">Extra</option>
+						</select>
+	                </li>
+	                <li class="style_setting">
+	                    <div class="color">
+	                        <label class="colorPicker_label" for="">Background color</label>
+	                        <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+	                    </div>
+	                    <div class="opacity">
+	                        <input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />
+	                        <label for="opacity">Transparent</label>
+	                    </div>
+	                </li>
+	                <li class="style_setting">
+	                    <label class="colorPicker_label" for="">Title</label>
+	                    <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+	                </li>
+	                <li class="style_setting">
+	                    <label class="colorPicker_label" for="">Text</label>
+	                    <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+	                </li>
+	                <li class="style_setting">
+	                    <label class="colorPicker_label" for="">URL</label>
+	                    <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+	                </li>
+	                <li class="style_setting">
+	                    <div class="color">
+	                        <label class="colorPicker_label" for="">Border</label>
+	                        <input data-ng-model="user.backgroundColor" type="text" data-ui-colorpicker />
+	                    </div>
+	                    <div class="opacity">
+	                        <input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />
+	                        <label for="opacity">Transparent</label>
+	                    </div>
+	                </li>
+	            </ul>
+        	</div>
+    	</div>
     </div>
 
     <!-- loader -->
