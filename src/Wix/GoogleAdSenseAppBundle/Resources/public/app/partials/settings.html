@@ -4,14 +4,13 @@
         <a target="_blank" href="https://drive.google.com/start" id="logo">
             <img src="/bundles/wixgoogleadsenseapp/app/images/settings/logo.jpg" alt="Google Drive">
         </a>
-        <div data-ng-hide="user.connected" class="connect">
+        <div data-ng-hide="connected()" class="connect">
             <p class="description">App info text</p>
             <a data-ng-click="authenticate()" class="connect_button action_links">Connect Account</a>
             <p class="create_account">Don't have an account? <a target="_blank" href="https://drive.google.com/start">Create one</a>
         </div>
-        <div data-ng-show="user.connected" class="connect">
-            <p>You are now connected to: <span class="wix_blue">{{ about.user.displayName }}</span> Google account. <br/>Choose which document you'd like to appear on your site.</p>
-            <a data-bt-tooltip data-bt-placement="bottom" title="Notice that in order to display the document it's visibility should be set to 'Public on the web' or 'Anyone with a link'.">More info</a>
+        <div data-ng-show="connected()" class="connect">
+            <p>You are now connected to: <span class="wix_blue">{{ account.name }}</span> AdSense. </p>
             <p class="disconnect">
                 <a href="" data-ng-click="disconnect()">Disconnect Account</a>
             </p>

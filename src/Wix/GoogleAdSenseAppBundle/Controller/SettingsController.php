@@ -73,7 +73,23 @@ class SettingsController extends AppController
     {
         $user = $this->getUserDocument();
 
+        $user = $this->getSerializer()->normalize($user);
+
         return new JsonResponse($user);
+    }
+
+    /**
+     * @Route("/account", name="getAccount", options={"expose"=true})
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function getAccountAction()
+    {
+        $user = $this->getUserDocument();
+
+        $account = $this->getService()->accounts->get($user->getAccountId());
+
+        return new JsonResponse($account);
     }
 
     /**

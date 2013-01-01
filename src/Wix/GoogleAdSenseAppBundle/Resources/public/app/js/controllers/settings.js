@@ -1,10 +1,16 @@
 'use strict';
 
 /* Settings Controller */
-function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
+function SettingsCtrl($scope, $window, $http, Router, adUnit, user, account) {
     $scope.adUnit = adUnit;
-    
+
     $scope.user = user;
+
+    $scope.account = account;
+
+    $scope.connected = function() {
+        return $scope.user.accountId !== null;
+    };
 
     $scope.fontFamily = ['ARIAL', 'TIMES', 'VERDANA' ];
 
@@ -22,7 +28,7 @@ function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
     }
 }
 
-SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit'];
+SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit', 'user', 'account'];
 
 SettingsCtrl.resolve = {
     /**
@@ -41,6 +47,15 @@ SettingsCtrl.resolve = {
         var dfd = $q.defer();
 
         $http.get(Router('getUser')).success(function(response) {
+            dfd.resolve(response);
+        });
+
+        return dfd.promise;
+    }],
+    account: ['$http', '$q', 'Router', function($http, $q, Router) {
+        var dfd = $q.defer();
+
+        $http.get(Router('getAccount')).success(function(response) {
             dfd.resolve(response);
         });
 
