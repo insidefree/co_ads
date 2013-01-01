@@ -164,11 +164,13 @@ ul { list-style: none; padding: 0; margin: 0; }
 			margin-left: -5px;
 			top: -8px; }
 		.ui-slider-range { background: none;}
-		&.ui-slider-disabled { @include opacity(50); }
-	}
+		&.ui-slider-disabled { @include opacity(50); } }
+}
 
-	.settings_layout,
-	.settings_type {
+.settings_layout {
+
+	.layouts,
+	.types {
 		padding-top: 10px;
 		border-top: 1px solid #ccc;
 		li {
@@ -180,7 +182,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 				width: 100%; } }
 	}
 
-	.settings_layout {
+	.layouts {
 		li {
 			position: relative;
 			margin-top: 160px; }
@@ -205,17 +207,19 @@ ul { list-style: none; padding: 0; margin: 0; }
 			line-height: 29px;
 			position: absolute;
 			font-size: 14px; }
-		ul { text-align: center; font-size: 0; }
-		li { @include inline-block(25px,25px,auto,auto,auto); }
-		li > a {
+		& > div { text-align: center; font-size: 0; }
+		label {
+			@include inline-block(25px,25px,auto,auto,auto);
 			border: 2px solid #bee5ff;
+			vertical-align: top;
+			float: none;
+			margin: 0;
 			position: relative;
 			color: transparent;
-			height: 100%;
-			overflow: hidden;
-			display: block; }
-		li > a:before {
+			overflow: hidden; }
+		label:before {
 			content: "";
+			background: none;
 			height: 10px;
 			width: 10px;
 			border: 3px solid #ccc;
@@ -224,10 +228,10 @@ ul { list-style: none; padding: 0; margin: 0; }
 			top: 7px;
 			margin-left: -5px;
 			position: absolute; }
-		li > a:hover { background: #eee; }
-		li > a.active { background: #bee5ff; }
-		li > a.active:before { border-color: #fff; }
-		.slight a:before { @include border-radius(5px 0 0 0); }
-		.round a:before { @include border-radius(10px 0 0 0); }
+		label:hover { background: #eee; }
+		input:checked + label { background: #bee5ff; }
+		input:checked + label:before { border-color: #fff; }
+		.slight:before { @include border-radius(5px 0 0 0); }
+		.round:before { @include border-radius(10px 0 0 0); }
 	}
 }

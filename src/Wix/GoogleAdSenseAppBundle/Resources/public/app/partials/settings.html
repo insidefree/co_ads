@@ -20,9 +20,9 @@
     <!-- accordion -->
     <div data-ui-accordion data-ui-height-style="auto" data-ui-header="div > h2">
         <!-- type settings -->
-        <div class="box_style clearfix">
+        <div class="box_style clearfix settings_layout">
             <h2 class="box_title">Type</h2>
-            <ul class="settings_type">
+            <ul class="types">
                 <li>
 					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
 					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT" name="BannerType" id="TypeText"/>
@@ -42,10 +42,10 @@
         </div>
 
         <!-- layout settings -->
-        <div class="box_style clearfix">
+        <div class="box_style clearfix settings_layout">
             <h2 class="box_title">Layout</h2>
             <div>
-	            <ul class="settings_layout">
+	            <ul class="layouts">
 	                <li class="rectangle">
 						<input data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_300_250" name="BannerLayout" id="StyleRect"/>
 						<label for="StyleRect">Rectangular</label>
@@ -61,11 +61,14 @@
 	            </ul>
 	            <div class="cornder_radius">
 	            	<h3>Corner style</h3>
-		            <ul>
-		            	<li class="straight"><a class="active" href="#">90 degrees</a></li>
-		            	<li class="slight"><a href="#">Slightly Rounded</a></li>
-		            	<li class="round"><a href="#">Rounded</a></li>
-		            </ul>
+	            	<div>
+						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerLayout" id="LayoutBanner"/>
+						<label class="straight" for="LayoutBanner">90 degrees</label>
+						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerLayout" id="LayoutBanner"/>
+						<label class="slight" for="LayoutBanner">Slightly Rounded</label>
+						<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="Text and image" name="BannerLayout" id="LayoutBanner"/>
+						<label class="round" for="LayoutBanner">Rounded</label>
+	            	</div>
 		        </div>
 	        </div>
         </div>
