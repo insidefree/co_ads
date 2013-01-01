@@ -47,74 +47,14 @@ class User
     protected $updatedAt;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Token")
+     * @MongoDB\String
      */
-    protected $token;
+    protected $accountId;
 
     /**
      * @MongoDB\String
      */
-    protected $type = 'text';
-
-    /**
-     * @MongoDB\Int
-     */
-    protected $width = 400;
-
-    /**
-     * @MongoDB\Int
-     */
-    protected $height = 400;
-
-    /**
-     * @MongoDB\Int
-     */
-    protected $cornerStyle = 0;
-
-    /**
-     * @MongoDB\String
-     */
-    protected $fontStyle = 'Verdana';
-
-    /**
-     * @MongoDB\Int
-     */
-    protected $fontSize = 12;
-
-    /**
-     * @MongoDB\String;
-     */
-    protected $backgroundColor = '#ffffff';
-
-    /**
-     * @MongoDB\Boolean
-     */
-    protected $backgroundTransparent = false;
-
-    /**
-     * @MongoDB\String
-     */
-    protected $titleColor = '#cccccc';
-
-    /**
-     * @MongoDB\String
-     */
-    protected $textColor = '#cccccc';
-
-    /**
-     * @MongoDB\String
-     */
-    protected $urlColor = '#cccccc';
-
-    /**
-     * @MongoDB\String
-     */
-    protected $borderColor = '#cccccc';
-
-    /**
-     * @MongoDB\Boolean
-     */
-    protected $borderTransparent = false;
+    protected $associationId;
 
     /**
      * @param $instanceId
@@ -129,45 +69,21 @@ class User
     }
 
     /**
-     * @param $token
-     * @return User
-     */
-    public function setToken($token) {
-        $this->token = $token;
-        return $this;
-    }
-
-    /**
-     * @return Token
-     */
-    public function getToken() {
-        return $this->token;
-    }
-
-    /**
      * @return bool
      */
     public function connected()
     {
-        return $this->token !== null;
+        return $this->accountId !== null;
     }
 
     /**
-     * @return mixed
-     */
-    public function getInstanceId()
-    {
-        return $this->instanceId;
-    }
-
-    /**
-     * Get componentId
+     * Get id
      *
-     * @return custom_id $componentId
+     * @return id $id
      */
-    public function getComponentId()
+    public function getId()
     {
-        return $this->componentId;
+        return $this->id;
     }
 
     /**
@@ -237,16 +153,6 @@ class User
     }
 
     /**
-     * Get id
-     *
-     * @return id $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Set instanceId
      *
      * @param string $instanceId
@@ -256,6 +162,16 @@ class User
     {
         $this->instanceId = $instanceId;
         return $this;
+    }
+
+    /**
+     * Get instanceId
+     *
+     * @return $instanceId
+     */
+    public function getInstanceId()
+    {
+        return $this->instanceId;
     }
 
     /**
@@ -271,288 +187,56 @@ class User
     }
 
     /**
-     * Set type
+     * Get componentId
      *
-     * @param string $type
+     * @return $componentId
+     */
+    public function getComponentId()
+    {
+        return $this->componentId;
+    }
+
+    /**
+     * Set accountId
+     *
+     * @param string $accountId
      * @return \User
      */
-    public function setType($type)
+    public function setAccountId($accountId)
     {
-        $this->type = $type;
+        $this->accountId = $accountId;
         return $this;
     }
 
     /**
-     * Get type
+     * Get accountId
      *
-     * @return string $type
+     * @return string $accountId
      */
-    public function getType()
+    public function getAccountId()
     {
-        return $this->type;
+        return $this->accountId;
     }
 
     /**
-     * Set width
+     * Set associationId
      *
-     * @param int $width
+     * @param string $associationId
      * @return \User
      */
-    public function setWidth($width)
+    public function setAssociationIdd($associationId)
     {
-        $this->width = $width;
+        $this->associationId = $associationId;
         return $this;
     }
 
     /**
-     * Get width
+     * Get associationId
      *
-     * @return int $width
+     * @return string $associationId
      */
-    public function getWidth()
+    public function getAssociationId()
     {
-        return $this->width;
-    }
-
-    /**
-     * Set height
-     *
-     * @param int $height
-     * @return \User
-     */
-    public function setHeight($height)
-    {
-        $this->height = $height;
-        return $this;
-    }
-
-    /**
-     * Get height
-     *
-     * @return int $height
-     */
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    /**
-     * Set cornerStyle
-     *
-     * @param int $cornerStyle
-     * @return \User
-     */
-    public function setCornerStyle($cornerStyle)
-    {
-        $this->cornerStyle = $cornerStyle;
-        return $this;
-    }
-
-    /**
-     * Get cornerStyle
-     *
-     * @return int $cornerStyle
-     */
-    public function getCornerStyle()
-    {
-        return $this->cornerStyle;
-    }
-
-    /**
-     * Set fontStyle
-     *
-     * @param string $fontStyle
-     * @return \User
-     */
-    public function setFontStyle($fontStyle)
-    {
-        $this->fontStyle = $fontStyle;
-        return $this;
-    }
-
-    /**
-     * Get fontStyle
-     *
-     * @return string $fontStyle
-     */
-    public function getFontStyle()
-    {
-        return $this->fontStyle;
-    }
-
-    /**
-     * Set fontSize
-     *
-     * @param int $fontSize
-     * @return \User
-     */
-    public function setFontSize($fontSize)
-    {
-        $this->fontSize = $fontSize;
-        return $this;
-    }
-
-    /**
-     * Get fontSize
-     *
-     * @return int $fontSize
-     */
-    public function getFontSize()
-    {
-        return $this->fontSize;
-    }
-
-    /**
-     * Set backgroundColor
-     *
-     * @param string $backgroundColor
-     * @return \User
-     */
-    public function setBackgroundColor($backgroundColor)
-    {
-        $this->backgroundColor = $backgroundColor;
-        return $this;
-    }
-
-    /**
-     * Get backgroundColor
-     *
-     * @return string $backgroundColor
-     */
-    public function getBackgroundColor()
-    {
-        return $this->backgroundColor;
-    }
-
-    /**
-     * Set backgroundTransparent
-     *
-     * @param boolean $backgroundTransparent
-     * @return \User
-     */
-    public function setBackgroundTransparent($backgroundTransparent)
-    {
-        $this->backgroundTransparent = $backgroundTransparent;
-        return $this;
-    }
-
-    /**
-     * Get backgroundTransparent
-     *
-     * @return boolean $backgroundTransparent
-     */
-    public function getBackgroundTransparent()
-    {
-        return $this->backgroundTransparent;
-    }
-
-    /**
-     * Set titleColor
-     *
-     * @param string $titleColor
-     * @return \User
-     */
-    public function setTitleColor($titleColor)
-    {
-        $this->titleColor = $titleColor;
-        return $this;
-    }
-
-    /**
-     * Get titleColor
-     *
-     * @return string $titleColor
-     */
-    public function getTitleColor()
-    {
-        return $this->titleColor;
-    }
-
-    /**
-     * Set textColor
-     *
-     * @param string $textColor
-     * @return \User
-     */
-    public function setTextColor($textColor)
-    {
-        $this->textColor = $textColor;
-        return $this;
-    }
-
-    /**
-     * Get textColor
-     *
-     * @return string $textColor
-     */
-    public function getTextColor()
-    {
-        return $this->textColor;
-    }
-
-    /**
-     * Set urlColor
-     *
-     * @param string $urlColor
-     * @return \User
-     */
-    public function setUrlColor($urlColor)
-    {
-        $this->urlColor = $urlColor;
-        return $this;
-    }
-
-    /**
-     * Get urlColor
-     *
-     * @return string $urlColor
-     */
-    public function getUrlColor()
-    {
-        return $this->urlColor;
-    }
-
-    /**
-     * Set borderColor
-     *
-     * @param string $borderColor
-     * @return \User
-     */
-    public function setBorderColor($borderColor)
-    {
-        $this->borderColor = $borderColor;
-        return $this;
-    }
-
-    /**
-     * Get borderColor
-     *
-     * @return string $borderColor
-     */
-    public function getBorderColor()
-    {
-        return $this->borderColor;
-    }
-
-    /**
-     * Set borderTransparent
-     *
-     * @param boolean $borderTransparent
-     * @return \User
-     */
-    public function setBorderTransparent($borderTransparent)
-    {
-        $this->borderTransparent = $borderTransparent;
-        return $this;
-    }
-
-    /**
-     * Get borderTransparent
-     *
-     * @return boolean $borderTransparent
-     */
-    public function getBorderTransparent()
-    {
-        return $this->borderTransparent;
+        return $this->associationId;
     }
 }

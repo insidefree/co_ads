@@ -40,40 +40,6 @@ class AppController extends Controller
     private $manager;
 
     /**
-     * @return string
-     */
-    protected function getAccountId()
-    {
-        return 'pub-4373694264490992';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getClientId()
-    {
-        return 'ca-pub-4373694264490992';
-    }
-
-    /**
-     * @return Instance
-     * @throws \Exception
-     */
-    protected function getInstance()
-    {
-        if ($this->instance === null) {
-            $instance = $this->getRequest()->query->get('instance');
-            if ($instance === null) {
-                throw new \Exception('Missing instance query string parameter.');
-            }
-
-            $this->instance = $this->get('wix_bridge')->parse($instance);
-        }
-
-        return $this->instance;
-    }
-
-    /**
      * @return \Google_Client
      */
     protected function getClient()
@@ -130,16 +96,21 @@ class AppController extends Controller
     }
 
     /**
-     * @param array $params
-     * @return array
+     * @return Instance
+     * @throws \Exception
      */
-    protected function removeInstanceParams(array $params)
+    protected function getInstance()
     {
-        unset($params['instance']);
-        unset($params['compId']);
-        unset($params['origCompId']);
+        if ($this->instance === null) {
+            $instance = $this->getRequest()->query->get('instance');
+            if ($instance === null) {
+                throw new \Exception('Missing instance query string parameter.');
+            }
 
-        return $params;
+            $this->instance = $this->get('wix_bridge')->parse($instance);
+        }
+
+        return $this->instance;
     }
 
     /**
@@ -166,5 +137,48 @@ class AppController extends Controller
         }
 
         return $componentId;
+    }
+
+    /**
+     * @return User
+     */
+    protected function getUserDocument()
+    {
+        $componentId = $this->getComponentId();
+        $instanceId = $this->getInstance()->getInstanceId();
+
+        $user = $this->getRepository('WixGoogleAdSenseAppBundle:User')
+          ->findOneBy(array(
+                  'instanceId' => $instanceId,
+                  'componentId' => (string) $componentId,
+              ));
+
+        if ($user === null) {
+            $user = new User($instanceId, $componentId);
+        }
+
+        return $user;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getAccountId()
+    {
+        $user = $this->getUserDocument();
+
+        if ($user->connected()) {
+            return $user->getAccountId();
+        }
+
+        return 'pub-4373694264490992';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getAfcClientId()
+    {
+        return 'ca-pub-4373694264490992';
     }
 }

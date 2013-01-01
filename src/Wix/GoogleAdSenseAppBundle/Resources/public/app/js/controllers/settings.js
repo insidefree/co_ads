@@ -4,7 +4,9 @@
 function SettingsCtrl($scope, $window, $http, Router, adUnit) {
     $scope.adUnit = adUnit;
 
-    console.log(adUnit);
+    $scope.fontTypes = ['ARIAL', 'TIMES', 'VERDANA' ];
+
+    $scope.fontSizes = ['SMALL', 'MEDIUM', 'LARGE'];
 
     $scope.$watch('adUnit', function(adUnit, oldAdUnit) {
         if (adUnit === oldAdUnit) {

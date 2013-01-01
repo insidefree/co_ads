@@ -14,11 +14,13 @@ use Wix\GoogleAdSenseAppBundle\Exceptions\MissingTokenException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\MissingParametersException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\MissingAfcAdClientException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\AssociationRejectedException;
+use Wix\GoogleAdSenseAppBundle\Exceptions\InvalidAssociationIdException;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Wix\GoogleAdSenseAppBundle\Document\User;
 
 /**
  * @Route("/settings")
@@ -34,13 +36,7 @@ class SettingsController extends AppController
     {
         $service = $this->getService();
 
-        $adClient = $this->getAfcAdClient($service->accounts_adclients->listAccountsAdclients($this->getAccountId()));
-
-        if ($adClient === null) {
-            throw new MissingAfcAdClientException('could not find an ad client with product code of: AFC (adsense for content)');
-        }
-
-        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $adClient->getId());
+        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
 
         if ($adUnits->getItems() === 0) {
 //        $adUnit = $this->getDefaultAdUnit();
@@ -59,7 +55,7 @@ class SettingsController extends AppController
     {
         $adUnit = new \Google_AdUnit();
 
-        $adUnit->setName(sprintf('Wix ad unit #%s', $this->getInstance()->getInstanceId()));
+        $adUnit->setName(sprintf('Wix ad unit for user %s #%s', $this->getInstance()->getInstanceId(), $this->getComponentId()));
 
         $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
         $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
@@ -80,28 +76,12 @@ class SettingsController extends AppController
         $customStyle->setColors($colors);
         $customStyle->setCorners('SQUARE');
         $font = new \Google_AdStyleFont();
-        $font->setFamily('ACCOUNT_DEFAULT_FAMILY');
-        $font->setSize('ACCOUNT_DEFAULT_SIZE');
+        $font->setFamily('Arial');
+        $font->setSize('Medium');
         $customStyle->setFont($font);
         $adUnit->setCustomStyle($customStyle);
 
         return $adUnit;
-    }
-
-    /**
-     * @param $clients
-     * @internal param $adclients
-     * @return null
-     */
-    protected function getAfcAdClient($clients)
-    {
-        foreach($clients->getItems() as $client) {
-            if ($client->getProductCode() === 'AFC') {
-                return $client;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -112,7 +92,13 @@ class SettingsController extends AppController
     public function authenticateAction()
     {
         $service = $this->getService();
-        $session = $service->associationsessions->start('AFC', 'http://www.just.a.test.com');
+        $session = $service->associationsessions->start('AFC', 'http://local.adsense.apps.wix.com/app_dev.php/view/');
+
+        $user = $this->getUserDocument();
+        $user->setAssociationIdd($session->getId());
+
+        $this->getDocumentManager()->persist($user);
+        $this->getDocumentManager()->flush();
 
         return new RedirectResponse($session->getRedirectUrl());
     }
@@ -126,18 +112,7 @@ class SettingsController extends AppController
     {
         $service = $this->getService();
 
-        $adClient = $this->getAfcAdClient($service->accounts_adclients->listAccountsAdclients($this->getAccountId()));
-
-        if ($adClient === null) {
-            throw new MissingAfcAdClientException('could not find an ad client with product code of: AFC (adsense for content)');
-        }
-
-        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $adClient->getId());
-
-        if ($adUnits->getItems() === 0) {
-//        $adUnit = $this->getDefaultAdUnit(sprintf('Wix ad unit #%s', $this->getInstance()->getInstanceId()));
-//        $result = $service->accounts_adunits->insert($this->getAccountId(), $client->getId(), $adUnit);
-        }
+        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
 
         $adUnit = $adUnits->getItems()[0];
 
@@ -163,17 +138,21 @@ class SettingsController extends AppController
         $service = $this->getService();
         $serializer = $this->getSerializer();
 
-        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getClientId());
+        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
         $adUnit = $adUnits->getItems()[0];
 
         // todo build these objects in a better way, maybe by writing a normalizer for the serializer component
         $adUnit->getContentAdsSettings()->setType($data->contentAdsSettings->type);
         $adUnit->getContentAdsSettings()->setSize($data->contentAdsSettings->size);
         $adUnit->getCustomStyle()->setCorners($data->customStyle->corners);
-        $adUnit->getCustomStyle()->setColors($serializer->deserialize(json_encode($data->customStyle->colors), '\Google_AdStyleColors', 'json'));
-        $adUnit->getCustomStyle()->setFont($serializer->deserialize(json_encode($data->customStyle->font), '\Google_AdStyleFont', 'json'));
+        $adUnit->getCustomStyle()->setColors(
+            $serializer->deserialize(json_encode($data->customStyle->colors), '\Google_AdStyleColors', 'json')
+        );
+        $adUnit->getCustomStyle()->setFont(
+            $serializer->deserialize(json_encode($data->customStyle->font), '\Google_AdStyleFont', 'json')
+        );
 
-        $result = $service->accounts_adunits->update($this->getAccountId(), $this->getClientId(), $adUnit);
+        $result = $service->accounts_adunits->update($this->getAccountId(), $this->getAfcClientId(), $adUnit);
 
         return new JsonResponse($result);
     }
@@ -185,12 +164,7 @@ class SettingsController extends AppController
      */
     public function redirectAction()
     {
-       if ($this->getInstance()->isOwner() === false) {
-            throw new PermissionsDeniedException('access denied.');
-        }
-
-//        $token = $this->getRequest()->query->get('token');
-        $token = 'AKH2dBpeo9YghIlHGrVFLa9zQcXtuFe8ahZMgn_00rFinv2rggtKl3VLm0QXZ753Mphpwc-OCcFZBZYyl1YOzF3_0aXb8XZI52J5nNt0fmX1X5heEDEnn4B3uIQLf31qNTnJB-EpGKWmyGlaLBqAvB23sAYbe3cn422egvyzw1PX8Cxg1-2paCPx4HItQoNJFRLbtI9bdhsC4NihU1CYIgTkzmp2PYJf_Q';
+        $token = $this->getRequest()->query->get('token');
 
         if ($token === null) {
             throw new MissingTokenException('could not find a token query string parameter.');
@@ -203,7 +177,19 @@ class SettingsController extends AppController
             throw new AssociationRejectedException('the association was rejected.');
         }
 
-        // do stuff with the association
+        $user = $this->getRepository('WixGoogleAdSenseAppBundle:User')
+          ->findOneBy(array('associationId' => $association->getId()));
+
+        if ($user === null) {
+            throw new InvalidAssociationIdException('could not find a matching association Id in the database.');
+        }
+
+        $user->setAccountId($association->getAccountId());
+
+        $this->getDocumentManager()->persist($user);
+        $this->getDocumentManager()->flush();
+
+        return array();
     }
 
     /**

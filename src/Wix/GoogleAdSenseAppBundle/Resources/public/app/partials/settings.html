@@ -52,20 +52,8 @@
                     <li>
                         <div class="video">
                             <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="VIDEO" />
-                                <label for="">Video</label>
-                            </div>
-                            <div>
-                                <img src="" alt="">
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="links">
-                            <div>
-                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="LINKS" />
-                                <label for="">Links</label>
+                                <input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT_IMAGE" />
+                                <label for="">Text and image</label>
                             </div>
                             <div>
                                 <img src="" alt="">
@@ -125,6 +113,18 @@
             <h2 class="box_title">Style</h2>
             <div>
                 <ul>
+                    <li class="style_setting">
+                        <div>
+                            <div>
+                                <label for="">Fonts</label>
+                                <select ng-model="adUnit.customStyle.font.family" ng-options="font for font in fontTypes"></select>
+                            </div>
+                            <div>
+                                <label for="">Size</label>
+                                <select ng-model="adUnit.customStyle.font.size" ng-options="font for font in fontSizes"></select>
+                            </div>
+                        </div>
+                    </li>
                     <li class="style_setting">
                         <div class="color">
                             <div>

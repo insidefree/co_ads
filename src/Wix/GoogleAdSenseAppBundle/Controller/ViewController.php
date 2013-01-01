@@ -19,16 +19,11 @@ class ViewController extends AppController
     {
         $service = $this->getService();
 
-        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getClientId());
-
-        if ($adUnits->getItems() === 0) {
-//        $adUnit = $this->getDefaultAdUnit();
-//        $result = $service->accounts_adunits->insert($this->getAccountId(), $client->getId(), $adUnit);
-        }
+        $adUnits = $service->accounts_adunits->listAccountsAdunits($this->getAccountId(), $this->getAfcClientId());
 
         $adUnit = $adUnits->getItems()[0];
 
-        $code = $service->accounts_adunits->getAdCode($this->getAccountId(), $this->getClientId(), $adUnit->getId());
+        $code = $service->accounts_adunits->getAdCode($this->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
 
         return array('code' => $code->getAdCode());
     }
