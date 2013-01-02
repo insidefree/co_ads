@@ -51,12 +51,11 @@ angular.module('adSenseApp.directives', ['ajaxEvents'])
      */
     .directive('chosen', [function() {
         return {
-            priority: 0,
             require: '?ngModel',
             link: function(scope, elm, attr) {
                 setTimeout(function() {
                     elm.chosen({
-                        disable_search: true
+                        disable_search: attr.disableSearch || true
                     });
                 }, 1);
 
