@@ -1,7 +1,32 @@
 'use strict';
 
 /* Directives */
-angular.module('adSenseApp.directives', [])
+angular.module('adSenseApp.directives', ['ajaxEvents'])
+    /**
+     * ajax loader directive
+     */
+    .directive('ajaxLoader', ['$rootScope', function ($rootScope) {
+        return {
+            restrict: 'C',
+            link: function(scope, elm) {
+                elm.hide();
+
+                $rootScope.$on('ajaxStart', function() {
+                    elm.fadeIn('fast');
+                });
+
+                $rootScope.$on('ajaxSuccess', function() {
+                    elm.fadeOut('fast');
+                });
+
+                $rootScope.$on('ajaxFailure', function() {
+                    elm.fadeOut('fast');
+                });
+
+                $rootScope.$on();
+            }
+        };
+    }])
     /**
      * loader directive.
      */

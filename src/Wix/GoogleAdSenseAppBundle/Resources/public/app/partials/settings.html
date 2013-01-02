@@ -21,7 +21,7 @@
     <div data-ui-accordion data-ui-height-style="auto" data-ui-header="div > h2">
         <!-- type settings -->
         <div class="box_style clearfix settings_layout">
-            <h2 class="box_title">Type</h2>
+            <h2 class="box_title {{ adUnit.contentAdsSettings.type|lowercase }}">Type</h2>
             <ul class="types">
                 <li>
 					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
@@ -62,13 +62,13 @@
 	            <div class="cornder_radius">
 	            	<h3>Corner style</h3>
 	            	<div>
-						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="SQUARE" name="BannerLayout" id="Square"/>
+						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="SQUARE" id="Square" />
 						<label class="straight" for="Square">Square</label>
 
-						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="ROUNDED" name="BannerLayout" id="Rounded"/>
+						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="ROUNDED" id="Rounded" />
 						<label class="slight" for="Rounded">Rounded</label>
 
-						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="VERY_ROUNDED" name="BannerLayout" id="VeryRounded"/>
+						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="VERY_ROUNDED" id="VeryRounded" />
 						<label class="round" for="VeryRounded">Very Rounded</label>
 	            	</div>
 		        </div>
@@ -77,54 +77,59 @@
 
         <!-- style settings -->
         <div class="box_style clearfix">
-            <h2 class="box_title">Settings</h2>
+            <h2 class="box_title">Style</h2>
             <div>
-	            <ul>
-	                <li class="style_setting">
-	                    <label for="font-type">Font</label>
-						<select data-ng-model="adUnit.customStyle.font.family" data-ng-options="font for font in fontFamily" id="font-type"></select>
-	                    <label for="font-size">Size</label>
-						<select data-ng-model="adUnit.customStyle.font.size" data-ng-options="font for font in fontSize" id="font-size"></select>
-	                </li>
-	                <li class="style_setting">
-	                    <div class="color">
-	                        <label class="colorPicker_label" for="">Background color</label>
-	                        <input data-ng-model="adUnit.customStyle.colors.background" type="text" data-ui-colorpicker />
-	                    </div>
-	                    <!--<div class="opacity">-->
-	                        <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
-	                        <!--<label for="opacity">Transparent</label>-->
-	                    <!--</div>-->
-	                </li>
-	                <li class="style_setting">
-	                    <label class="colorPicker_label" for="">Title</label>
-	                    <input data-ng-model="adUnit.customStyle.colors.title" type="text" data-ui-colorpicker />
-	                </li>
-	                <li class="style_setting">
-	                    <label class="colorPicker_label" for="">Text</label>
-	                    <input data-ng-model="adUnit.customStyle.colors.text" type="text" data-ui-colorpicker />
-	                </li>
-	                <li class="style_setting">
-	                    <label class="colorPicker_label" for="">URL</label>
-	                    <input data-ng-model="adUnit.customStyle.colors.url" type="text" data-ui-colorpicker />
-	                </li>
-	                <li class="style_setting">
-	                    <div class="color">
-	                        <label class="colorPicker_label" for="">Border</label>
-	                        <input data-ng-model="adUnit.customStyle.colors.border" type="text" data-ui-colorpicker />
-	                    </div>
-	                    <!--<div class="opacity">-->
-	                        <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
-	                        <!--<label for="opacity">Transparent</label>-->
-	                    <!--</div>-->
-	                </li>
-	            </ul>
-        	</div>
+                <div ng-hide="adUnit.contentAdsSettings.type == 'IMAGE'">
+                    <ul>
+                        <li class="style_setting">
+                            <label for="font-type">Font</label>
+                            <select data-ng-model="adUnit.customStyle.font.family" data-ng-options="font for font in fontFamily" id="font-type"></select>
+                            <label for="font-size">Size</label>
+                            <select data-ng-model="adUnit.customStyle.font.size" data-ng-options="font for font in fontSize" id="font-size"></select>
+                        </li>
+                        <li class="style_setting">
+                            <div class="color">
+                                <label class="colorPicker_label" for="">Background color</label>
+                                <input data-ng-model="adUnit.customStyle.colors.background" type="text" data-ui-colorpicker />
+                            </div>
+                            <!--<div class="opacity">-->
+                            <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
+                            <!--<label for="opacity">Transparent</label>-->
+                            <!--</div>-->
+                        </li>
+                        <li class="style_setting">
+                            <label class="colorPicker_label" for="">Title</label>
+                            <input data-ng-model="adUnit.customStyle.colors.title" type="text" data-ui-colorpicker />
+                        </li>
+                        <li class="style_setting">
+                            <label class="colorPicker_label" for="">Text</label>
+                            <input data-ng-model="adUnit.customStyle.colors.text" type="text" data-ui-colorpicker />
+                        </li>
+                        <li class="style_setting">
+                            <label class="colorPicker_label" for="">URL</label>
+                            <input data-ng-model="adUnit.customStyle.colors.url" type="text" data-ui-colorpicker />
+                        </li>
+                        <li class="style_setting">
+                            <div class="color">
+                                <label class="colorPicker_label" for="">Border</label>
+                                <input data-ng-model="adUnit.customStyle.colors.border" type="text" data-ui-colorpicker />
+                            </div>
+                            <!--<div class="opacity">-->
+                            <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
+                            <!--<label for="opacity">Transparent</label>-->
+                            <!--</div>-->
+                        </li>
+                    </ul>
+                </div>
+                <div ng-show="adUnit.contentAdsSettings.type == 'IMAGE'">
+                    Ad styles do not apply for these settings. Only ads of type Text or Text and Image can be styled.
+                </div>
+            </div>
     	</div>
     </div>
 
     <!-- loader -->
-    <div class="loader">
-        <img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_loader.gif" width="20" height="20" alt="loader"/>
+    <div class="ajax-loader">
+        <img src="/bundles/wixgoogleadsenseapp/app/images/loader.gif" width="20" height="20" alt="loader"/>
     </div>
 </div>
