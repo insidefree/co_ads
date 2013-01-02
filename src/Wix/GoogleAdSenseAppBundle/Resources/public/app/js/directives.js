@@ -33,7 +33,7 @@ angular.module('adSenseApp.directives', ['ajaxEvents'])
     .directive('loader', [function () {
         return {
             restrict: 'C',
-            link: function(scope, elm) {
+            link: function(scope, elm, attr) {
                 elm.hide();
 
                 scope.$on('$routeChangeStart', function() {
@@ -43,6 +43,28 @@ angular.module('adSenseApp.directives', ['ajaxEvents'])
                 scope.$on('$routeChangeSuccess', function() {
                     elm.fadeOut('fast');
                 });
+            }
+        };
+    }])
+    /**
+     * directive for the chosen plugin.
+     */
+    .directive('chosen', [function() {
+        return {
+            priority: 0,
+            require: '?ngModel',
+            link: function(scope, elm, attr) {
+                setTimeout(function() {
+                    elm.chosen({
+                        disable_search: true
+                    });
+                }, 1);
+
+                if (attr.ngModel) {
+                    scope.$watch(attr.ngModel, function() {
+                        elm.trigger('liszt:updated');
+                    });
+                }
             }
         };
     }])
