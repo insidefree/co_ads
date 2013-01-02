@@ -1,7 +1,7 @@
 'use strict';
 
 /* Settings Controller */
-function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
+function SettingsCtrl($scope, $window, $http, Router, WixSDK, QueryParams, adUnit, user) {
     $scope.adUnit = adUnit;
 
     $scope.user = user;
@@ -18,7 +18,10 @@ function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
         if (adUnit === oldAdUnit) {
             return;
         }
-        $http.post(Router('saveAdUnit'), adUnit);
+        $http.post(Router('saveAdUnit'), adUnit)
+            .success(function() {
+                WixSDK.refreshAppByCompIds(QueryParams.origCompId);
+            });
     }, true);
 
     $scope.authenticate = function() {
@@ -32,7 +35,7 @@ function SettingsCtrl($scope, $window, $http, Router, adUnit, user) {
     };
 }
 
-SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'adUnit', 'user'];
+SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user'];
 
 SettingsCtrl.resolve = {
     /**
