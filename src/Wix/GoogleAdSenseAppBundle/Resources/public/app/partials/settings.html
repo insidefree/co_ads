@@ -25,17 +25,17 @@
             <ul class="types">
                 <li>
 					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
-					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT" name="BannerType" id="TypeText"/>
+					<input data-ng-disabled="connected()" data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT" name="BannerType" id="TypeText"/>
 					<label for="TypeText">Text</label>
                 </li>
                 <li>
 					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
-					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="IMAGE" name="BannerType" id="TypeImage"/>
+					<input data-ng-disabled="connected()" data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="IMAGE" name="BannerType" id="TypeImage"/>
 					<label for="TypeImage">Image</label>
                 </li>
                 <li>
 					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
-					<input data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT_IMAGE" name="BannerType" id="TypeBoth"/>
+					<input data-ng-disabled="connected()" data-ng-model="adUnit.contentAdsSettings.type" type="radio" value="TEXT_IMAGE" name="BannerType" id="TypeBoth"/>
 					<label for="TypeBoth">Text And Image</label>
                 </li>
             </ul>
@@ -47,28 +47,28 @@
             <div>
 	            <ul class="layouts">
 	                <li class="rectangle">
-						<input data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_300_250" name="BannerLayout" id="StyleRect"/>
+						<input data-ng-disabled="connected()" data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_300_250" name="BannerLayout" id="StyleRect"/>
 						<label for="StyleRect">Rectangular</label>
 	                </li>
 	                <li class="scraper">
-						<input data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_120_600" name="BannerLayout" id="LayoutScraper"/>
+						<input data-ng-disabled="connected()" data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_120_600" name="BannerLayout" id="LayoutScraper"/>
 						<label for="LayoutScraper">Sky Scraper</label>
 	                </li>
 	                <li class="banner">
-						<input data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_468_60" name="BannerLayout" id="LayoutBanner"/>
+						<input data-ng-disabled="connected()" data-ng-model="adUnit.contentAdsSettings.size" type="radio" value="SIZE_468_60" name="BannerLayout" id="LayoutBanner"/>
 						<label for="LayoutBanner">Banner</label>
 	                </li>
 	            </ul>
 	            <div class="cornder_radius">
 	            	<h3>Corner style</h3>
 	            	<div>
-						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="SQUARE" id="Square" />
+						<input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.corners" type="radio" value="SQUARE" id="Square" />
 						<label class="straight" for="Square">Square</label>
 
-						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="ROUNDED" id="Rounded" />
+						<input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.corners" type="radio" value="ROUNDED" id="Rounded" />
 						<label class="slight" for="Rounded">Rounded</label>
 
-						<input data-ng-model="adUnit.customStyle.corners" type="radio" value="VERY_ROUNDED" id="VeryRounded" />
+						<input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.corners" type="radio" value="VERY_ROUNDED" id="VeryRounded" />
 						<label class="round" for="VeryRounded">Very Rounded</label>
 	            	</div>
 		        </div>
@@ -83,14 +83,14 @@
                     <ul>
                         <li class="style_setting">
                             <label for="font-type">Font</label>
-                            <select style="width: 100px;" data-chosen data-ng-model="adUnit.customStyle.font.family" data-ng-options="font for font in fontFamily" id="font-type"></select>
+                            <select data-ng-disabled="connected()" style="width: 100px;" data-chosen data-ng-model="adUnit.customStyle.font.family" data-ng-options="font for font in fontFamily" id="font-type"></select>
                             <label for="font-size">Size</label>
-                            <select style="width: 100px;" data-chosen data-ng-model="adUnit.customStyle.font.size" data-ng-options="font for font in fontSize" id="font-size"></select>
+                            <select data-ng-disabled="connected()" style="width: 100px;" data-chosen data-ng-model="adUnit.customStyle.font.size" data-ng-options="font for font in fontSize" id="font-size"></select>
                         </li>
                         <li class="style_setting">
                             <div class="color">
                                 <label class="colorPicker_label" for="">Background color</label>
-                                <input data-ng-model="adUnit.customStyle.colors.background" type="text" data-ui-colorpicker />
+                                <input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.colors.background" type="text" data-ui-colorpicker />
                             </div>
                             <!--<div class="opacity">-->
                             <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
@@ -99,20 +99,20 @@
                         </li>
                         <li class="style_setting">
                             <label class="colorPicker_label" for="">Title</label>
-                            <input data-ng-model="adUnit.customStyle.colors.title" type="text" data-ui-colorpicker />
+                            <input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.colors.title" type="text" data-ui-colorpicker />
                         </li>
                         <li class="style_setting">
                             <label class="colorPicker_label" for="">Text</label>
-                            <input data-ng-model="adUnit.customStyle.colors.text" type="text" data-ui-colorpicker />
+                            <input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.colors.text" type="text" data-ui-colorpicker />
                         </li>
                         <li class="style_setting">
                             <label class="colorPicker_label" for="">URL</label>
-                            <input data-ng-model="adUnit.customStyle.colors.url" type="text" data-ui-colorpicker />
+                            <input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.colors.url" type="text" data-ui-colorpicker />
                         </li>
                         <li class="style_setting">
                             <div class="color">
                                 <label class="colorPicker_label" for="">Border</label>
-                                <input data-ng-model="adUnit.customStyle.colors.border" type="text" data-ui-colorpicker />
+                                <input data-ng-disabled="connected()" data-ng-model="adUnit.customStyle.colors.border" type="text" data-ui-colorpicker />
                             </div>
                             <!--<div class="opacity">-->
                             <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
