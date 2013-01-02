@@ -250,3 +250,5 @@ ul { list-style: none; padding: 0; margin: 0; }
 		.slight:before { @include border-radius(5px 0 0 0); }
 		.round:before { @include border-radius(10px 0 0 0); } }
 }
+
+.chzn-container-single .chzn-single div b { background-image: url("/bundles/wixgoogleadsenseapp/app/lib/chosen/chosen-sprite.png"); }
