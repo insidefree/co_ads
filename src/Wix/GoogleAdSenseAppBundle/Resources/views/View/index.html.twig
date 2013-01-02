@@ -13,6 +13,7 @@
     <!-- adsense code -->
     {#{{ code|raw }}#}
 
+    {% if adUnit is not null %}
     <!-- adsense customization -->
     <script type="text/javascript">
         google_ad_client = "ca-pub-5195028014239031";
@@ -41,6 +42,7 @@
     <script type="text/javascript"
             src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </script>
+    {% endif %}
 </div>
 
 </body>

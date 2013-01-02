@@ -19,6 +19,10 @@ class ViewController extends AppController
     {
         $adUnit = $this->getAdUnit();
 
+        if ($adUnit === null) {
+            return array();
+        }
+
         $code = $this->getService()->accounts_adunits->getAdCode($this->getUserDocument()->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
 
         preg_match_all('/\d+/', $adUnit->getContentAdsSettings()->getSize(), $size);

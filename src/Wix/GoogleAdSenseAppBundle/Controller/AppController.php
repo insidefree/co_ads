@@ -158,7 +158,7 @@ class AppController extends Controller
         );
 
         if ($adUnits->getItems() === 0) {
-            throw new \Exception('could not find a wix ad unit to work with.');
+            return null;
         }
 
         return $adUnits->items[0];
