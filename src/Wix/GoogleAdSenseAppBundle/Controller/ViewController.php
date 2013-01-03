@@ -31,7 +31,7 @@ class ViewController extends AppController
             case 'SQUARE':
                 $corners = 4;
             break;
-            case 'ROUNDED':
+            case 'SLIGHTLY_ROUNDED':
                 $corners = 6;
             break;
             case 'VERY_ROUNDED':
