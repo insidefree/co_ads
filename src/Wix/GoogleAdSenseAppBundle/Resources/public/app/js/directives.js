@@ -22,8 +22,6 @@ angular.module('adSenseApp.directives', ['ajaxEvents'])
                 $rootScope.$on('ajaxFailure', function() {
                     elm.fadeOut('fast');
                 });
-
-                $rootScope.$on();
             }
         };
     }])

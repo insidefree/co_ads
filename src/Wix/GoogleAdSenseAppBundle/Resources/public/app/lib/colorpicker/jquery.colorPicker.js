@@ -221,7 +221,8 @@
             var hexColor = selectorOwner.prev("input").val();
 
             palette.css({
-                top: selectorOwner.offset().top + (selectorOwner.outerHeight()),
+//                top: selectorOwner.offset().top + (selectorOwner.outerHeight()),
+                top: selectorOwner.offset().top + (selectorOwner.outerHeight()) - 202, // ronena
                 left: selectorOwner.offset().left
             });
 
