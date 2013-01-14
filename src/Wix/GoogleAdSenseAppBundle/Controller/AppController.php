@@ -10,12 +10,19 @@ namespace Wix\GoogleAdSenseAppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+
 use Wix\APIBundle\Base\Instance;
+
+use Wix\GoogleAdSenseAppBundle\Document\AdUnit;
 use Wix\GoogleAdSenseAppBundle\Document\User;
 use Wix\GoogleAdSenseAppBundle\Document\Token;
+use Wix\GoogleAdSenseAppBundle\Exceptions\MissingParametersException;
+
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Wix\GoogleAdSenseAppBundle\Exceptions\MissingParametersException;
 
 class AppController extends Controller
 {
@@ -141,30 +148,6 @@ class AppController extends Controller
     }
 
     /**
-     * @return null|\Google_AdUnit
-     * @throws \Exception
-     */
-    protected function getAdUnit()
-    {
-        $user = $this->getUserDocument();
-
-        if ($user->connected() === false) {
-            return null;
-        }
-
-        $adUnits = $this->getService()->accounts_adunits->listAccountsAdunits(
-            $user->getAccountId(),
-            $this->getAfcClientId()
-        );
-
-        if ($adUnits->getItems() === 0) {
-            return null;
-        }
-
-        return $adUnits->items[0];
-    }
-
-    /**
      * @return User
      */
     protected function getUserDocument()
@@ -183,6 +166,140 @@ class AppController extends Controller
         }
 
         return $user;
+    }
+
+    /**
+     * @return null|\Google_AdUnit
+     * @throws \Exception
+     */
+    protected function getAdUnit()
+    {
+        $user = $this->getUserDocument();
+
+        if ($user->connected() === false) {
+            $adUnit = $user->getAdUnit();
+
+            if ($adUnit === null) {
+                $adUnit = new AdUnit();
+            }
+
+            return $this->encodeAdUnit($adUnit);
+        }
+
+        $adUnits = $this->getService()->accounts_adunits->listAccountsAdunits(
+            $user->getAccountId(),
+            $this->getAfcClientId()
+        );
+
+        if ($adUnits->getItems() === 0) {
+            // code...
+        }
+
+        return $adUnits->items[0];
+    }
+
+    /**
+     * @param AdUnit $adUnit
+     * @return \Google_AdUnit
+     */
+    protected function encodeAdUnit(AdUnit $adUnit)
+    {
+        /* ads settings */
+        $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
+        $contentAdsSettings->setSize($adUnit->getSize());
+        $contentAdsSettings->setType($adUnit->getType());
+
+        /* colors */
+        $colors = new \Google_AdStyleColors();
+        $colors->setBackground($adUnit->getBackgroundColor());
+        $colors->setBorder($adUnit->getBorderColor());
+        $colors->setText($adUnit->getTextColor());
+        $colors->setTitle($adUnit->getTitleColor());
+        $colors->setUrl($adUnit->getUrlColor());
+
+        /* font */
+        $font = new \Google_AdStyleFont();
+        $font->setFamily($adUnit->getFontFamily());
+        $font->setSize($adUnit->getFontSize());
+
+        /* custom style */
+        $customStyle = new \Google_AdStyle();
+        $customStyle->setCorners($adUnit->getCornerStyle());
+        $customStyle->setColors($colors);
+        $customStyle->setFont($font);
+
+        /* ad unit */
+        $googleAdUnit = new \Google_AdUnit();
+        $googleAdUnit->setContentAdsSettings($contentAdsSettings);
+        $googleAdUnit->setCustomStyle($customStyle);
+        $googleAdUnit->setName(
+            sprintf(
+                'Wix ad unit for user %s #%s',
+                $this->getInstance()->getInstanceId(),
+                $this->getComponentId()
+            )
+        );
+
+        return $googleAdUnit;
+    }
+
+    /**
+     * @param \Google_AdUnit $googleAdUnit
+     * @return AdUnit
+     */
+    protected function decodeAdUnit(\Google_AdUnit $googleAdUnit)
+    {
+        $adUnit = new AdUnit();
+
+        /* ads settings */
+        $adUnit->setType(
+            $googleAdUnit->getContentAdsSettings()->getType()
+        );
+        $adUnit->setSize(
+            $googleAdUnit->getContentAdsSettings()->getSize()
+        );
+
+        /* style */
+        $adUnit->setCornerStyle(
+            $googleAdUnit->getCustomStyle()->getCorners()
+        );
+
+        /* font */
+        $adUnit->setFontFamily(
+            $googleAdUnit->getCustomStyle()->getFont()->getFamily()
+        );
+        $adUnit->setFontSize(
+            $googleAdUnit->getCustomStyle()->getFont()->getSize()
+        );
+
+        /* colors */
+        $adUnit->setBackgroundColor(
+            $googleAdUnit->getCustomStyle()->getColors()->getBackground()
+        );
+        $adUnit->setBorderColor(
+            $googleAdUnit->getCustomStyle()->getColors()->getBorder()
+        );
+        $adUnit->setTextColor(
+            $googleAdUnit->getCustomStyle()->getColors()->getText()
+        );
+        $adUnit->setTitleColor(
+            $googleAdUnit->getCustomStyle()->getColors()->getTitle()
+        );
+        $adUnit->setUrlColor(
+            $googleAdUnit->getCustomStyle()->getColors()->getUrl()
+        );
+
+        return $adUnit;
+    }
+
+    /**
+     * @return Serializer
+     */
+    protected function getSerializer()
+    {
+        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
+
+        return $serializer;
     }
 
     /**

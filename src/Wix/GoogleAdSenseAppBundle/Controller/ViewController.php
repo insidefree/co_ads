@@ -25,29 +25,8 @@ class ViewController extends AppController
 
         $code = $this->getService()->accounts_adunits->getAdCode($this->getUserDocument()->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
 
-        preg_match_all('/\d+/', $adUnit->getContentAdsSettings()->getSize(), $size);
-
-        switch($adUnit->getCustomStyle()->corners) {
-            case 'SQUARE':
-                $corners = 4;
-            break;
-            case 'SLIGHTLY_ROUNDED':
-                $corners = 6;
-            break;
-            case 'VERY_ROUNDED':
-                $corners = 10;
-            break;
-            default:
-                $corners = null;
-            break;
-        }
-
         return array(
             'code' => $code->getAdCode(),
-            'adUnit' => $adUnit,
-            'width' => $size[0][0],
-            'height' => $size[0][1],
-            'corners' => $corners
         );
     }
 }

@@ -14,9 +14,6 @@ use Wix\GoogleAdSenseAppBundle\Exceptions\MissingParametersException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\AssociationRejectedException;
 use Wix\GoogleAdSenseAppBundle\Exceptions\InvalidAssociationIdException;
 
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -41,7 +38,9 @@ class SettingsController extends AppController
      */
     public function authenticateAction()
     {
-        $session = $this->getService()->associationsessions->start('AFC', 'http://local.adsense.apps.wix.com/app_dev.php/view/');
+        $session = $this->getService()->associationsessions->start(
+            'AFC', 'http://local.adsense.apps.wix.com/app_dev.php/view/'
+        );
 
         $user = $this->getUserDocument();
         $user->setAssociationIdd($session->getId());
@@ -49,7 +48,9 @@ class SettingsController extends AppController
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
 
-        return new RedirectResponse($session->getRedirectUrl());
+        return new RedirectResponse(
+            $session->getRedirectUrl()
+        );
     }
 
     /**
@@ -72,24 +73,9 @@ class SettingsController extends AppController
         $user->setAccountId(null);
 
         $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush($user);
+        $this->getDocumentManager()->flush();
 
-        return new JsonResponse(array(
-            'code' => 200,
-            'message' => 'disconnect successful',
-        ));
-    }
-
-    /**
-     * @Route("/adunit", name="getAdUnit", options={"expose"=true})
-     * @Method({"GET"})
-     * @Template()
-     */
-    public function getAdUnitAction()
-    {
-        $adUnit = $this->getAdUnit();
-
-        return new JsonResponse($adUnit);
+        return new JsonResponse('OK');
     }
 
     /**
@@ -99,25 +85,27 @@ class SettingsController extends AppController
      */
     public function getUserAction()
     {
-        $user = $this->getUserDocument();
+        $user = $this->getSerializer()->normalize(
+            $this->getUserDocument()
+        );
 
-        $user = $this->getSerializer()->normalize($user);
+        unset($user['adUnit']);
 
         return new JsonResponse($user);
     }
 
     /**
-     * @Route("/account", name="getAccount", options={"expose"=true})
+     * @Route("/adunit", name="getAdUnit", options={"expose"=true})
      * @Method({"GET"})
      * @Template()
      */
-    public function getAccountAction()
+    public function getAdUnitAction()
     {
-        $user = $this->getUserDocument();
+        $adUnit = $this->getSerializer()->normalize(
+            $this->getAdUnit()
+        );
 
-        $account = $this->getService()->accounts->get($user->getAccountId());
-
-        return new JsonResponse($account);
+        return new JsonResponse($adUnit);
     }
 
     /**
@@ -138,12 +126,44 @@ class SettingsController extends AppController
             throw new MissingParametersException('could not find request data (expecting request payload to be sent)');
         }
 
-        $adUnit = $this->getAdUnit();
-        $adUnit = $this->updateAdUnit($adUnit, $data);
+        $adUnit = $this->updateAdUnit(
+            $this->getAdUnit(),
+            $data
+        );
 
-        $result = $this->getService()->accounts_adunits->update($this->getUserDocument()->getAccountId(), $this->getAfcClientId(), $adUnit);
+        if ($this->getUserDocument()->connected() === false) {
+            // todo refactor
+            $decodedAdUnit = $this->decodeAdUnit($adUnit);
 
-        return new JsonResponse($result);
+            $this->getDocumentManager()->persist(
+                $this->getUserDocument()
+            );
+
+            $this->getDocumentManager()->flush();
+
+            $this->getDocumentManager()->persist(
+                $decodedAdUnit
+            );
+
+            $this->getDocumentManager()->flush();
+
+            $this->getUserDocument()->setAdUnit($decodedAdUnit);
+
+            $this->getDocumentManager()->persist(
+                $this->getUserDocument()
+            );
+
+            $this->getDocumentManager()->flush();
+        } else {
+            $this->getService()->accounts_adunits->update(
+                $this->getUserDocument()->getAccountId(),
+                $this->getAfcClientId(), $adUnit
+            );
+        }
+
+        return new JsonResponse(
+            $this->getSerializer()->normalize($adUnit)
+        );
     }
 
     /**
@@ -162,12 +182,11 @@ class SettingsController extends AppController
         $association = $this->getService()->associationsessions->verify($token);
 
         if ($association->getStatus() === 'REJECTED') {
-            // todo handle rejection in a more gentle way
             throw new AssociationRejectedException('the association was rejected.');
         }
 
         $user = $this->getRepository('WixGoogleAdSenseAppBundle:User')
-          ->findOneBy(array('associationId' => $association->getId()));
+            ->findOneBy(array('associationId' => $association->getId()));
 
         if ($user === null) {
             throw new InvalidAssociationIdException('could not find a matching association Id in the database.');
@@ -200,51 +219,5 @@ class SettingsController extends AppController
         );
 
         return $adUnit;
-    }
-
-    /**
-     * @return \Google_AdUnit
-     */
-    protected function getDefaultAdUnit()
-    {
-        $adUnit = new \Google_AdUnit();
-
-        $adUnit->setName(sprintf('Wix ad unit for user %s #%s', $this->getInstance()->getInstanceId(), $this->getComponentId()));
-
-        $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
-        $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
-        $backupOption->setType('COLOR');
-        $backupOption->setColor('ffffff');
-        $contentAdsSettings->setBackupOption($backupOption);
-        $contentAdsSettings->setSize('SIZE_300_250');
-        $contentAdsSettings->setType('TEXT');
-        $adUnit->setContentAdsSettings($contentAdsSettings);
-
-        $customStyle = new \Google_AdStyle();
-        $colors = new \Google_AdStyleColors();
-        $colors->setBackground('ffffff');
-        $colors->setBorder('000000');
-        $colors->setText('000000');
-        $colors->setTitle('000000');
-        $colors->setUrl('0000ff');
-        $customStyle->setColors($colors);
-        $customStyle->setCorners('SQUARE');
-        $font = new \Google_AdStyleFont();
-        $font->setFamily('Arial');
-        $font->setSize('Medium');
-        $customStyle->setFont($font);
-        $adUnit->setCustomStyle($customStyle);
-
-        return $adUnit;
-    }
-
-    /**
-     * @return Serializer
-     */
-    protected function getSerializer()
-    {
-        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
-
-        return $serializer;
     }
 }

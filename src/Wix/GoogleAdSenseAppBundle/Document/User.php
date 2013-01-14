@@ -57,6 +57,11 @@ class User
     protected $associationId;
 
     /**
+     * @MongoDB\ReferenceOne(targetDocument="AdUnit")
+     */
+    protected $adUnit;
+
+    /**
      * @param $instanceId
      * @param $componentId
      */
@@ -156,7 +161,7 @@ class User
      * Set instanceId
      *
      * @param string $instanceId
-     * @return \User
+     * @return User
      */
     public function setInstanceId($instanceId)
     {
@@ -178,7 +183,7 @@ class User
      * Set componentId
      *
      * @param string $componentId
-     * @return \User
+     * @return User
      */
     public function setComponentId($componentId)
     {
@@ -200,7 +205,7 @@ class User
      * Set accountId
      *
      * @param string $accountId
-     * @return \User
+     * @return User
      */
     public function setAccountId($accountId)
     {
@@ -222,7 +227,7 @@ class User
      * Set associationId
      *
      * @param string $associationId
-     * @return \User
+     * @return User
      */
     public function setAssociationIdd($associationId)
     {
@@ -238,5 +243,39 @@ class User
     public function getAssociationId()
     {
         return $this->associationId;
+    }
+
+    /**
+     * Set associationId
+     *
+     * @param string $associationId
+     * @return User
+     */
+    public function setAssociationId($associationId)
+    {
+        $this->associationId = $associationId;
+        return $this;
+    }
+
+    /**
+     * Set adUnit
+     *
+     * @param AdUnit $adUnit
+     * @return User
+     */
+    public function setAdUnit(\Wix\GoogleAdSenseAppBundle\Document\AdUnit $adUnit)
+    {
+        $this->adUnit = $adUnit;
+        return $this;
+    }
+
+    /**
+     * Get adUnit
+     *
+     * @return AdUnit $adUnit
+     */
+    public function getAdUnit()
+    {
+        return $this->adUnit;
     }
 }
