@@ -75,7 +75,7 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
     };
 
     /**
-     * updates the models to the newest data from the backend.
+     * updates the models to the newest data from the backend
      */
     function reload() {
         $http.get(Router('getAdUnit')).success(function(response) {
@@ -87,6 +87,9 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
         });
     }
 
+    /**
+     * export the reload to the window to make it available from outside source
+     */
     $window.reload = reload;
 }
 

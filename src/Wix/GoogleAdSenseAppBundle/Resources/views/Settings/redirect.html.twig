@@ -13,7 +13,7 @@
 
 <!-- script for updating wix and reloading the page -->
 <script type="text/javascript">
-    window.opener.location.reload();
+    (window.opener.reload || function(){})();
     window.close();
 </script>
 </body>
