@@ -57,6 +57,22 @@ function SettingsCtrl($scope, $window, $http, Router, WixSDK, QueryParams, adUni
             $window.location.reload();
         });
     };
+
+    /**
+     * submits an ad to be active for this account
+     */
+    $scope.submit = function() {
+        $http.post(Router('submit')).success(function() {
+            $window.location.reload();
+        });
+    };
+
+    /**
+     * returns true if this user has an active ad unit
+     */
+    $scope.hasAdUnit = function() {
+        return $scope.user.adUnitId !== null;
+    };
 }
 
 /**

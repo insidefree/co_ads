@@ -57,7 +57,17 @@ class User
     protected $associationId;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="AdUnit")
+     * @MongoDB\String
+     */
+    protected $adUnitId;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $clientId;
+    
+    /**
+     * @MongoDB\EmbedOne(targetDocument="AdUnit")
      */
     protected $adUnit;
 
@@ -277,5 +287,49 @@ class User
     public function getAdUnit()
     {
         return $this->adUnit;
+    }
+
+    /**
+     * Set adUnitId
+     *
+     * @param string $adUnitId
+     * @return \User
+     */
+    public function setAdUnitId($adUnitId)
+    {
+        $this->adUnitId = $adUnitId;
+        return $this;
+    }
+
+    /**
+     * Get adUnitId
+     *
+     * @return string $adUnitId
+     */
+    public function getAdUnitId()
+    {
+        return $this->adUnitId;
+    }
+
+    /**
+     * Set clientId
+     *
+     * @param string $clientId
+     * @return \User
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+        return $this;
+    }
+
+    /**
+     * Get clientId
+     *
+     * @return string $clientId
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
     }
 }

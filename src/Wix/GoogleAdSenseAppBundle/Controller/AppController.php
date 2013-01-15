@@ -174,28 +174,54 @@ class AppController extends Controller
      */
     protected function getAdUnit()
     {
-        $user = $this->getUserDocument();
+        $adUnit = $this->getUserDocument()->getAdUnit();
 
-        if ($user->connected() === false) {
-            $adUnit = $user->getAdUnit();
+        if ($adUnit === null) {
+            $adUnit = new AdUnit();
+        }
 
-            if ($adUnit === null) {
-                $adUnit = new AdUnit();
-            }
+        return $adUnit;
+    }
 
-            return $this->encodeAdUnit($adUnit);
+    /**
+     * @return Serializer
+     */
+    protected function getSerializer()
+    {
+        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
+
+        return $serializer;
+    }
+
+    /**
+     * @return null|\Google_AdUnit
+     */
+    protected function getGoogleAdUnit()
+    {
+        if ($this->getUserDocument()->connected() === false) {
+            return null;
         }
 
         $adUnits = $this->getService()->accounts_adunits->listAccountsAdunits(
-            $user->getAccountId(),
-            $this->getAfcClientId()
+            $this->getUserDocument()->getAccountId(),
+            $this->getUserDocument()->getClientId()
         );
 
-        if ($adUnits->getItems() === 0) {
-            // code...
+        $googleAdUnit = null;
+
+        // try to find the appropriate ad unit
+        foreach($adUnits->getItems() as $adUnit) {
+            if ($adUnit->getName() === $this->getAdUnitName()) {
+                $googleAdUnit = $adUnit;
+                break;
+            }
         }
 
-        return $adUnits->items[0];
+        if ($googleAdUnit === null) {
+            return null;
+        }
+
+        return $googleAdUnit;
     }
 
     /**
@@ -204,10 +230,16 @@ class AppController extends Controller
      */
     protected function encodeAdUnit(AdUnit $adUnit)
     {
+        /* backup option */
+        $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
+        $backupOption->setType('COLOR');
+        $backupOption->setColor('ffffff');
+
         /* ads settings */
         $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
         $contentAdsSettings->setSize($adUnit->getSize());
         $contentAdsSettings->setType($adUnit->getType());
+        $contentAdsSettings->setBackupOption($backupOption);
 
         /* colors */
         $colors = new \Google_AdStyleColors();
@@ -232,12 +264,48 @@ class AppController extends Controller
         $googleAdUnit = new \Google_AdUnit();
         $googleAdUnit->setContentAdsSettings($contentAdsSettings);
         $googleAdUnit->setCustomStyle($customStyle);
-        $googleAdUnit->setName(
-            sprintf(
-                'Wix ad unit for user %s #%s',
-                $this->getInstance()->getInstanceId(),
-                $this->getComponentId()
-            )
+        $googleAdUnit->setName($this->getAdUnitName());
+
+        return $googleAdUnit;
+    }
+
+    /**
+     * @param AdUnit $adUnit
+     * @param \Google_AdUnit $googleAdUnit
+     */
+    protected function updateAdUnit(AdUnit $adUnit, \Google_AdUnit $googleAdUnit)
+    {
+        $googleAdUnit->getContentAdsSettings()->setType(
+            $adUnit->getType()
+        );
+
+        $googleAdUnit->getCustomStyle()->setCorners(
+            $adUnit->getCornerStyle()
+        );
+
+        /* font */
+        $googleAdUnit->getCustomStyle()->getFont()->setFamily(
+            $adUnit->getFontFamily()
+        );
+        $googleAdUnit->getCustomStyle()->getFont()->setSize(
+            $adUnit->getFontSize()
+        );
+
+        /* colors */
+        $googleAdUnit->getCustomStyle()->getColors()->setBackground(
+            $adUnit->getBackgroundColor()
+        );
+        $googleAdUnit->getCustomStyle()->getColors()->setBorder(
+            $adUnit->getBorderColor()
+        );
+        $googleAdUnit->getCustomStyle()->getColors()->setText(
+            $adUnit->getTextColor()
+        );
+        $googleAdUnit->getCustomStyle()->getColors()->setTitle(
+            $adUnit->getTitleColor()
+        );
+        $googleAdUnit->getCustomStyle()->getColors()->setUrl(
+            $adUnit->getUrlColor()
         );
 
         return $googleAdUnit;
@@ -293,20 +361,14 @@ class AppController extends Controller
     }
 
     /**
-     * @return Serializer
-     */
-    protected function getSerializer()
-    {
-        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
-
-        return $serializer;
-    }
-
-    /**
      * @return string
      */
-    protected function getAfcClientId()
+    protected function getAdUnitName()
     {
-        return 'ca-pub-4373694264490992';
+        return sprintf(
+            'Wix ad unit for user %s #%s',
+            $this->getInstance()->getInstanceId(),
+            $this->getComponentId()
+        );
     }
 }

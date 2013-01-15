@@ -11,7 +11,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @MongoDB\Document(collection="adunits")
+ * @MongoDB\EmbeddedDocument
  */
 class AdUnit
 {
@@ -43,37 +43,37 @@ class AdUnit
     /**
      * @MongoDB\String
      */
-    protected $fontFamily = 'Arial';
+    protected $fontFamily = 'ARIAL';
 
     /**
      * @MongoDB\String
      */
-    protected $fontSize = 'Medium';
+    protected $fontSize = 'MEDIUM';
 
     /**
      * @MongoDB\String
      */
-    protected $backgroundColor = 'fff';
+    protected $backgroundColor = 'ffffff';
 
     /**
      * @MongoDB\String
      */
-    protected $titleColor = '333';
+    protected $titleColor = '333333';
 
     /**
      * @MongoDB\String
      */
-    protected $textColor = '666';
+    protected $textColor = '666666';
 
     /**
      * @MongoDB\String
      */
-    protected $urlColor = '06c';
+    protected $urlColor = '0066cc';
 
     /**
      * @MongoDB\String
      */
-    protected $borderColor = 'ccc';
+    protected $borderColor = 'cccccc';
 
     /**
      * Get id
@@ -83,6 +83,18 @@ class AdUnit
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set id
+     *
+     * @param string $id
+     * @return AdUnit
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
