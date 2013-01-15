@@ -46,7 +46,15 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
      * opens an authentication window
      */
     $scope.authenticate = function() {
-        $window.open(Router('authenticate'), 'authenticate', 'height=600, width=1000');
+        WixSDK.getSiteInfo(function(info) {
+            var websiteUrl = (info || {}).websiteUrl;
+
+            if (websiteUrl === null || websiteUrl === undefined) {
+                return; // popup
+            }
+
+            $window.open(Router('authenticate', { websiteUrl: websiteUrl }), 'authenticate', 'height=600, width=1000');
+        });
     };
 
     /**

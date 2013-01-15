@@ -41,8 +41,16 @@ class SettingsController extends AppController
      */
     public function authenticateAction()
     {
+        $websiteUrl = $this->getRequest()->query->get('websiteUrl');
+
+        if ($websiteUrl === null) {
+            throw new  MissingParametersException('websiteUrl query string parameter is missing.');
+        }
+
+        // todo make sure $websiteUrl is a domain fora  wix website
+
         $session = $this->getService()->associationsessions->start(
-            'AFC', 'http://local.adsense.apps.wix.com/app_dev.php/view/'
+            'AFC', $websiteUrl
         );
 
         $user = $this->getUserDocument();
