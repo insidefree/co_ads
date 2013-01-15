@@ -45,7 +45,7 @@
         <!-- layout settings -->
         <div class="box_style clearfix settings_layout">
             <h2 class="box_title">Layout</h2>
-            <div ng-class="{ disabled: !hasAdUnit() }">
+            <div ng-class="{ disabled: hasAdUnit() }">
 	            <ul class="layouts">
 	                <li class="rectangle">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_300_250" name="BannerLayout" id="StyleRect"/>
