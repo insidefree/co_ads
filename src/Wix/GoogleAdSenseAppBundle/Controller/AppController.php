@@ -194,37 +194,6 @@ class AppController extends Controller
     }
 
     /**
-     * @return null|\Google_AdUnit
-     */
-    protected function getGoogleAdUnit()
-    {
-        if ($this->getUserDocument()->connected() === false) {
-            return null;
-        }
-
-        $adUnits = $this->getService()->accounts_adunits->listAccountsAdunits(
-            $this->getUserDocument()->getAccountId(),
-            $this->getUserDocument()->getClientId()
-        );
-
-        $googleAdUnit = null;
-
-        // try to find the appropriate ad unit
-        foreach($adUnits->getItems() as $adUnit) {
-            if ($adUnit->getName() === $this->getAdUnitName()) {
-                $googleAdUnit = $adUnit;
-                break;
-            }
-        }
-
-        if ($googleAdUnit === null) {
-            return null;
-        }
-
-        return $googleAdUnit;
-    }
-
-    /**
      * @param AdUnit $adUnit
      * @return \Google_AdUnit
      */

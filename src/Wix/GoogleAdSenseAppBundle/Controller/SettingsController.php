@@ -161,6 +161,7 @@ class SettingsController extends AppController
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
 
+        // if the user has an ad unit created on google, update it too
         if ($user->getAdUnitId() !== null) {
             $googleAdUnit = $this->getService()->accounts_adunits->get(
                 $user->getAccountId(),
