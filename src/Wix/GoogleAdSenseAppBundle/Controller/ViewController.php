@@ -17,16 +17,17 @@ class ViewController extends AppController
      */
     public function indexAction()
     {
-        $adUnit = $this->getAdUnit();
-
-        if ($adUnit === null) {
-            return array();
-        }
-
-        $code = $this->getService()->accounts_adunits->getAdCode($this->getUserDocument()->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
-
-        return array(
-            'code' => $code->getAdCode(),
-        );
+//        $adUnit = $this->getAdUnit();
+//
+//        if ($adUnit === null) {
+//            return array();
+//        }
+//
+//        $code = $this->getService()->accounts_adunits->getAdCode($this->getUserDocument()->getAccountId(), $this->getAfcClientId(), $adUnit->getId());
+//
+//        return array(
+//            'code' => $code->getAdCode(),
+//        );
+        return array();
     }
 }

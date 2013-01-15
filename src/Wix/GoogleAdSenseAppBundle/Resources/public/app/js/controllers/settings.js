@@ -50,7 +50,8 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
             var websiteUrl = (info || {}).baseUrl;
 
             if (websiteUrl === null || websiteUrl === undefined) {
-                return; // popup
+                alert('You have to save your website before you can add an AdSense app to it'); // todo use jquery-ui modals
+                return;
             }
 
             $window.open(Router('authenticate', { websiteUrl: websiteUrl }), 'authenticate', 'height=615, width=1000');
