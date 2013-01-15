@@ -72,6 +72,8 @@ class SettingsController extends AppController
             throw new \Exception('the associated user is not connected to an AdSense account.');
         }
 
+        $this->getService()->accounts_adunits->delete($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
+
         $user->setAccountId(null);
         $user->setClientId(null);
         $user->setAdUnitId(null);
