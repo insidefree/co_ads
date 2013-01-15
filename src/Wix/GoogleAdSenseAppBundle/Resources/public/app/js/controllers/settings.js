@@ -47,13 +47,13 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
      */
     $scope.authenticate = function() {
         WixSDK.getSiteInfo(function(info) {
-            var websiteUrl = (info || {}).websiteUrl;
+            var websiteUrl = (info || {}).baseUrl;
 
             if (websiteUrl === null || websiteUrl === undefined) {
                 return; // popup
             }
 
-            $window.open(Router('authenticate', { websiteUrl: websiteUrl }), 'authenticate', 'height=600, width=1000');
+            $window.open(Router('authenticate', { websiteUrl: websiteUrl }), 'authenticate', 'height=615, width=1000');
         });
     };
 
