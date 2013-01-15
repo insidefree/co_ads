@@ -1,7 +1,7 @@
 'use strict';
 
 /* Settings Controller */
-function SettingsCtrl($scope, $window, $http, Router, WixSDK, QueryParams, adUnit, user) {
+function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user) {
     /**
      * represents the ad unit model
      */
@@ -54,7 +54,7 @@ function SettingsCtrl($scope, $window, $http, Router, WixSDK, QueryParams, adUni
      */
     $scope.disconnect = function() {
         $http.post(Router('disconnect')).success(function() {
-            $window.location.reload();
+            reload();
         });
     };
 
@@ -63,7 +63,7 @@ function SettingsCtrl($scope, $window, $http, Router, WixSDK, QueryParams, adUni
      */
     $scope.submit = function() {
         $http.post(Router('submit')).success(function() {
-            $window.location.reload();
+            reload();
         });
     };
 
@@ -73,12 +73,27 @@ function SettingsCtrl($scope, $window, $http, Router, WixSDK, QueryParams, adUni
     $scope.hasAdUnit = function() {
         return $scope.user.adUnitId !== null;
     };
+
+    /**
+     * updates the models to the newest data from the backend.
+     */
+    function reload() {
+        $http.get(Router('getAdUnit')).success(function(response) {
+            $scope.adUnit = response;
+        });
+
+        $http.get(Router('getUser')).success(function(response) {
+            $scope.user = response;
+        });
+    }
+
+    $window.reload = reload;
 }
 
 /**
  * specifying concrete injections
  */
-SettingsCtrl.$inject = ['$scope', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user'];
+SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user'];
 
 /**
  * resolving promises
