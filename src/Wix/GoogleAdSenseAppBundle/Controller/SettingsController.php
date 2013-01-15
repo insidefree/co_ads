@@ -73,6 +73,8 @@ class SettingsController extends AppController
         }
 
         $user->setAccountId(null);
+        $user->setClientId(null);
+        $user->setAdUnitId(null);
 
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
