@@ -50,7 +50,7 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
             var websiteUrl = (info || {}).baseUrl;
 
             if (websiteUrl === null || websiteUrl === undefined) {
-                WixSDK.openModal('htt://www.ynet.co.il', 400, 200);
+                alert('You have to save your website before you can add an AdSense app to it'); // todo use jquery-ui modals
                 return;
             }
 
