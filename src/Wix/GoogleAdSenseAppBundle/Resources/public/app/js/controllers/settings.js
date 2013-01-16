@@ -22,12 +22,12 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
     /**
      * available fonts to choose from
      */
-    $scope.fontFamily = ['ARIAL', 'TIMES', 'VERDANA' ];
+    $scope.fontFamily = ['Arial', 'Times', 'Verdana' ];
 
     /**
      * available font sizes to choose from
      */
-    $scope.fontSize = ['SMALL', 'MEDIUM', 'LARGE'];
+    $scope.fontSize = ['Small', 'Medium', 'Large'];
 
     /**
      * listens to changes on the ad unit model and sends a request to save it on the server

@@ -53,7 +53,7 @@
 	                </li>
 	                <li class="scraper">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_120_600" name="BannerLayout" id="LayoutScraper"/>
-						<label for="LayoutScraper">Sky Scraper</label>
+						<label for="LayoutScraper">Skyscraper</label>
 	                </li>
 	                <li class="banner">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_468_60" name="BannerLayout" id="LayoutBanner"/>
@@ -84,9 +84,9 @@
                     <ul>
                         <li class="style_setting">
                             <label for="font-type">Font</label>
-                            <select style="width: 100px;" data-chosen data-ng-model="adUnit.fontFamily" data-ng-options="font for font in fontFamily" id="font-type"></select>
+                            <select style="width: 100px;" data-chosen data-ng-model="adUnit.fontFamily" data-ng-options="object|uppercase as object for object in fontFamily" id="font-type"></select>
                             <label for="font-size">Size</label>
-                            <select style="width: 100px;" data-chosen data-ng-model="adUnit.fontSize" data-ng-options="font for font in fontSize" id="font-size"></select>
+                            <select style="width: 100px;" data-chosen data-ng-model="adUnit.fontSize" data-ng-options="object|uppercase as object for object in fontSize" id="font-size"></select>
                         </li>
                         <li class="style_setting">
                             <div class="color">
