@@ -1,7 +1,7 @@
 'use strict';
 
 /* Settings Controller */
-function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user) {
+function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, uiDialog) {
     /**
      * represents the ad unit model
      */
@@ -50,7 +50,7 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
             var websiteUrl = (info || {}).baseUrl;
 
             if (websiteUrl === null || websiteUrl === undefined) {
-                alert('You have to save your website before you can add an AdSense app to it'); // todo use jquery-ui modals
+                uiDialog.open('/bundles/wixgoogleadsenseapp/app/partials/publish.html');
                 return;
             }
 
@@ -108,7 +108,7 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
 /**
  * specifying concrete injections
  */
-SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user'];
+SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user', 'uiDialog'];
 
 /**
  * resolving promises
