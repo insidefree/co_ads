@@ -11,109 +11,11 @@
 <!-- adsense advertisement -->
 <div class="drive_widget_main">
     <!-- adsense code -->
-    {#{{ code|raw }}#}
-    <div style="background-color:transparent;font-family:verdana,arial,sans-serif">
-        <div style="background-color:#ffffff;height:60px;width:234px">
-            <style>#ads {
-                    height: 59px;
-                    left: 0px;
-                    position: absolute;
-                    top: 0px;
-                    width: 234px
-                }
-
-                #ads ul {
-                    list-style: none
-                }
-
-                #ads ul li {
-                    clear: both;
-                    float: left;
-                    line-height: 0;
-                    padding: 1px 4px;
-                    overflow: hidden;
-                }
-
-                .ad {
-                    text-align: left;
-                }
-
-                .adc {
-                    height: px;
-                    table-layout: fixed;
-                    width: 100%
-                }
-
-                .adt {
-                    font-size: 13px;
-                    font-weight: bold;
-                    line-height: 1.2
-                }
-
-                .adt:hover {
-                    color: #ff0000
-                }
-
-                .adb {
-                    color: #000000;
-                    font-size: 12px;
-                    line-height: 1.2
-                }
-
-                .adu {
-                    color: #008000;
-                    font-size: 10px;
-                    line-height: 1.2;
-                    overflow: hidden;
-                    text-decoration: underline;
-                    text-overflow: ellipsis;
-                    white-space: nowrap
-                }
-
-                .adus {
-                    cursor: pointer
-                }</style>
-            <div id="ads">
-                <ul id="ads0">
-                    <li id="taw0" onfocus="ss('','aw0');" onmouseover="ss('','aw0');" style="height:57px; width:226px">
-                        <div class="ad"><a class="adt" href="https://www.google.com/adsense/v3/app#&amp;mb=1" id="aw0"
-                                           onclick="ha('aw0')" onfocus="ss('','aw0')" onmousedown="st('aw0')"
-                                           onmouseover="return ss('','aw0')" target="_self"
-                                           title="www.ad-url.com"><span>Ad Title</span></a>
-
-                            <div class="adb"><span class="adbs" id="baw0">Ad Text </span></div>
-                            <div class="adu"><span class="adus" id="uaw0" onclick="ga(this,event)"
-                                                   onmousedown="st(this.id.substr(1))"
-                                                   title="www.ad-url.com">www.ad-url.com</span></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div id="abgb" style="height:18px;left:150px;position:absolute;  top:42px;width:84px">
-            <style>.attribution li {
-                    float: right;
-                    height: 18px;
-                }</style>
-            <ul class="attribution" style="list-style:none">
-                <li style="background-color:#ffffff;width:72px"></li>
-            </ul>
-            <div style="right:2px;position:absolute;top:2px"><a
-                        href="http://www.google.com/url?ct=abg&amp;q=https://www.google.com/adsense/support/bin/request.py%3Fcontact%3Dabg_afc%26url%3Dhttp://www.google.com/%26gl%3DUS%26hl%3Den%26client%3Dca-google-asfe%26hideleadgen%3D1%26ai0%3DC6CZsKLnyUNqYF9TY0AGzl4GwBu7i2ooD7sqqvUvu1oW3bRABIK-S-wVQoPPKhgVgyQaIAQGgAdrEoN4DyAEBqAMByAOABKoEVk_Q6ppyGRMFDaBXct5yuva_2_IEHQHu6j65Uq6PHlU5YtAyR0iUdRcrj7Le6e-rL-vm58ukbB-EPmt8AgfXTwIWzXKt82TLWHhiN5NVfscE2Gu1NcylgAeOu98h&amp;usg=AFQjCNHZu0-TJpIqBNkeZj8Q3whHYaEqng"
-                        target="_blank"><img alt="AdChoices" border="0" height="15"
-                                             src="https://tpc.googlesyndication.com/pagead/images/adchoices/en-000000.png"></a>
-            </div>
-        </div>
-        <script>var onDrtLoad = function () {
-                if (typeof posWidgetIframeList != 'undefined' && posWidgetIframeList) {
-                    for (var i = 0; i < posWidgetIframeList.length; i++) {
-                        posWidgetIframeList[i].G_handleAdDoritosFlowDone();
-                    }
-                }
-            };</script>
-        <iframe frameborder="0" height="0" width="0" src="https://googleads.g.doubleclick.net/pagead/drt/s?v=r20120211"
-                style="position:absolute" onload="onDrtLoad()"></iframe>
-    </div>
+    {% if code is defined %}
+        {{ code|raw }}
+    {% else %}
+        {# preview, values can be accessed through {{ adUnit.backgroundColor }} #}
+    {% endif %}
 </div>
 
 </body>

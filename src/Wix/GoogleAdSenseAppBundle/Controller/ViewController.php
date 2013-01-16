@@ -28,6 +28,18 @@ class ViewController extends AppController
 //        return array(
 //            'code' => $code->getAdCode(),
 //        );
-        return array();
+        $user = $this->getUserDocument();
+
+        if ($user->getAdUnitId() !== null) {
+            $code = $this->getService()->accounts_adunits->getAdCode($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
+
+            return array(
+                'code' => $code,
+            );
+        }
+
+        return array(
+            'adUnit' => $this->getAdUnit(),
+        );
     }
 }
