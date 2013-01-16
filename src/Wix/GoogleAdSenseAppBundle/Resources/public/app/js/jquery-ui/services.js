@@ -9,7 +9,7 @@ angular.module('jQueryUI.services', [])
                     var scope = $rootScope.$new();
 
                     $compile(response)(scope, function(elm) {
-                        elm.dialog();
+                        elm.dialog({ modal: true });
 
                         elm.on('dialogclose', function() {
                             elm.remove();
