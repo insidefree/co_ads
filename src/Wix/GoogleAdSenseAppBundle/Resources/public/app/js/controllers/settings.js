@@ -50,7 +50,7 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
             var websiteUrl = (info || {}).baseUrl;
 
             if (websiteUrl === null || websiteUrl === undefined) {
-                alert('You have to save your website before you can add an AdSense app to it'); // todo use jquery-ui modals
+                WixSDK.openModal('htt://www.ynet.co.il', 400, 200);
                 return;
             }
 
@@ -84,7 +84,7 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
     };
 
     /**
-     * updates the models to the newest data from the backend
+     * updates the models to the newest data from the backend and refreshes the app
      */
     function reload() {
         var adUnit = $http.get(Router('getAdUnit')).success(function(response) {
