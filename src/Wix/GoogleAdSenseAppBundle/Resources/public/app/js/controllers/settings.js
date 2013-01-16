@@ -87,12 +87,15 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
      * updates the models to the newest data from the backend
      */
     function reload() {
-        $http.get(Router('getAdUnit')).success(function(response) {
-            $scope.adUnit = response;
-        });
+        var adUnit = $http.get(Router('getAdUnit')).success(function(response) {
+                $scope.adUnit = response;
+            }),
+            user = $http.get(Router('getUser')).success(function(response) {
+                $scope.user = response;
+            });
 
-        $http.get(Router('getUser')).success(function(response) {
-            $scope.user = response;
+        $q.all([adUnit, user]).then(function() {
+            WixSDK.refreshAppByCompIds(QueryParams.origCompId);
         });
     }
 

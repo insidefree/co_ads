@@ -3,7 +3,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('adSenseApp', ['adSenseApp.filters', 'adSenseApp.services', 'adSenseApp.directives', 'adSenseApp.resources', 'jQueryUI'])
     .config(['$routeProvider', function($routeProvider) {
-        $routeProvider.when('/',{
+        $routeProvider.when('/', {
             templateUrl: '/bundles/wixgoogleadsenseapp/app/partials/settings.html',
             controller: SettingsCtrl,
             resolve: SettingsCtrl.resolve
