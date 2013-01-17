@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
     <title>Google AdSense App</title>
-    {% stylesheets filter='yui_css'
+    {% stylesheets filter='yui_css, cssrewrite'
     '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/bootstrap/css/bootstrap.css'
     '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/colorpicker/colorPicker.css'
     '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/chosen/chosen.css'
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<!-- container for the drive app -->
+<!-- container for the adsense app -->
 <div data-ng-view></div>
 
 <!-- wix sdk -->
@@ -26,6 +26,7 @@
 <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
+<!-- scripts -->
 {% javascripts filter='closure'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery/jquery.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery-ui/js/jquery-ui.js'
