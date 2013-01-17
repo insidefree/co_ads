@@ -29,9 +29,10 @@
 
             // type of ad
             {% if adUnit.type != 'IMAGE' %}
-                {% set adUnit.type = 'TEXT' %}
+                google_ad_type = 'text';
+            {% else %}
+                google_ad_type = 'image';
             {% endif %}
-            google_ad_type = '{{ adUnit.type | lower }}';
 
             // font style
             google_font_face = '{{ adUnit.fontFamily }}';
