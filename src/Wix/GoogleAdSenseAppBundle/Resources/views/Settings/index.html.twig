@@ -2,9 +2,9 @@
 <html lang="en" data-ng-app="adSenseApp">
 <head>
     <meta charset="utf-8">
-    <meta name="robots" content="noindex">
+    <meta name="robots" content="noindex, nofollow">
     <title>Google AdSense App</title>
-    {% stylesheets filter='cssrewrite'
+    {% stylesheets filter='yui_css'
     '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/bootstrap/css/bootstrap.css'
     '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/colorpicker/colorPicker.css'
     '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/chosen/chosen.css'
@@ -26,32 +26,20 @@
 <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
-<!-- dependency scripts -->
-{% javascripts
+{% javascripts filter='closure'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery/jquery.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery-ui/js/jquery-ui.js'
-'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/bootstrap/js/bootstrap.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/chosen/chosen.jquery.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/colorpicker/jquery.colorPicker.js'
-'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/angular/angular.js'
-'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/angular/angular-resource.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
+'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/angular/angular.min.js'
 
-<!-- jquery-ui modules -->
-{% javascripts
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/app.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/services.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/filters.js'
-'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/directives.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
+'@WixGoogleAdSenseAppBundle/Resources/public/app/js/jquery-ui/directives.js'
 
-<!-- application modules -->
-{% javascripts
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/app.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/services.js'
-'@WixGoogleAdSenseAppBundle/Resources/public/app/js/resources.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/filters.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/directives.js'
 '@WixGoogleAdSenseAppBundle/Resources/public/app/js/ajax-events.js'

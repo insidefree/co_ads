@@ -5,7 +5,7 @@ angular.module('ajaxEvents', [])
      * fires ajaxStart, ajaxSuccess and ajaxFailure events on the root scope
      */
     .config(['$httpProvider', function ($httpProvider) {
-        $httpProvider.responseInterceptors.push(function($q, $rootScope) {
+        $httpProvider.responseInterceptors.push(['$q', '$rootScope', function($q, $rootScope) {
             return function(promise) {
                 $rootScope.$emit('ajaxStart');
 
@@ -20,5 +20,5 @@ angular.module('ajaxEvents', [])
                     }
                 );
             };
-        });
-    }])
+        }]);
+    }]);
