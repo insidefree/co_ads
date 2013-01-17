@@ -28,6 +28,9 @@
             google_ad_format = '{{ adUnit.width }}x{{ adUnit.height }}_as';
 
             // type of ad
+            {% if adUnit.type != 'IMAGE' %}
+                {% set adUnit.type = 'TEXT' %}
+            {% endif %}
             google_ad_type = '{{ adUnit.type | lower }}';
 
             // font style
