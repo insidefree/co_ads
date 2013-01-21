@@ -71,7 +71,7 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
      * submits an ad to be active for this account
      */
     $scope.submit = function() {
-        uiDialog.prompt('/bundles/wixgoogleadsenseapp/app/partials/note.html', {
+        uiDialog.confirm('/bundles/wixgoogleadsenseapp/app/partials/note.html', {
             submit: function() {
                 $http.post(Router('submit')).success(function() {
                     reload();

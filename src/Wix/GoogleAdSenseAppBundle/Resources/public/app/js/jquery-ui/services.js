@@ -19,7 +19,7 @@ angular.module('jQueryUI.services', [])
                     });
                 });
             },
-            prompt: function(templateUrl, options) {
+            confirm: function(templateUrl, options) {
             $http.get(templateUrl).success(function(response) {
                 var scope = $rootScope.$new();
 
