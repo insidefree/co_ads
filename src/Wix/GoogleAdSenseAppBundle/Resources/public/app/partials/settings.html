@@ -5,7 +5,8 @@
             <img src="/bundles/wixgoogleadsenseapp/app/images/settings/logo.jpg" alt="Google Drive">
         </a>
         <div data-ng-hide="connected()" class="connect">
-            <p class="description">App info text</p>
+            <p class="description">You can earn revenue by showing relevant and engaging ads along-side your online content. Just connect your Google AdSense account.</p>
+            <p>Your ad will be active up to 24 hours after you save the settings for your ad.</p>
             <a data-ng-click="authenticate()" class="connect_button action_links">Connect Account</a>
             <p class="create_account">Don't have an account? <a target="_blank" href="https://drive.google.com/start">Create one</a>
         </div>
@@ -14,15 +15,15 @@
             <p class="disconnect">
                 <a href="" data-ng-click="disconnect()">Disconnect Account</a>
             </p>
-            <a data-ng-hide="hasAdUnit()" data-ng-click="submit()" class="submit_ad action_links">Submit Ad</a>
+            <a data-ng-hide="hasAdUnit()" data-ng-click="submit()" class="submit_ad action_links">Submit</a>
         </div>
     </div>
 
     <!-- accordion -->
     <div data-ui-accordion data-ui-height-style="auto" data-ui-header="div > h2">
-        <!-- type settings -->
+        <!-- contents settings -->
         <div class="box_style clearfix settings_layout">
-            <h2 class="box_title" ng-class="adUnit.type|lowercase">Type</h2>
+            <h2 class="box_title" ng-class="adUnit.type|lowercase">Contents</h2>
             <ul class="types">
                 <li>
 					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
@@ -37,7 +38,7 @@
                 <li>
                     <img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
                     <input data-ng-model="adUnit.type" type="radio" value="TEXT_IMAGE" name="BannerType" id="TypeBoth"/>
-                    <label for="TypeBoth">Text And Image</label>
+                    <label for="TypeBoth">Text & Image</label>
                 </li>
             </ul>
         </div>
@@ -49,15 +50,15 @@
 	            <ul class="layouts">
 	                <li class="rectangle">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_300_250" name="BannerLayout" id="StyleRect"/>
-						<label for="StyleRect">Rectangular</label>
+						<label for="StyleRect">Square</label>
 	                </li>
 	                <li class="scraper">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_120_600" name="BannerLayout" id="LayoutScraper"/>
-						<label for="LayoutScraper">Skyscraper</label>
+						<label for="LayoutScraper">Tall</label>
 	                </li>
 	                <li class="banner">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_468_60" name="BannerLayout" id="LayoutBanner"/>
-						<label for="LayoutBanner">Banner</label>
+						<label for="LayoutBanner">Wide</label>
 	                </li>
 	            </ul>
 	            <div class="cornder_radius">

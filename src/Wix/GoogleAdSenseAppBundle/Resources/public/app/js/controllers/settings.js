@@ -47,10 +47,10 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
      */
     $scope.authenticate = function() {
         WixSDK.getSiteInfo(function(info) {
-            var websiteUrl = (info || {}).baseUrl;
+            var websiteUrl = (info || {baseUrl: 'http://hello.world.com'}).baseUrl;
 
             if (websiteUrl === null || websiteUrl === undefined) {
-                uiDialog.open('/bundles/wixgoogleadsenseapp/app/partials/publish.html');
+                uiDialog.alert('/bundles/wixgoogleadsenseapp/app/partials/publish.html');
                 return;
             }
 
@@ -71,8 +71,12 @@ function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, a
      * submits an ad to be active for this account
      */
     $scope.submit = function() {
-        $http.post(Router('submit')).success(function() {
-            reload();
+        uiDialog.prompt('/bundles/wixgoogleadsenseapp/app/partials/note.html', {
+            submit: function() {
+                $http.post(Router('submit')).success(function() {
+                    reload();
+                });
+            }
         });
     };
 
