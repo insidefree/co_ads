@@ -277,3 +277,25 @@ ul { list-style: none; padding: 0; margin: 0; }
 		font-size: 16px;
 		padding: 0; }
 }
+
+/* Popups */
+.ui-dialog {
+	@include border-radius(10px);
+	@include box-shadow(0 0 8px #bbb);
+	background: white;
+	overflow: hidden;
+	padding: 10px;
+
+	.ui-dialog-titlebar span {
+		display: inline-block;
+		padding: 10px 0 15px 65px;
+		color: red; }
+	.ui-dialog-titlebar-close { }
+	#dialog {
+		margin-bottom: 15px;
+		padding-left: 65px;
+		background: transparent inline-image("settings/ge/ge_exclamation.png") 10px 10px / 42px 42px no-repeat; }
+	.ui-dialog-buttonset {
+		button { float: left; }
+		button:first-child { float: right; } }
+}

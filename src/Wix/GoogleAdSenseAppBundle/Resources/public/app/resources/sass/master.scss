@@ -183,6 +183,7 @@ dd.after,dd:after {
 /* Site specific nuggets of gold */
 /* ============================================================================= */
 
+.ui-button-text-only,
 .action_links {
 	@include border-radius(4px);
 	background: #45a1d2;
