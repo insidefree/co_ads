@@ -1,4 +1,4 @@
-<div id="settings_popup" xmlns="http://www.w3.org/1999/html">
+<div id="settings_popup" class="clearfix" xmlns="http://www.w3.org/1999/html">
     <!-- connect account -->
     <div class="box_style top_section inline_block">
         <a target="_blank" href="https://drive.google.com/start" id="logo">
@@ -15,7 +15,6 @@
             <p class="disconnect">
                 <a href="" data-ng-click="disconnect()">Disconnect Account</a>
             </p>
-            <a data-ng-hide="hasAdUnit()" data-ng-click="submit()" class="submit_ad action_links">Submit</a>
         </div>
     </div>
 
@@ -90,36 +89,26 @@
                             <select style="width: 100px;" data-chosen data-ng-model="adUnit.fontSize" data-ng-options="object|uppercase as object for object in fontSize" id="font-size"></select>
                         </li>
                         <li class="style_setting">
-                            <div class="color">
-                                <label class="colorPicker_label" for="">Background color</label>
-                                <input data-ng-model="adUnit.backgroundColor" type="text" data-ui-colorpicker />
-                            </div>
-                            <!--<div class="opacity">-->
-                            <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
-                            <!--<label for="opacity">Transparent</label>-->
-                            <!--</div>-->
-                        </li>
-                        <li class="style_setting">
-                            <label class="colorPicker_label" for="">Title</label>
+                            <label class="colorPicker_label" for="">Title color</label>
                             <input data-ng-model="adUnit.titleColor" type="text" data-ui-colorpicker />
-                        </li>
-                        <li class="style_setting">
-                            <label class="colorPicker_label" for="">Text</label>
+                            <label class="colorPicker_label" for="">Text color</label>
                             <input data-ng-model="adUnit.textColor" type="text" data-ui-colorpicker />
                         </li>
                         <li class="style_setting">
-                            <label class="colorPicker_label" for="">URL</label>
+                            <label class="colorPicker_label" for="">URL color</label>
                             <input data-ng-model="adUnit.urlColor" type="text" data-ui-colorpicker />
                         </li>
                         <li class="style_setting">
                             <div class="color">
-                                <label class="colorPicker_label" for="">Border</label>
+                                <label class="colorPicker_label" for="">Border color</label>
                                 <input data-ng-model="adUnit.borderColor" type="text" data-ui-colorpicker />
                             </div>
-                            <!--<div class="opacity">-->
-                            <!--<input data-ng-model="user.backgroundHasOpacity" id="opacity" type="checkbox" />-->
-                            <!--<label for="opacity">Transparent</label>-->
-                            <!--</div>-->
+                        </li>
+                        <li class="style_setting">
+                            <div class="color">
+                                <label class="colorPicker_label" for="">Background color</label>
+                                <input data-ng-model="adUnit.backgroundColor" type="text" data-ui-colorpicker />
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -128,6 +117,11 @@
                 </div>
             </div>
     	</div>
+    </div>
+
+    <div class="bottom_section">
+    	<p class="warning">After submit, Ad setting cannot be changed. To make changes, you will need to delete the existing Ad and create a new one.</p>
+	    <a data-ng-hide="hasAdUnit()" data-ng-click="submit()" class="submit_ad action_links">Submit</a>
     </div>
 
     <!-- loader -->

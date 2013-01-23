@@ -85,9 +85,6 @@ ul { list-style: none; padding: 0; margin: 0; }
 		color: $color_lightGrey;
 		font-size: 12px;
 		width: 150px; }
-	.submit_ad {
-		position: absolute;
-		bottom: 10px; }
 }
 
 /* ************** */
@@ -140,9 +137,10 @@ ul { list-style: none; padding: 0; margin: 0; }
 		margin-right: 30px; }
 	.colorPicker-picker:hover { @include box-shadow(0 0 2px #000); }
 	.colorPicker-picker:active { @include box-shadow(0 2px 1px #ccc inset); }
-	.opacity_count {
-		padding-left: 10px;
-		display: inline-block; }
+	input[data-ui-colorpicker] { display: none; }
+	.colorPicker-picker + .colorPicker_label {
+		margin-left: 15px;
+		width: 180px; }
 	select { display: inline-block; width: auto; }
 	.chzn-container { margin-top: -4px;}
 	#font_type_chzn { margin-right: 80px; }
@@ -256,3 +254,26 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .chzn-container-single .chzn-single div b { background-image: url("/bundles/wixgoogleadsenseapp/app/lib/chosen/chosen-sprite.png"); }
+
+.bottom_section {
+	.warning {
+		$warning-position:image-width("settings/ge/ge_exclamation.png") + 10px;
+		@include inline-block(375px,auto,auto,auto,auto);
+		font-size: 11px;
+		position: relative;
+		padding-left: $warning-position;
+		margin-top: 20px;
+		&:before {
+			content: inline-image("settings/ge/ge_exclamation.png");
+			position: absolute;
+			left: 0;
+			top: 50%;
+			margin-top: -#{image-height("settings/ge/ge_exclamation.png") / 2}; }
+		}
+	.submit_ad {
+		@include inline-block(142px,29px,auto,auto,29px);
+		float: right;
+		margin-top: 20px;
+		font-size: 16px;
+		padding: 0; }
+}
