@@ -206,54 +206,53 @@ ul { list-style: none; padding: 0; margin: 0; }
 	.layouts {
 		li {
 			position: relative;
-			margin-top: 160px; }
-		li:before {
+			margin: 0 0 120px; }
+		li:after {
 			content: "";
 			left: 50%;
 			position: absolute;
-			background: transparent inline-image("settings/bg/bg_layout.png") top left repeat;
+			background: transparent inline-image("settings/bg/bg_tile.png") top left repeat;
 			border: 1px solid #ccc; }
-		.rectangle:before { @include layout-shape(60px,60px); }
-		.scraper:before { @include layout-shape(30px,90px); }
-		.banner:before { @include layout-shape(90px,30px); } }
+		.rectangle:after { @include layout-shape(70px,60px); }
+		.scraper:after { @include layout-shape(55px,90px); }
+		.banner:after { @include layout-shape(80px,30px); } }
 
 	.cornder_radius {
 		padding: 15px 0 0;
-		margin-top: 35px;
 		border-top: 1px solid #ccc;
 		h3 {
 			@include inline-block(auto,auto,auto,top,29px);
 			color: #3A3A3A;
-			margin: 0 125px 0 20px;
+			margin: 0 70px 0 20px;
 			font-size: 14px; }
-		& > div {
+		.radiuses {
 			@include inline-block(auto,auto,auto,top,auto);
 			font-size: 0; }
 		label {
-			@include inline-block(25px,25px,auto,auto,auto);
-			border: 2px solid #bee5ff;
+			@include inline-block(50px,50px,auto,auto,auto);
 			vertical-align: top;
 			float: none;
-			margin: 0;
+			margin: 0 60px 0 0;
 			position: relative;
 			color: transparent;
-			overflow: hidden; }
-		label:before {
+			opacity: 0.5;
+			background: #f9f9f9; }
+		label:before { left: -25px; }
+		label:after {
 			content: "";
 			background: none;
-			height: 10px;
-			width: 10px;
-			border: 3px solid #ccc;
-			border-width: 3px 0 0 3px;
+			height: 16px;
+			width: 16px;
+			border: 6px solid #bfe4ff;
+			border-width: 6px 0 0 6px;
 			left: 50%;
-			top: 7px;
-			margin-left: -5px;
+			top: 15px;
+			margin-left: -9px;
 			position: absolute; }
-		label:hover { background: #eee; }
-		input:checked + label { background: #bee5ff; }
-		input:checked + label:before { background: none; border-color: #fff; }
-		.slight:before { @include border-radius(5px 0 0 0); }
-		.round:before { @include border-radius(10px 0 0 0); } }
+		label:hover,
+		input:checked + label { opacity: 1; }
+		.slight:after { @include border-radius(10px 0 0 0); }
+		.round:after { @include border-radius(25px 0 0 0); } }
 }
 
 .chzn-container-single .chzn-single div b { background-image: url("/bundles/wixgoogleadsenseapp/app/lib/chosen/chosen-sprite.png"); }
