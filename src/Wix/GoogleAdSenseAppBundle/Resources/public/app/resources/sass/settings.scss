@@ -194,17 +194,17 @@ ul { list-style: none; padding: 0; margin: 0; }
 		border-top: 1px solid #ccc;
 		li {
 			@include inline-block(32%,auto,center,auto,auto);
-			margin-top: 95px;
+			position: relative;
+			vertical-align: top;
 			label {
 				margin: 10px 0;
 				display: block;
-				width: 100%; } } }
+				width: 100%; } }
+		img { margin: 50px 0; } }
 	.disabled { opacity: 0.5; }
 
 	.layouts {
-		li {
-			position: relative;
-			margin: 0 0 120px; }
+		li { margin: 0 0 120px; }
 		li:after {
 			content: "";
 			left: 50%;
@@ -214,6 +214,16 @@ ul { list-style: none; padding: 0; margin: 0; }
 		.rectangle:after { @include layout-shape(70px,60px); }
 		.scraper:after { @include layout-shape(55px,90px); }
 		.banner:after { @include layout-shape(80px,30px); } }
+
+	.types {
+		li:after {
+		content: "";
+		border-left: 1px solid #e5e5e5;
+		height: 120px;
+		position: absolute;
+		top: 80px;
+		left: 0; }
+		li:first-child:after { border: none; } }
 
 	.cornder_radius {
 		padding: 15px 0 0;
