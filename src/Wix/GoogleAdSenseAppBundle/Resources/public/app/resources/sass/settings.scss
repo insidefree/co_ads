@@ -50,7 +50,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 	margin: 0 0 20px;
 	#logo {
 		height: 100%;
-		padding: 0 25px 0 20px;
+		padding: 0 20px 0 15px;
 		border-right: 1px solid #e7e7e7;
 		img { margin-top: 20px;} }
 }
@@ -59,14 +59,17 @@ ul { list-style: none; padding: 0; margin: 0; }
 .connect {
 	position: relative;
 	height: 100%;
-	width: 420px;
+	width: 430px;
 	padding: $connect_paddingTop 0 $connect_paddingBottom $connect_paddingLeft;
 	@include box-sizing("border-box");
 	p {
-		font-size: 14px;
+		font-size: 12px;
 		margin-right: 20px;
 		color: $color_darkGrey; }
 	p a { text-decoration: underline; }
+	p + p {
+		margin-top: 13px;
+		color: $color_lightGrey; }
 	.choose_blog,
 	.create_account,
 	.create_blog {
@@ -74,17 +77,17 @@ ul { list-style: none; padding: 0; margin: 0; }
 		width: 135px;
 		color: #aaa;
 		font-size: 12px;
-		bottom: $connect_paddingBottom;
+		bottom: 0;
 		left: $connect_paddingLeft;
 		a { color: $color_wixBlue; } }
 	.disconnect, .connect_button {
 		position: absolute;
 		right: 0;
-		bottom: $connect_paddingBottom; }
+		bottom: 0; }
 	.create_account {
 		color: $color_lightGrey;
 		font-size: 12px;
-		width: 150px; }
+		width: auto; }
 }
 
 /* ************** */
