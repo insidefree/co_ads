@@ -50,8 +50,8 @@ ul { list-style: none; padding: 0; margin: 0; }
 	margin: 0 0 20px;
 	#logo {
 		height: 100%;
-		padding: 0 25px 0 4px;
-		border-right: 1px solid #a9a9a9;
+		padding: 0 25px 0 20px;
+		border-right: 1px solid #e7e7e7;
 		img { margin-top: 20px;} }
 }
 
@@ -191,7 +191,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 	.layouts,
 	.types {
 		padding-top: 10px;
-		border-top: 1px solid #ccc;
+		border-top: 1px solid #e7e7e7;
 		li {
 			@include inline-block(32%,auto,center,auto,auto);
 			position: relative;
@@ -227,7 +227,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 
 	.cornder_radius {
 		padding: 15px 0 0;
-		border-top: 1px solid #ccc;
+		border-top: 1px solid #e7e7e7;
 		h3 {
 			@include inline-block(auto,auto,auto,top,29px);
 			color: #3A3A3A;
@@ -300,12 +300,19 @@ ul { list-style: none; padding: 0; margin: 0; }
 		display: inline-block;
 		padding: 10px 0 15px 65px;
 		color: red; }
-	.ui-dialog-titlebar-close { }
+	.ui-dialog-titlebar-close {
+		@include background-image("settings/ge/ge_close.png");
+		position: absolute;
+		right: 10px;
+		top: 10px; }
 	#dialog {
 		margin-bottom: 15px;
 		padding-left: 65px;
 		background: transparent inline-image("settings/ge/ge_exclamation.png") 10px 10px / 42px 42px no-repeat; }
 	.ui-dialog-buttonset {
 		button { float: left; }
-		button:first-child { float: right; } }
+		button:first-child { float: right; }
+		button + button {
+			color: $color_wixBlue !important;
+			@include background(linear-gradient(#fff 50%,#eee 50%)); } }
 }
