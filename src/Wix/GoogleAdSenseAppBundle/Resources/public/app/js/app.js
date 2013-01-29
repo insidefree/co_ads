@@ -8,8 +8,8 @@
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/', {
             templateUrl: '/bundles/wixgoogleadsenseapp/app/partials/settings.html',
-            controller: SettingsCtrl,
-            resolve: SettingsCtrl.resolve
+            controller: window.SettingsCtrl,
+            resolve: window.SettingsCtrl.resolve
         });
 
         $routeProvider.otherwise({
