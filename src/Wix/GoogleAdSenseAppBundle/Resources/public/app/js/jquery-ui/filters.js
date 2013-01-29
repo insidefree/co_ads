@@ -1,4 +1,6 @@
-'use strict';
-
 /* Filters */
-angular.module('jQueryUI.filters', []);
+(function(window) {
+    'use strict';
+
+    window.angular.module('jQueryUI.filters', []);
+}(window));

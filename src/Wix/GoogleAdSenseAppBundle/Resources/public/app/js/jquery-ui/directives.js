@@ -1,7 +1,8 @@
-'use strict';
-
 /* Directives */
-angular.module('jQueryUI.directives', [])
+(function(window) {
+    'use strict';
+
+    window.angular.module('jQueryUI.directives', [])
     /**
      * transforms an element into a jquery-ui accordion
      */
@@ -13,3 +14,4 @@ angular.module('jQueryUI.directives', [])
             });
         };
     });
+}(window));

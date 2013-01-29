@@ -76,6 +76,57 @@
 {% endjavascripts %}
 
 <script>
+    (function() {
+        var sizes = [
+            { width: 300, height: 250 },
+            { width: 336, height: 280 },
+            { width: 728, height: 90 },
+            { width: 160, height: 600 },
+            { width: 320, height: 50 },
+            { width: 468, height: 60 },
+            { width: 234, height: 60 },
+            { width: 120, height: 600 },
+            { width: 120, height: 240 },
+            { width: 300, height: 600 },
+            { width: 250, height: 250 },
+            { width: 200, height: 200 },
+            { width: 180, height: 150 },
+            { width: 125, height: 125 },
+            { width: 728, height: 15 },
+            { width: 468, height: 15 },
+            { width: 200, height: 90 },
+            { width: 180, height: 90 },
+            { width: 160, height: 90 },
+            { width: 120, height: 90 }
+        ];
+
+        $(window).resize(function(event){
+            var width = $(event.target).width(),
+                height = $(event.target).height(),
+                matching = [],
+                largest;
+
+            $.each(sizes, function(key, size) {
+                if (size.width <= width && size.height <= height) {
+                    matching.push(size);
+                }
+            });
+
+            $.each(matching, function(key, size) {
+                if (largest === undefined || (size.width * size.height) > (largest.width * largest.height)) {
+                    largest = size;
+                }
+            });
+
+            google_ad_width = largest.widget;
+            google_ad_height = largest.height;
+
+            $('#').attr('src', $('#').attr('src'));
+
+            console.log(largest.width, largest.height);
+        });
+    }());
+
     $(function() {
         Wix.reportHeightChange($('body').height());
     });

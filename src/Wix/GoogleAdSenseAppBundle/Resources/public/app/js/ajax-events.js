@@ -1,6 +1,7 @@
-'use strict';
+(function(window) {
+    'use strict';
 
-angular.module('ajaxEvents', [])
+    window.angular.module('ajaxEvents', [])
     /**
      * fires ajaxStart, ajaxSuccess and ajaxFailure events on the root scope
      */
@@ -22,3 +23,4 @@ angular.module('ajaxEvents', [])
             };
         }]);
     }]);
+}(window));

@@ -22,30 +22,32 @@
     <div data-ui-accordion data-ui-height-style="auto" data-ui-header="div > h2">
         <!-- contents settings -->
         <div class="box_style clearfix settings_layout">
-            <h2 class="box_title" ng-class="adUnit.type|lowercase">Contents</h2>
-            <ul class="types">
-                <li>
-					<input data-ng-model="adUnit.type" type="radio" value="TEXT" name="BannerType" id="TypeText"/>
-					<label for="TypeText">Text</label>
-					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
-                </li>
-                <li>
-					<input data-ng-model="adUnit.type" type="radio" value="IMAGE" name="BannerType" id="TypeImage"/>
-					<label for="TypeImage">Image</label>
-					<img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
-                </li>
-                <li>
-                    <input data-ng-model="adUnit.type" type="radio" value="TEXT_IMAGE" name="BannerType" id="TypeBoth"/>
-                    <label for="TypeBoth">Text & Image</label>
-                    <img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text_image.png" alt="">
-                </li>
-            </ul>
+            <h2 class="box_title" data-ng-class="adUnit.type|lowercase">Contents</h2>
+            <div data-ng-class="{ disabled: hasAdUnit() }">
+                <ul class="types">
+                    <li>
+                        <input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.type" type="radio" value="TEXT" name="BannerType" id="TypeText"/>
+                        <label for="TypeText">Text</label>
+                        <img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text.png" alt="">
+                    </li>
+                    <li>
+                        <input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.type" type="radio" value="IMAGE" name="BannerType" id="TypeImage"/>
+                        <label for="TypeImage">Image</label>
+                        <img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_image.png" alt="">
+                    </li>
+                    <li>
+                        <input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.type" type="radio" value="TEXT_IMAGE" name="BannerType" id="TypeBoth"/>
+                        <label for="TypeBoth">Text & Image</label>
+                        <img src="/bundles/wixgoogleadsenseapp/app/images/settings/ge/ge_type_text_image.png" alt="">
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- layout settings -->
         <div class="box_style clearfix settings_layout">
             <h2 class="box_title">Layout</h2>
-            <div ng-class="{ disabled: hasAdUnit() }">
+            <div data-ng-class="{ disabled: hasAdUnit() }">
 	            <ul class="layouts">
 	                <li class="rectangle">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_300_250" name="BannerLayout" id="StyleRect"/>
@@ -80,7 +82,7 @@
         <div class="box_style clearfix">
             <h2 class="box_title">Style</h2>
             <div>
-                <div ng-hide="adUnit.type == 'IMAGE'">
+                <div data-ng-hide="adUnit.type == 'IMAGE'">
                     <ul>
                         <li class="style_setting">
                             <label for="font-type">Font</label>
@@ -91,6 +93,7 @@
                         <li class="style_setting">
                             <label class="colorPicker_label" for="">Title color</label>
                             <input data-ng-model="adUnit.titleColor" type="text" data-ui-colorpicker />
+
                             <label class="colorPicker_label" for="">Text color</label>
                             <input data-ng-model="adUnit.textColor" type="text" data-ui-colorpicker />
                         </li>
@@ -112,16 +115,16 @@
                         </li>
                     </ul>
                 </div>
-                <div ng-show="adUnit.type == 'IMAGE'">
+                <div data-ng-show="adUnit.type == 'IMAGE'">
                     Ad styles do not apply for these settings. Only ads of type Text or Text and Image can be styled.
                 </div>
             </div>
     	</div>
     </div>
 
-    <div class="bottom_section">
+    <div class="bottom_section" data-ng-show="connected() && !hasAdUnit()">
     	<p class="warning">After submit, Ad setting cannot be changed. To make changes, you will need to delete the existing Ad and create a new one.</p>
-	    <a data-ng-hide="hasAdUnit()" data-ng-click="submit()" class="submit_ad action_links">Submit</a>
+	    <a data-ng-click="submit()" class="submit_ad action_links">Submit</a>
     </div>
 
     <!-- loader -->

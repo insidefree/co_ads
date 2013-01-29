@@ -1,7 +1,10 @@
-'use strict';
+(function(window) {
+    'use strict';
 
-// Declare app level module which depends on filters, and services
-angular.module('adSenseApp', ['adSenseApp.filters', 'adSenseApp.services', 'adSenseApp.directives', 'jQueryUI'])
+    window.angular.module('adSenseApp', ['adSenseApp.filters', 'adSenseApp.services', 'adSenseApp.directives', 'jQueryUI'])
+    /**
+     * config
+     */
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/', {
             templateUrl: '/bundles/wixgoogleadsenseapp/app/partials/settings.html',
@@ -12,4 +15,5 @@ angular.module('adSenseApp', ['adSenseApp.filters', 'adSenseApp.services', 'adSe
         $routeProvider.otherwise({
             redirectTo: '/'
         });
-  }]);
+    }]);
+}(window));

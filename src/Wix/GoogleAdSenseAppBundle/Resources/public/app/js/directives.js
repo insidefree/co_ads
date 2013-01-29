@@ -1,7 +1,8 @@
-'use strict';
-
 /* Directives */
-angular.module('adSenseApp.directives', ['ajaxEvents'])
+(function(window) {
+    'use strict';
+
+    window.angular.module('adSenseApp.directives', ['ajaxEvents'])
     /**
      * ajax loader directive
      */
@@ -83,3 +84,4 @@ angular.module('adSenseApp.directives', ['ajaxEvents'])
             }
         };
     });
+}(window));

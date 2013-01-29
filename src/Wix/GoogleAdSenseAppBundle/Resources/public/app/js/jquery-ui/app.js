@@ -1,4 +1,6 @@
-'use strict';
+/* Module */
+(function(window) {
+    'use strict';
 
-// Declare app level module which depends on filters, and services
-angular.module('jQueryUI', ['jQueryUI.filters', 'jQueryUI.services', 'jQueryUI.directives']);
+    window.angular.module('jQueryUI', ['jQueryUI.filters', 'jQueryUI.services', 'jQueryUI.directives']);
+}(window));

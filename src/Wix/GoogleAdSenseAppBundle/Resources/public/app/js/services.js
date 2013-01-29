@@ -1,16 +1,17 @@
-'use strict';
-
 /* Services */
-angular.module('adSenseApp.services', [])
+(function(window) {
+    'use strict';
+
+    window.angular.module('adSenseApp.services', [])
     /**
      * allows access to query string parameters.
      */
     .factory('QueryParams', ['$location', function($location) {
-        var object = {};
+        var object = {},
+            params = $location.$$absUrl.slice($location.$$absUrl.indexOf('?') + 1).split('&'),
+            param;
 
-        var params = $location.$$absUrl.slice($location.$$absUrl.indexOf('?') + 1).split('&');
-
-        for(var param in params) {
+        for(param in params) {
             object[params[param].split('=')[0]] = params[param].split('=')[1];
         }
 
@@ -36,3 +37,4 @@ angular.module('adSenseApp.services', [])
             return $window.Routing.generate(name, params, absolute);
         };
     }]);
+}(window));
