@@ -270,18 +270,18 @@ ul { list-style: none; padding: 0; margin: 0; }
 
 .bottom_section {
 	.warning {
-		$warning-position:image-width("settings/ge/ge_exclamation.png") + 10px;
+		$warning-position:image-width("settings/ge/ge_exclamation_small.png") + 10px;
 		@include inline-block(375px,auto,auto,auto,auto);
 		font-size: 11px;
 		position: relative;
 		padding-left: $warning-position;
 		margin-top: 20px;
 		&:before {
-			content: inline-image("settings/ge/ge_exclamation.png");
+			content: inline-image("settings/ge/ge_exclamation_small.png");
 			position: absolute;
 			left: 0;
 			top: 50%;
-			margin-top: -#{image-height("settings/ge/ge_exclamation.png") / 2}; }
+			margin-top: -#{image-height("settings/ge/ge_exclamation_small.png") / 2}; }
 		}
 	.submit_ad {
 		@include inline-block(142px,29px,auto,auto,29px);
@@ -311,7 +311,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 	#dialog {
 		margin-bottom: 15px;
 		padding-left: 65px;
-		background: transparent inline-image("settings/ge/ge_exclamation.png") 10px 10px / 42px 42px no-repeat; }
+		background: transparent inline-image("settings/ge/ge_exclamation.png") 10px 10px no-repeat; }
 	.ui-dialog-buttonset {
 		button { float: left; }
 		button:first-child { float: right; }
