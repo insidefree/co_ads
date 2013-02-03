@@ -169,8 +169,7 @@ class AppController extends Controller
     }
 
     /**
-     * @return null|\Google_AdUnit
-     * @throws \Exception
+     * @return AdUnit
      */
     protected function getAdUnit()
     {
@@ -239,48 +238,6 @@ class AppController extends Controller
     }
 
     /**
-     * @param AdUnit $adUnit
-     * @param \Google_AdUnit $googleAdUnit
-     */
-    protected function updateAdUnit(AdUnit $adUnit, \Google_AdUnit $googleAdUnit)
-    {
-        $googleAdUnit->getContentAdsSettings()->setType(
-            $adUnit->getType()
-        );
-
-        $googleAdUnit->getCustomStyle()->setCorners(
-            $adUnit->getCornerStyle()
-        );
-
-        /* font */
-        $googleAdUnit->getCustomStyle()->getFont()->setFamily(
-            $adUnit->getFontFamily()
-        );
-        $googleAdUnit->getCustomStyle()->getFont()->setSize(
-            $adUnit->getFontSize()
-        );
-
-        /* colors */
-        $googleAdUnit->getCustomStyle()->getColors()->setBackground(
-            $adUnit->getBackgroundColor()
-        );
-        $googleAdUnit->getCustomStyle()->getColors()->setBorder(
-            $adUnit->getBorderColor()
-        );
-        $googleAdUnit->getCustomStyle()->getColors()->setText(
-            $adUnit->getTextColor()
-        );
-        $googleAdUnit->getCustomStyle()->getColors()->setTitle(
-            $adUnit->getTitleColor()
-        );
-        $googleAdUnit->getCustomStyle()->getColors()->setUrl(
-            $adUnit->getUrlColor()
-        );
-
-        return $googleAdUnit;
-    }
-
-    /**
      * @param \Google_AdUnit $googleAdUnit
      * @return AdUnit
      */
@@ -289,42 +246,22 @@ class AppController extends Controller
         $adUnit = new AdUnit();
 
         /* ads settings */
-        $adUnit->setType(
-            $googleAdUnit->getContentAdsSettings()->getType()
-        );
-        $adUnit->setSize(
-            $googleAdUnit->getContentAdsSettings()->getSize()
-        );
+        $adUnit->setType($googleAdUnit->getContentAdsSettings()->getType());
+        $adUnit->setSize($googleAdUnit->getContentAdsSettings()->getSize());
 
         /* style */
-        $adUnit->setCornerStyle(
-            $googleAdUnit->getCustomStyle()->getCorners()
-        );
+        $adUnit->setCornerStyle($googleAdUnit->getCustomStyle()->getCorners());
 
         /* font */
-        $adUnit->setFontFamily(
-            $googleAdUnit->getCustomStyle()->getFont()->getFamily()
-        );
-        $adUnit->setFontSize(
-            $googleAdUnit->getCustomStyle()->getFont()->getSize()
-        );
+        $adUnit->setFontFamily($googleAdUnit->getCustomStyle()->getFont()->getFamily());
+        $adUnit->setFontSize($googleAdUnit->getCustomStyle()->getFont()->getSize());
 
         /* colors */
-        $adUnit->setBackgroundColor(
-            $googleAdUnit->getCustomStyle()->getColors()->getBackground()
-        );
-        $adUnit->setBorderColor(
-            $googleAdUnit->getCustomStyle()->getColors()->getBorder()
-        );
-        $adUnit->setTextColor(
-            $googleAdUnit->getCustomStyle()->getColors()->getText()
-        );
-        $adUnit->setTitleColor(
-            $googleAdUnit->getCustomStyle()->getColors()->getTitle()
-        );
-        $adUnit->setUrlColor(
-            $googleAdUnit->getCustomStyle()->getColors()->getUrl()
-        );
+        $adUnit->setBackgroundColor($googleAdUnit->getCustomStyle()->getColors()->getBackground());
+        $adUnit->setBorderColor($googleAdUnit->getCustomStyle()->getColors()->getBorder());
+        $adUnit->setTextColor($googleAdUnit->getCustomStyle()->getColors()->getText());
+        $adUnit->setTitleColor($googleAdUnit->getCustomStyle()->getColors()->getTitle());
+        $adUnit->setUrlColor($googleAdUnit->getCustomStyle()->getColors()->getUrl());
 
         return $adUnit;
     }

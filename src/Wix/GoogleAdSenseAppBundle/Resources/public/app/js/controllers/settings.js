@@ -2,7 +2,7 @@
     'use strict';
 
     /* Settings Controller */
-    window.SettingsCtrl = function SettingsCtrl($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, uiDialog) {
+    window.SettingsCtrl = function($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, uiDialog) {
         /**
          * represents the ad unit model
          */
@@ -48,7 +48,7 @@
          */
         $scope.authenticate = function() {
             WixSDK.getSiteInfo(function(info) {
-                var websiteUrl = (info || {}).baseUrl;
+                var websiteUrl = (info || {baseUrl: 'http://hello.world.com'}).baseUrl;
 
                 if (websiteUrl === null || websiteUrl === undefined) {
                     uiDialog.alert('/bundles/wixgoogleadsenseapp/app/partials/publish.html');

@@ -92,6 +92,20 @@ class User
     }
 
     /**
+     * @return bool
+     */
+    public function hasAdUnit()
+    {
+        $adUnitId = $this->getAdUnitId();
+
+        if ($adUnitId === null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get id
      *
      * @return id $id
