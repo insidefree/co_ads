@@ -1,8 +1,19 @@
-/* Services */
+/* jQuery UI module */
 (function(window) {
     'use strict';
 
-    window.angular.module('jQueryUI.services', [])
+    window.angular.module('jQueryUI', [])
+    /**
+     * transforms an element into a jquery-ui accordion
+     */
+    .directive('uiAccordion', function() {
+        return function(scope, elm, attr) {
+            elm.accordion({
+                header: attr.uiHeader,
+                heightStyle: attr.uiHeightStyle
+            });
+        };
+    })
     /**
      * dialog service
      * @todo add docs

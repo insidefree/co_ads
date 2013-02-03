@@ -47,8 +47,8 @@
         <!-- layout settings -->
         <div class="box_style clearfix settings_layout">
             <h2 class="box_title">Layout</h2>
-            <div data-ng-class="{ disabled: hasAdUnit() }">
-	            <ul class="layouts">
+            <div>
+	            <ul class="layouts" data-ng-class="{ disabled: hasAdUnit() }">
 	                <li class="rectangle">
 						<input data-ng-disabled="hasAdUnit()" data-ng-model="adUnit.size" type="radio" value="SIZE_300_250" name="BannerLayout" id="StyleRect"/>
 						<label for="StyleRect">Square</label>
@@ -91,26 +91,26 @@
                             <select style="width: 100px;" data-chosen data-ng-model="adUnit.fontSize" data-ng-options="object|uppercase as object for object in fontSize" id="font-size"></select>
                         </li>
                         <li class="style_setting">
-                            <label class="colorPicker_label" for="">Title color</label>
-                            <input data-ng-model="adUnit.titleColor" type="text" data-ui-colorpicker />
+                            <label class="colorPicker_label" for="title-color">Title color</label>
+                            <input data-ng-model="adUnit.titleColor" type="text" id="title-color" data-ui-colorpicker />
 
-                            <label class="colorPicker_label" for="">Text color</label>
-                            <input data-ng-model="adUnit.textColor" type="text" data-ui-colorpicker />
+                            <label class="colorPicker_label" for="text-color">Text color</label>
+                            <input data-ng-model="adUnit.textColor" type="text" id="text-color" data-ui-colorpicker />
                         </li>
                         <li class="style_setting">
-                            <label class="colorPicker_label" for="">URL color</label>
-                            <input data-ng-model="adUnit.urlColor" type="text" data-ui-colorpicker />
+                            <label class="colorPicker_label" for="url-color">URL color</label>
+                            <input data-ng-model="adUnit.urlColor" type="text" id="url-color" data-ui-colorpicker />
                         </li>
                         <li class="style_setting">
                             <div class="color">
-                                <label class="colorPicker_label" for="">Border color</label>
-                                <input data-ng-model="adUnit.borderColor" type="text" data-ui-colorpicker />
+                                <label class="colorPicker_label" for="border-color">Border color</label>
+                                <input data-ng-model="adUnit.borderColor" type="text" id="border-color" data-ui-colorpicker />
                             </div>
                         </li>
                         <li class="style_setting">
                             <div class="color">
-                                <label class="colorPicker_label" for="">Background color</label>
-                                <input data-ng-model="adUnit.backgroundColor" type="text" data-ui-colorpicker />
+                                <label class="colorPicker_label" for="background-color">Background color</label>
+                                <input data-ng-model="adUnit.backgroundColor" type="text" id="background-color" data-ui-colorpicker />
                             </div>
                         </li>
                     </ul>

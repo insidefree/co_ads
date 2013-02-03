@@ -27,14 +27,19 @@
      * serves as a router to generate routes to a symfony2 backend. appends the instance for every request if it's available.
      */
     .factory('Router', ['$window', 'QueryParams', function($window, QueryParams) {
-        return function(name, opt_params, absolute) {
-            var params = opt_params || {};
+        return {
+            path: function(name, params, absolute) {
+                params = params || {};
 
-            params.instance = QueryParams.instance || null;
-            params.compId = QueryParams.compId || null;
-            params.origCompId = QueryParams.origCompId || null;
+                params.instance = QueryParams.instance || null;
+                params.compId = QueryParams.compId || null;
+                params.origCompId = QueryParams.origCompId || null;
 
-            return $window.Routing.generate(name, params, absolute);
+                return $window.Routing.generate(name, params, absolute);
+            },
+            url: function(name, params) {
+                return this.path(name, params, true);
+            }
         };
     }]);
 }(window));
