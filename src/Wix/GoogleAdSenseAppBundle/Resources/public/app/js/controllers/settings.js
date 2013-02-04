@@ -23,7 +23,7 @@
         /**
          * available fonts to choose from
          */
-        $scope.fontFamily = ['Arial', 'Times', 'Verdana' ];
+        $scope.fontFamily = ['Arial', 'Times', 'Verdana'];
 
         /**
          * available font sizes to choose from
