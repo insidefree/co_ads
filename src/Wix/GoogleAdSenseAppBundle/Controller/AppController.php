@@ -47,6 +47,7 @@ class AppController extends Controller
     private $manager;
 
     /**
+     * returns a lazy loaded google client
      * @return \Google_Client
      */
     protected function getClient()
@@ -61,6 +62,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns a lazy loaded google service
      * @return \Google_AdsensehostService
      */
     protected function getService()
@@ -73,6 +75,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns the config array for the adsense app
      * @return mixed
      */
     protected function getConfig()
@@ -83,6 +86,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns a document manager
      * @return DocumentManager
      */
     protected function getDocumentManager()
@@ -95,6 +99,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns a repository for a class
      * @param $class
      * @return DocumentRepository
      */
@@ -104,6 +109,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns an instance object
      * @return Instance
      * @throws \Exception
      */
@@ -122,6 +128,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns a component id
      * @param bool $full
      * @throws MissingParametersException
      * @return mixed
@@ -148,6 +155,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns a user document that represents the current user
      * @return User
      */
     protected function getUserDocument()
@@ -169,6 +177,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns the current user's ad unit
      * @return AdUnit
      */
     protected function getAdUnit()
@@ -183,6 +192,7 @@ class AppController extends Controller
     }
 
     /**
+     * returns a serializer object
      * @return Serializer
      */
     protected function getSerializer()
@@ -193,6 +203,7 @@ class AppController extends Controller
     }
 
     /**
+     * encodes an ad unit to a google ad unit format
      * @param AdUnit $adUnit
      * @return \Google_AdUnit
      */
@@ -238,6 +249,7 @@ class AppController extends Controller
     }
 
     /**
+     * decodes a google ad unit to an ad unit
      * @param \Google_AdUnit $googleAdUnit
      * @return AdUnit
      */
@@ -267,6 +279,7 @@ class AppController extends Controller
     }
 
     /**
+     * generates a name for the current ad unit
      * @return string
      */
     protected function getAdUnitName()
