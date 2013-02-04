@@ -127,9 +127,11 @@
     	</div>
     </div>
 
-    <div class="bottom_section" data-ng-show="connected() && !hasAdUnit()">
-    	<p class="warning">After submit, Ad setting cannot be changed. To make changes, you will need to delete the existing Ad and create a new one.</p>
-	    <a data-ng-click="submit()" class="submit_ad action_links">Submit</a>
+    <div class="bottom_section">
+        <div data-ng-show="connected() && !hasAdUnit()">
+            <p class="warning">After submit, Ad setting cannot be changed. To make changes, you will need to delete the existing Ad and create a new one.</p>
+            <a data-ng-click="submit()" class="submit_ad action_links">Submit</a>
+        </div>
     </div>
 
     <!-- loader -->
