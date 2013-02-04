@@ -6,17 +6,34 @@
     /**
      * transforms an element into a jquery-ui accordion
      */
-    .directive('uiAccordion', function() {
+    .directive('uiAccordion', [function() {
         return function(scope, elm, attr) {
             elm.accordion({
                 header: attr.uiHeader,
                 heightStyle: attr.uiHeightStyle
             });
         };
-    })
+    }])
     /**
-     * dialog service
-     * @todo add docs
+     * @todo docs
+     */
+    .directive('uiDatepicker', [function() {
+        return {
+            require: '?ngModel',
+            link: function(scope, elm, attr, ctrl) {
+                elm.datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: attr.uiYearRange,
+                    onSelect: function(date){
+                        ctrl.$setViewValue(date);
+                    }
+                });
+            }
+        };
+    }])
+    /**
+     * @todo docs
      */
     .factory('uiDialog', ['$http', '$compile', '$rootScope', function($http, $compile, $rootScope) {
         return {
