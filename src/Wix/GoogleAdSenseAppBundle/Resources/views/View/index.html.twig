@@ -27,9 +27,9 @@
 
             // type of ad
             {% if adUnit.type != 'IMAGE' %}
-            google_ad_type = 'text';
+                google_ad_type = 'text';
             {% else %}
-            google_ad_type = 'image';
+                google_ad_type = 'image';
             {% endif %}
 
             // font style
@@ -45,11 +45,11 @@
 
             // corners
             {% if adUnit.cornerStyle == 'SQUARE' %}
-            google_ui_features = 'rc:4';
+                google_ui_features = 'rc:4';
             {% elseif adUnit.cornerStyle == 'SLIGHTLY_ROUNDED' %}
-            google_ui_features = 'rc:6';
+                google_ui_features = 'rc:6';
             {% elseif adUnit.cornerStyle == 'VERY_ROUNDED' %}
-            google_ui_features = 'rc:10';
+                google_ui_features = 'rc:10';
             {% endif %}
         </script>
         <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
@@ -67,17 +67,17 @@
 <!-- wix sdk -->
 <script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.16.0/js/Wix.js"></script>
 
-{% if code is not defined %}
-    <!-- fos js routing bundle -->
-    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+{#{% if code is not defined %}#}
+    {#<!-- fos js routing bundle -->#}
+    {#<script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>#}
 
-    <!-- scripts -->
-    {% javascripts
-    '@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery/jquery.js'
-    '@WixGoogleAdSenseAppBundle/Resources/public/app/js/responsive.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endif %}
+    {#<!-- scripts -->#}
+    {#{% javascripts#}
+    {#'@WixGoogleAdSenseAppBundle/Resources/public/app/lib/jquery/jquery.js'#}
+    {#'@WixGoogleAdSenseAppBundle/Resources/public/app/js/responsive.js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+{#{% endif %}#}
 </body>
 </html>
