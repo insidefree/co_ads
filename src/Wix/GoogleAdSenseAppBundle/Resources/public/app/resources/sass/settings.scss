@@ -247,7 +247,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 			position: relative;
 			color: transparent;
 			opacity: 0.5;
-			background: #f9f9f9; }
+			background: #f3f3f3; }
 		label:before { left: -25px; }
 		label:after {
 			content: "";
@@ -269,6 +269,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .chzn-container-single .chzn-single div b { background-image: url("/bundles/wixgoogleadsenseapp/app/lib/chosen/chosen-sprite.png"); }
 
 .bottom_section {
+	height: 50px;
 	.warning {
 		$warning-position:image-width("settings/ge/ge_exclamation_small.png") + 10px;
 		@include inline-block(375px,auto,auto,auto,auto);
