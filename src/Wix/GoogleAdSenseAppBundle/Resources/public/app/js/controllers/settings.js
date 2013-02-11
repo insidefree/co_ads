@@ -48,7 +48,7 @@
          */
         $scope.authenticate = function() {
             WixSDK.getSiteInfo(function(info) {
-                var websiteUrl = (info || {baseUrl: 'http://hello.world.com'}).baseUrl;
+                var websiteUrl = (info || {}).baseUrl;
 
                 if (websiteUrl === null || websiteUrl === undefined) {
                     uiDialog.alert('/bundles/wixgoogleadsenseapp/app/partials/publish.html');
