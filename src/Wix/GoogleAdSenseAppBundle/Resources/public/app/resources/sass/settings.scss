@@ -120,7 +120,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     border-top: 1px solid $border_color;
     height: 51px;
     line-height: 51px;
-	& > div { @include inline-block(55%,auto,auto,middle,auto); }
+	& > div { @include inline-block(49%,auto,auto,middle,auto); }
 	& > .opacity { width: 43%; }
 	label {
 		line-height: 51px;
