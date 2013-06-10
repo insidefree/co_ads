@@ -67,6 +67,37 @@
         };
     }])
     /**
+     * @name Ui.uiColorPicker
+     * @description
+     * Activates a DOM select element as a colorpicker element. It requires Wix's ColorPicker plugin to work but it will not throw
+     * any exceptions if it's not available.
+     *
+     * @example
+     *   <div data-ui-color-picker data-ng-model="user.searchBorder"></div>
+     */
+    .directive('uiColorPicker', function() {
+        return {
+            require: 'ngModel',
+            link: function(scope, elm, attr, ctrl) {
+                if (!elm.ColorPicker) {
+                    return;
+                }
+
+                elm.on('colorChanged', function(event, data) {
+                    scope.$apply(function() {
+                        ctrl.$setViewValue(data.selected_color);
+                    });
+                });
+
+                ctrl.$render = function() {
+                    elm.ColorPicker({
+                        startWithColor: ctrl.$viewValue
+                    });
+                };
+            }
+        };
+    })
+    /**
      * colorpicker directive
      */
     .directive('uiColorpicker', function() {

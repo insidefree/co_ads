@@ -83,8 +83,8 @@ wix_api:
 # Google OAuth2 Configuration
 google_apio_auth2:
     keys:
-        client_id: 417424657964.apps.googleusercontent.com
-        client_secret: R1R9PiJd4j9kVT-X4xQf1y76
+        client_id: 945840538324.apps.googleusercontent.com
+        client_secret: hD3pGqJf-xa5FxIfBm_5nhGd
         redirect_uri: http://local.adsense.apps.wix.com/app_dev.php/settings/redirect
 
     scopes:
@@ -95,4 +95,4 @@ google_apio_auth2:
 
 # Wix Google AdSense Configuration
 wix_google_ad_sense_app:
-    refresh_token: 1/-tOgUd17_soJ1an9Z99Nv9vbfeCBvhAQNPeMkKA7oUo
+    refresh_token: 1/9QrmGVvG6zOu9Jna1UDBHon-1Mww_pL9NEzRJl_aY0k
