@@ -50,7 +50,7 @@
             WixSDK.getSiteInfo(function(info) {
                 var websiteUrl = (info || {}).baseUrl;
 
-                if (websiteUrl === null || websiteUrl === undefined) {
+                if (!websiteUrl) {
                     uiDialog.alert('/bundles/wixgoogleadsenseapp/app/partials/publish.html');
                     return;
                 }
