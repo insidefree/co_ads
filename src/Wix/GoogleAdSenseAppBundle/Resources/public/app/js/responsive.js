@@ -86,7 +86,7 @@
     // report height change to wix whenever the document is refreshed
     jQuery(function() {
         window.Wix.reportHeightChange(
-            window.jQuery('body').height()
+            window.jQuery(document).height()
         );
     });
 
