@@ -196,7 +196,7 @@ dd.after,dd:after {
 	&:hover { @include box-shadow(1px 2px 2px #aaa); }
 	&:active { @include box-shadow(0 2px 1px #aaa inset); } }
 
-input[type="text"] {
+input[type="text"]:not(.acp-readout-input) {
 	@include inline-align(30px);
 	border: 1px solid #ccc;
 	@include border-radius(3px);

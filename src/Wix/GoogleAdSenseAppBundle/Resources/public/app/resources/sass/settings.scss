@@ -149,6 +149,28 @@ ul { list-style: none; padding: 0; margin: 0; }
 	#font_type_chzn { margin-right: 80px; }
 	#font_size_chzn { margin-left: 10px; }
 }
+.style_setting .readouts>label {
+  width: auto;
+  text-indent: 0;
+  line-height: 1;
+  display: block;
+}
+.style_setting .readouts input[type="text"] {
+	border: 1px solid #b4b4b4;
+	box-shadow: rgba(0,0,0,0.2) 0 1px 1px 0 inset;
+	margin: 0 8px 0 8px;
+	width: 70px;
+	height: 27px;
+	line-height: 1.1em;
+	font-size: .8em;
+	text-align: center;
+	color: #848484;
+	text-transform: uppercase;
+	outline: 0;
+	vertical-align: baseline;
+	border-radius: 3px;
+	padding: 0;
+}
 
 /* layout settings */
 #settings_popup {
