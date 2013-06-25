@@ -98,11 +98,10 @@ class SettingsController extends AppController
             throw new AssociationRejectedException('the association was rejected.');
         }
 
-        $user = $this->getUserFromSession($session);
-        $account = $this->getService()->accounts->get($user->getAccountId());
+        $account = $this->getService()->accounts->get($session->getAccountId());
 
         if ($account->status === 'APPROVED') {
-            $this->saveUserInformation($session, $user);
+            $this->saveUserInformation($session);
         }
 
         return array();
@@ -110,10 +109,9 @@ class SettingsController extends AppController
 
     /**
      * @param \Google_AssociationSession $session
-     * @return User
      * @throws InvalidAssociationIdException
      */
-    protected function getUserFromSession(\Google_AssociationSession $session)
+    protected function saveUserInformation(\Google_AssociationSession $session)
     {
         $user = $this->getRepository('WixGoogleAdSenseAppBundle:User')
             ->findOneBy(array('associationId' => $session->getId()));
@@ -122,16 +120,6 @@ class SettingsController extends AppController
             throw new InvalidAssociationIdException('could not find a matching association Id in the database.');
         }
 
-        return $user;
-    }
-
-    /**
-     * @param \Google_AssociationSession $session
-     * @param User $user
-     * @throws InvalidAssociationIdException
-     */
-    protected function saveUserInformation(\Google_AssociationSession $session, User $user)
-    {
         $user->setAccountId($session->getAccountId());
         $adClients = $this->getService()->accounts_adclients->listAccountsAdclients($user->getAccountId());
 

@@ -24,6 +24,7 @@ class ViewController extends AppController
 
             return array(
                 'code' => $code,
+                'domain' => $user->getDomain(),
             );
         }
 
