@@ -69,30 +69,3 @@ doctrine_mongodb:
     document_managers:
         default:
             auto_mapping: true
-
-# Wix API Configuration
-wix_api:
-    classes:
-        service: Wix\APIBundle\Base\Bridge
-        instance: Wix\APIBundle\Base\Instance
-
-    keys:
-        app_id: 12d5833e-f061-7cc8-5122-e1d404f6c8ae
-        app_secret: d8f2bb9f-7ea1-4a15-b2af-acca6be60fe8
-
-# Google OAuth2 Configuration
-google_apio_auth2:
-    keys:
-        client_id: 945840538324.apps.googleusercontent.com
-        client_secret: hD3pGqJf-xa5FxIfBm_5nhGd
-        redirect_uri: http://local.adsense.apps.wix.com/app_dev.php/settings/redirect
-
-    scopes:
-        [ https://www.googleapis.com/auth/adsensehost ]
-
-    preferences:
-        use_objects: true
-
-# Wix Google AdSense Configuration
-wix_google_ad_sense_app:
-    refresh_token: 1/9QrmGVvG6zOu9Jna1UDBHon-1Mww_pL9NEzRJl_aY0k
