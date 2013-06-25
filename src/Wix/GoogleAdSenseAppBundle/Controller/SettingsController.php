@@ -72,7 +72,8 @@ class SettingsController extends AppController
     protected function authenticateUser(\Google_AssociationSession $session)
     {
         $user = $this->getUserDocument();
-        $user->setAssociationIdd($session->getId());
+        $user->setAssociationId($session->getId());
+        $user->setDomain($session->getWebsiteUrl());
 
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();

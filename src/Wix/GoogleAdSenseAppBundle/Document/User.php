@@ -32,6 +32,11 @@ class User
     protected $componentId;
 
     /**
+     * @MongoDB\String
+     */
+    protected $domain;
+
+    /**
      * @MongoDB\Date
      */
     protected $signedAt;
@@ -226,6 +231,28 @@ class User
     }
 
     /**
+     * Set domain
+     *
+     * @param string $domain
+     * @return User
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+        return $this;
+    }
+
+    /**
+     * Get domain
+     *
+     * @return $domain
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
      * Set accountId
      *
      * @param string $accountId
@@ -245,18 +272,6 @@ class User
     public function getAccountId()
     {
         return $this->accountId;
-    }
-
-    /**
-     * Set associationId
-     *
-     * @param string $associationId
-     * @return User
-     */
-    public function setAssociationIdd($associationId)
-    {
-        $this->associationId = $associationId;
-        return $this;
     }
 
     /**
