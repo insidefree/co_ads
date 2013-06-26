@@ -14,13 +14,6 @@
         $scope.user = user;
 
         /**
-         * returns true if the user has connected his account
-         */
-        $scope.connected = function() {
-            return $scope.user.accountId !== null;
-        };
-
-        /**
          * available fonts to choose from
          */
         $scope.fontFamily = ['Arial', 'Times', 'Verdana'];
@@ -29,6 +22,20 @@
          * available font sizes to choose from
          */
         $scope.fontSize = ['Small', 'Medium', 'Large'];
+
+        /**
+         * set the website url when it's available on the scope
+         */
+        WixSDK.getSiteInfo(function(info) {
+            $scope.websiteUrl = (info || {}).baseUrl;
+        });
+
+        /**
+         * returns true if the user has connected his account
+         */
+        $scope.connected = function() {
+            return $scope.user.accountId !== null;
+        };
 
         /**
          * listens to changes on the ad unit model and sends a request to save it on the server
@@ -47,16 +54,12 @@
          * opens an authentication window
          */
         $scope.authenticate = function() {
-            WixSDK.getSiteInfo(function(info) {
-                var websiteUrl = (info || {}).baseUrl;
+            if (!$scope.websiteUrl) {
+                uiDialog.alert('/bundles/wixgoogleadsenseapp/app/partials/publish.html');
+                return;
+            }
 
-                if (!websiteUrl) {
-                    uiDialog.alert('/bundles/wixgoogleadsenseapp/app/partials/publish.html');
-                    return;
-                }
-
-                $window.open(Router.path('authenticate', { websiteUrl: websiteUrl }), 'authenticate', 'height=615, width=1000');
-            });
+            $window.open(Router.path('authenticate', { websiteUrl: $scope.websiteUrl }), 'authenticate', 'height=615, width=1000');
         };
 
         /**
