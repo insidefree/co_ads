@@ -148,7 +148,7 @@ class AppController extends Controller
         }
 
         if ($full === false) {
-            $componentId = intval(preg_replace("/^(TPWdgt|TPSttngs)/", "", $componentId));
+            $componentId = preg_replace("/^(TPWdgt|TPSttngs)/", "", $componentId);
         }
 
         return $componentId;
