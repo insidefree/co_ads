@@ -291,7 +291,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .chzn-container-single .chzn-single div b { background-image: url("/bundles/wixgoogleadsenseapp/app/lib/chosen/chosen-sprite.png"); }
 
 .bottom_section {
-	height: 50px;
+	height: 70px;
 	.warning {
 		$warning-position:image-width("settings/ge/ge_exclamation_small.png") + 10px;
 		@include inline-block(375px,auto,auto,auto,auto);
@@ -340,5 +340,6 @@ ul { list-style: none; padding: 0; margin: 0; }
 		button:first-child { float: right; }
 		button + button {
 			color: $color_wixBlue !important;
+			background: #fff;
 			@include background(linear-gradient(#fff 50%,#eee 50%)); } }
 }

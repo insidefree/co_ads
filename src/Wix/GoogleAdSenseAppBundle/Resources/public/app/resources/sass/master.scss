@@ -227,3 +227,5 @@ input[type="radio"] + label:before {
 label.checked:before,
 input[type="radio"]:checked + label:before { @include background-image("settings/btn/btn_radio_checked.png"); }
 input[type="radio"] + label:first-child { text-indent: 0; }
+
+/* Colorpicker */

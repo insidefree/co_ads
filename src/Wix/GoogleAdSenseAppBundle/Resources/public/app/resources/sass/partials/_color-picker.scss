@@ -34,3 +34,7 @@ See <a href="#">Color picker module</a>
     left: -50px; }
 }
 #settings_popup .color-selector { @include colorPicker; }
+
+.popover .arrow { display: none; }
+.popover.right { margin-left: -130px; }
+.popover.left { margin-left: -140px; }
