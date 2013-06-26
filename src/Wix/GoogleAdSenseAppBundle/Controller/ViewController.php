@@ -18,12 +18,14 @@ class ViewController extends AppController
     public function indexAction()
     {
         $user = $this->getUserDocument();
+        $editor = $this->getInstance()->isOwner();
 
         if ($user->hasAdUnit()) {
             $code = $this->getService()->accounts_adunits->getAdCode($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
 
             return array(
                 'code' => $code,
+                'editor' => $editor,
                 'domain' => $user->getDomain(),
             );
         }
