@@ -340,5 +340,6 @@ ul { list-style: none; padding: 0; margin: 0; }
 		button:first-child { float: right; }
 		button + button {
 			color: $color_wixBlue !important;
+			background: #fff;
 			@include background(linear-gradient(#fff 50%,#eee 50%)); } }
 }
