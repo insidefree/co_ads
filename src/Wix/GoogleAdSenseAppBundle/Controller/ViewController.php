@@ -17,19 +17,21 @@ class ViewController extends AppController
      */
     public function indexAction()
     {
+        $params = array(
+            'adUnit' => $this->getAdUnit(),
+        );
+
         $user = $this->getUserDocument();
 
         if ($user->hasAdUnit()) {
             $code = $this->getService()->accounts_adunits->getAdCode($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
 
-            return array(
+            $params = array_merge($params, array(
                 'code' => $code,
                 'domain' => $user->getDomain(),
-            );
+            ));
         }
 
-        return array(
-            'adUnit' => $this->getAdUnit(),
-        );
+        return $params;
     }
 }
