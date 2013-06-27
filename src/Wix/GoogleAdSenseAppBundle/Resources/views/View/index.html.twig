@@ -10,7 +10,7 @@
 
 <!-- adsense advertisement -->
 <div>
-    {% if code is defined and editor == false %}
+    {% if code is defined and app.request.get('viewMode') != 'editor' %}
         {% include 'WixGoogleAdSenseAppBundle:View:ad.html.twig' %}
     {% else %}
         {% include 'WixGoogleAdSenseAppBundle:View:demo.html.twig' %}
