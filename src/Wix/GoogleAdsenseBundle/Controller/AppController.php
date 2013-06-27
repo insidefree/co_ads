@@ -167,6 +167,7 @@ class AppController extends Controller
         $user = $this->getRepository('WixGoogleAdsenseBundle:User')
             ->findOneBy(array(
                 'instanceId' => $instanceId,
+                'componentId' => (string) $componentId,
             ));
 
         if ($user === null) {
