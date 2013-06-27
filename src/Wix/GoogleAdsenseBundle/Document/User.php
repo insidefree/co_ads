@@ -34,16 +34,6 @@ class User
     /**
      * @MongoDB\String
      */
-    protected $adUnitId;
-
-    /**
-     * @MongoDB\EmbedOne(targetDocument="AdUnit")
-     */
-    protected $adUnit;
-
-    /**
-     * @MongoDB\String
-     */
     protected $domain;
 
     /**
@@ -74,7 +64,17 @@ class User
     /**
      * @MongoDB\String
      */
+    protected $adUnitId;
+
+    /**
+     * @MongoDB\String
+     */
     protected $clientId;
+    
+    /**
+     * @MongoDB\EmbedOne(targetDocument="AdUnit")
+     */
+    protected $adUnit;
 
     /**
      * @param $instanceId
@@ -89,6 +89,28 @@ class User
     }
 
     /**
+     * @return bool
+     */
+    public function connected()
+    {
+        return $this->accountId !== null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAdUnit()
+    {
+        $adUnitId = $this->getAdUnitId();
+
+        if ($adUnitId === null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get id
      *
      * @return id $id
@@ -96,14 +118,6 @@ class User
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return bool
-     */
-    public function connected()
-    {
-        return $this->accountId !== null;
     }
 
     /**
@@ -283,28 +297,6 @@ class User
     }
 
     /**
-     * Set clientId
-     *
-     * @param string $clientId
-     * @return \User
-     */
-    public function setClientId($clientId)
-    {
-        $this->clientId = $clientId;
-        return $this;
-    }
-
-    /**
-     * Get clientId
-     *
-     * @return string $clientId
-     */
-    public function getClientId()
-    {
-        return $this->clientId;
-    }
-
-    /**
      * Set adUnit
      *
      * @param AdUnit $adUnit
@@ -349,16 +341,24 @@ class User
     }
 
     /**
-     * @return bool
+     * Set clientId
+     *
+     * @param string $clientId
+     * @return \User
      */
-    public function hasAdUnit()
+    public function setClientId($clientId)
     {
-        $adUnitId = $this->getAdUnitId();
+        $this->clientId = $clientId;
+        return $this;
+    }
 
-        if ($adUnitId === null) {
-            return false;
-        }
-
-        return true;
+    /**
+     * Get clientId
+     *
+     * @return string $clientId
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
     }
 }
