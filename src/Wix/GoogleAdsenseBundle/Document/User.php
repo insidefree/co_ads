@@ -70,7 +70,7 @@ class User
      * @MongoDB\String
      */
     protected $clientId;
-    
+
     /**
      * @MongoDB\EmbedOne(targetDocument="AdUnit")
      */

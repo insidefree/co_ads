@@ -25,6 +25,11 @@ class GoogleAPIOAuth2Extension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('google_api_oauth2.config', $config);
+        $container->setParameter('google_api_oauth2.client_id', $config['keys']['client_id']);
+        $container->setParameter('google_api_oauth2.client_secret', $config['keys']['client_secret']);
+        $container->setParameter('google_api_oauth2.refresh_token', $config['keys']['refresh_token']);
+        $container->setParameter('google_api_oauth2.redirect_uri', $config['urls']['redirect_uri']);
+        $container->setParameter('google_api_oauth2.scopes', $config['scopes']);
+        $container->setParameter('google_api_oauth2.use_objects', $config['preferences']['use_objects']);
     }
 }

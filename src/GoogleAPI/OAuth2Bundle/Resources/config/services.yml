@@ -1,4 +1,14 @@
 services:
-    google_oauth2:
-        class: GoogleAPI\OAuth2Bundle\Service\GoogleService
-        arguments: [%google_api_oauth2.config%]
+    google_api.oauth2.client:
+        class: Google_Client
+        calls:
+            - [setClientId, [%google_api_oauth2.client_id%]]
+            - [setClientSecret, [%google_api_oauth2.client_secret%]]
+            - [setRedirectUri, [%google_api_oauth2.redirect_uri%]]
+            - [setScopes, [%google_api_oauth2.scopes%]]
+            - [setUseObjects, [%google_api_oauth2.use_objects%]]
+            - [refreshToken, [%google_api_oauth2.refresh_token%]]
+
+    google_api.oauth2.adsense_host_service:
+        class: Google_AdsensehostService
+        arguments: [@google_api.oauth2.client]

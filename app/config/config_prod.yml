@@ -33,6 +33,9 @@ google_apio_auth2:
     keys:
         client_id: 945840538324.apps.googleusercontent.com
         client_secret: hD3pGqJf-xa5FxIfBm_5nhGd
+        refresh_token: 1/9QrmGVvG6zOu9Jna1UDBHon-1Mww_pL9NEzRJl_aY0k
+
+    urls:
         redirect_uri: http://www.adsense.apps.wix.com/settings/redirect
 
     scopes:
@@ -40,7 +43,3 @@ google_apio_auth2:
 
     preferences:
         use_objects: true
-
-# Wix Google AdSense Configuration
-wix_google_adsense:
-    refresh_token: 1/9QrmGVvG6zOu9Jna1UDBHon-1Mww_pL9NEzRJl_aY0k
