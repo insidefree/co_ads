@@ -81,7 +81,7 @@ class AppController extends Controller
      */
     protected function getConfig()
     {
-        $config = $this->container->getParameter('wix_google_ad_sense_app.config');
+        $config = $this->container->getParameter('wix_google_adsense.config');
 
         return $config;
     }
