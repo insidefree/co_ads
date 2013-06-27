@@ -6,7 +6,7 @@ framework:
     profiler: { only_exceptions: false }
 
 web_profiler:
-    toolbar: false
+    toolbar: true
     intercept_redirects: false
 
 monolog:
@@ -51,5 +51,5 @@ google_apio_auth2:
         use_objects: true
 
 # Wix Google AdSense Configuration
-wix_google_ad_sense_app:
+wix_google_adsense:
     refresh_token: 1/-tOgUd17_soJ1an9Z99Nv9vbfeCBvhAQNPeMkKA7oUo

@@ -42,5 +42,5 @@ google_apio_auth2:
         use_objects: true
 
 # Wix Google AdSense Configuration
-wix_google_ad_sense_app:
+wix_google_adsense:
     refresh_token: 1/9QrmGVvG6zOu9Jna1UDBHon-1Mww_pL9NEzRJl_aY0k

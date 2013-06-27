@@ -1,0 +1,9 @@
+# main application routing
+wix_google_adsense.redirect:
+    pattern: /redirect
+    defaults: { _controller: WixGoogleAdsenseBundle:Settings:redirect }
+
+wix_google_adsense.main:
+    resource: "@WixGoogleAdsenseBundle/Controller/"
+    type:     annotation
+    prefix:   /

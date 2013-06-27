@@ -19,7 +19,7 @@ class AppKernel extends Kernel {
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
 
-            new Wix\GoogleAdSenseAppBundle\WixGoogleAdSenseAppBundle(),
+            new Wix\GoogleAdsenseBundle\WixGoogleAdsenseBundle(),
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Wix\APIBundle\WixAPIBundle(),
