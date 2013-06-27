@@ -22,10 +22,9 @@ class ViewController extends AppController
         );
 
         $user = $this->getUserDocument();
-        $settings = $this->getSettingsDocument();
 
-        if ($settings->hasAdUnit()) {
-            $code = $this->getService()->accounts_adunits->getAdCode($user->getAccountId(), $user->getClientId(), $settings->getAdUnitId());
+        if ($user->hasAdUnit()) {
+            $code = $this->getService()->accounts_adunits->getAdCode($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
 
             $params = array_merge($params, array(
                 'code' => $code,
