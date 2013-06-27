@@ -27,7 +27,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ WixGoogleAdSenseAppBundle ]
+    bundles:        [ WixGoogleAdsenseBundle ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
