@@ -17,7 +17,6 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Wix\APIBundle\Base\Instance;
 
 use Wix\GoogleAdsenseBundle\Document\AdUnit;
-use Wix\GoogleAdsenseBundle\Document\Settings;
 use Wix\GoogleAdsenseBundle\Document\User;
 use Wix\GoogleAdsenseBundle\Document\Token;
 use Wix\GoogleAdsenseBundle\Exceptions\MissingParametersException;
@@ -28,51 +27,21 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 class AppController extends Controller
 {
     /**
-     * @var \Google_Client
-     */
-    private $client;
-
-    /**
-     * @var \Google_AdsensehostService
-     */
-    private $service;
-
-    /**
-     * @var Instance
-     */
-    private $instance;
-
-    /**
-     * @var DocumentManager
-     */
-    private $manager;
-
-    /**
-     * returns a lazy loaded google client
+     * returns a google client
      * @return \Google_Client
      */
     protected function getClient()
     {
-        if ($this->client === null) {
-            $this->client = $this->get('google_oauth2')->getClient();
-            $config = $this->getConfig();
-            $this->client->refreshToken($config['refresh_token']);
-        }
-
-        return $this->client;
+        return $this->get('google_api.oauth2.client');
     }
 
     /**
-     * returns a lazy loaded google service
+     * returns a google service
      * @return \Google_AdsensehostService
      */
     protected function getService()
     {
-        if ($this->service === null) {
-            $this->service = $this->get('google_oauth2')->getAdSenseHostService($this->getClient());
-        }
-
-        return $this->service;
+        return $this->get('google_api.oauth2.adsense_host_service');
     }
 
     /**
@@ -81,9 +50,7 @@ class AppController extends Controller
      */
     protected function getConfig()
     {
-        $config = $this->container->getParameter('wix_google_adsense.config');
-
-        return $config;
+        return $this->container->getParameter('wix_google_adsense.config');
     }
 
     /**
@@ -92,11 +59,7 @@ class AppController extends Controller
      */
     protected function getDocumentManager()
     {
-        if ($this->manager === null) {
-            $this->manager = $this->get('doctrine.odm.mongodb.document_manager');
-        }
-
-        return $this->manager;
+        return $this->get('doctrine.odm.mongodb.document_manager');
     }
 
     /**
@@ -110,22 +73,41 @@ class AppController extends Controller
     }
 
     /**
+     * @return mixed
+     */
+    protected function getInstanceId()
+    {
+        return $this->getInstance()->getInstanceId();
+    }
+
+    /**
      * returns an instance object
      * @return Instance
      * @throws \Exception
      */
     protected function getInstance()
     {
-        if ($this->instance === null) {
-            $instance = $this->getRequest()->query->get('instance');
-            if ($instance === null) {
-                throw new \Exception('Missing instance query string parameter.');
-            }
+        $instance = $this->getRequest()->query->get('instance');
 
-            $this->instance = $this->get('wix_bridge')->parse($instance);
+        if ($instance === null) {
+            throw new \Exception('Missing instance query string parameter.');
         }
 
-        return $this->instance;
+        return $this->get('wix_bridge')->parse(
+            $instance
+        );
+    }
+
+    /**
+     * @return mixed|null
+     */
+    private function getCorrectComponentId()
+    {
+        $query = $this->getRequest()->query;
+
+        return $query->has('origCompId')
+            ? $query->get('origCompId')
+            : $query->get('compId');
     }
 
     /**
@@ -136,20 +118,30 @@ class AppController extends Controller
      */
     protected function getComponentId($full = false)
     {
-        $query = $this->getRequest()->query;
+        $componentId = $this->parseComponentId(
+            $this->getCorrectComponentId()
+        );
 
-        $componentId = $query->has('origCompId') ? $query->get('origCompId') : $query->get('compId');
+        if ($full === false) {
+            $componentId = preg_replace("/^(TPWdgt|TPSttngs)/", "", $componentId);
+        }
 
-        if ($componentId === null) {
+        return $componentId;
+    }
+
+    /**
+     * @param $componentId
+     * @return mixed
+     * @throws \Wix\GoogleAdsenseBundle\Exceptions\MissingParametersException
+     */
+    protected function parseComponentId($componentId)
+    {
+        if (!$componentId) {
             throw new MissingParametersException('Could not find a component id (originCompId or compId query string parameter).');
         }
 
         if (preg_match("/^(TPWdgt|TPSttngs)/", $componentId) == false) {
             throw new MissingParametersException('Invalid component id. should be in the format of "TPWdgt" or "TPSttngs" with a digit appended to it.');
-        }
-
-        if ($full === false) {
-            $componentId = preg_replace("/^(TPWdgt|TPSttngs)/", "", $componentId);
         }
 
         return $componentId;
@@ -161,20 +153,27 @@ class AppController extends Controller
      */
     protected function getUserDocument()
     {
+        $instanceId = $this->getInstanceId();
         $componentId = $this->getComponentId();
-        $instanceId = $this->getInstance()->getInstanceId();
 
-        $user = $this->getRepository('WixGoogleAdsenseBundle:User')
-            ->findOneBy(array(
-                'instanceId' => $instanceId,
-                'componentId' => (string) $componentId,
-            ));
+        $user = $this->findUserDocument($instanceId, $componentId);
 
         if ($user === null) {
             $user = new User($instanceId, $componentId);
         }
 
         return $user;
+    }
+
+    /**
+     * @param $instanceId
+     * @param $componentId
+     * @return object
+     */
+    protected function findUserDocument($instanceId, $componentId)
+    {
+        return $this->getRepository('WixGoogleAdsenseBundle:User')
+            ->findOneBy(array('instanceId' => $instanceId, 'componentId' => $componentId));
     }
 
     /**
@@ -198,9 +197,7 @@ class AppController extends Controller
      */
     protected function getSerializer()
     {
-        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
-
-        return $serializer;
+        return new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
     }
 
     /**

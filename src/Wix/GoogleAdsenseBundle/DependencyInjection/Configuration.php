@@ -26,11 +26,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->fixXmlConfig('scope')
-            ->children()
-                ->scalarNode('refresh_token')
-                    ->isRequired()
-                ->end()
-            ->end()
         ;
 
         return $treeBuilder;
