@@ -1,0 +1,6 @@
+services:
+    wix_google_adsense.permissions_listener:
+        class: Wix\GoogleAdsenseBundle\EventListener\PermissionsListener
+        arguments: [@annotation_reader, @wix_bridge]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

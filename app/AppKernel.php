@@ -18,10 +18,10 @@ class AppKernel extends Kernel {
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-
             new Wix\GoogleAdsenseBundle\WixGoogleAdsenseBundle(),
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
             new Wix\APIBundle\WixAPIBundle(),
             new GoogleAPI\OAuth2Bundle\GoogleAPIOAuth2Bundle(),
             new SunCat\MobileDetectBundle\MobileDetectBundle()
