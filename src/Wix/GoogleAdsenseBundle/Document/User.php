@@ -29,6 +29,21 @@ class User
     /**
      * @MongoDB\String
      */
+    protected $componentId;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $adUnitId;
+
+    /**
+     * @MongoDB\EmbedOne(targetDocument="AdUnit")
+     */
+    protected $adUnit;
+
+    /**
+     * @MongoDB\String
+     */
     protected $domain;
 
     /**
@@ -63,19 +78,14 @@ class User
 
     /**
      * @param $instanceId
+     * @param $componentId
      */
-    public function __construct($instanceId)
+    public function __construct($instanceId, $componentId)
     {
         $this->instanceId = $instanceId;
-        $this->createdAt = new \DateTime();
-    }
+        $this->componentId = $componentId;
 
-    /**
-     * @return bool
-     */
-    public function connected()
-    {
-        return $this->accountId !== null;
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -86,6 +96,14 @@ class User
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return bool
+     */
+    public function connected()
+    {
+        return $this->accountId !== null;
     }
 
     /**
@@ -284,5 +302,63 @@ class User
     public function getClientId()
     {
         return $this->clientId;
+    }
+
+    /**
+     * Set adUnit
+     *
+     * @param AdUnit $adUnit
+     * @return User
+     */
+    public function setAdUnit(\Wix\GoogleAdsenseBundle\Document\AdUnit $adUnit)
+    {
+        $this->adUnit = $adUnit;
+        return $this;
+    }
+
+    /**
+     * Get adUnit
+     *
+     * @return AdUnit $adUnit
+     */
+    public function getAdUnit()
+    {
+        return $this->adUnit;
+    }
+
+    /**
+     * Set adUnitId
+     *
+     * @param string $adUnitId
+     * @return \User
+     */
+    public function setAdUnitId($adUnitId)
+    {
+        $this->adUnitId = $adUnitId;
+        return $this;
+    }
+
+    /**
+     * Get adUnitId
+     *
+     * @return string $adUnitId
+     */
+    public function getAdUnitId()
+    {
+        return $this->adUnitId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAdUnit()
+    {
+        $adUnitId = $this->getAdUnitId();
+
+        if ($adUnitId === null) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -179,10 +179,10 @@ class SettingsController extends AppController
      */
     public function getUserAction()
     {
-        $settings = $this->getSerializer()->normalize($this->getSettingsDocument());
-        unset($settings['adUnit']);
+        $user = $this->getSerializer()->normalize($this->getUserDocument());
+        unset($user['adUnit']);
 
-        return new JsonResponse($settings);
+        return new JsonResponse($user);
     }
 
     /**
@@ -193,10 +193,9 @@ class SettingsController extends AppController
     public function getAdUnitAction()
     {
         $user = $this->getUserDocument();
-        $settings = $this->getSettingsDocument();
 
-        if ($settings->hasAdUnit()) {
-            $adUnit = $this->getService()->accounts_adunits->get($user->getAccountId(), $user->getClientId(), $settings->getAdUnitId());
+        if ($user->hasAdUnit()) {
+            $adUnit = $this->getService()->accounts_adunits->get($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
             $adUnit = $this->decodeAdUnit($adUnit);
         } else {
             $adUnit = $this->getAdUnit();
@@ -219,26 +218,26 @@ class SettingsController extends AppController
         }
 
         $size = $this->getRequest()->getContent();
-        $settings = $this->getSettingsDocument();
+        $user = $this->getUserDocument();
 
-        $this->saveAdUnitSize($settings, $size);
+        $this->saveAdUnitSize($user, $size);
 
-        $data = $this->getSerializer()->normalize($settings->getAdUnit(), 'json');
+        $data = $this->getSerializer()->normalize($user->getAdUnit(), 'json');
 
         return new JsonResponse($data);
     }
 
     /**
      * updates a user's ad unit with new sizes
-     * @param Settings $settings
+     * @param User $user
      * @param array $size
      */
-    protected function saveAdUnitSize(Settings $settings, array $size)
+    protected function saveAdUnitSize(User $user, array $size)
     {
-        $settings->getAdUnit()->setWidth($size['width']);
-        $settings->getAdUnit()->setHeight($size['height']);
+        $user->getAdUnit()->setWidth($size['width']);
+        $user->getAdUnit()->setHeight($size['height']);
 
-        $this->getDocumentManager()->persist($settings);
+        $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
     }
 
@@ -260,17 +259,17 @@ class SettingsController extends AppController
         }
 
         $adUnit = $this->getSerializer()->deserialize($data, 'Wix\GoogleAdsenseBundle\Document\AdUnit', 'json');
-        $settings = $this->getSettingsDocument();
+        $user = $this->getUserDocument();
 
         $this->saveAdUnit($adUnit);
 
         // if the user has an ad unit created on google, update it too
-        if ($settings->hasAdUnit()) {
+        if ($user->hasAdUnit()) {
             $this->updateAdUnit($adUnit);
         }
 
         return new JsonResponse(
-            $this->getSerializer()->normalize($settings->getAdUnit())
+            $this->getSerializer()->normalize($user->getAdUnit())
         );
     }
 
@@ -280,10 +279,10 @@ class SettingsController extends AppController
      */
     protected function saveAdUnit(AdUnit $adUnit)
     {
-        $settings = $this->getSettingsDocument();
-        $settings->setAdUnit($adUnit);
+        $user = $this->getUserDocument();
+        $user->setAdUnit($adUnit);
 
-        $this->getDocumentManager()->persist($settings);
+        $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
     }
 
@@ -295,9 +294,8 @@ class SettingsController extends AppController
     protected function updateAdUnit(AdUnit $adUnit)
     {
         $user = $this->getUserDocument();
-        $settings = $this->getSettingsDocument();
 
-        $googleAdUnit = $this->getService()->accounts_adunits->get($user->getAccountId(), $user->getClientId(), $settings->getAdUnitId());
+        $googleAdUnit = $this->getService()->accounts_adunits->get($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
 
         $googleAdUnit = $this->populateAdUnit($adUnit, $googleAdUnit);
 
@@ -344,7 +342,7 @@ class SettingsController extends AppController
             throw new AccountConnectionRequiredException('you have to connect your account before you can submit an ad creation request.');
         }
 
-        if ($this->getSettingsDocument()->getAdUnitId() !== null) {
+        if ($this->getUserDocument()->getAdUnitId() !== null) {
             throw new AdUnitAlreadyExistsException('an ad unit already exists for this component id. you can only submit an ad unit once per component.');
         }
 
@@ -366,7 +364,7 @@ class SettingsController extends AppController
     {
         $adUnit = $this->encodeAdUnit($this->getAdUnit());
         $adUnit = $this->getService()->accounts_adunits->insert($this->getUserDocument()->getAccountId(), $this->getUserDocument()->getClientId(), $adUnit);
-        $this->getSettingsDocument()->setAdUnitId($adUnit->getId());
+        $this->getUserDocument()->setAdUnitId($adUnit->getId());
 
         $this->getDocumentManager()->persist($this->getUserDocument());
         $this->getDocumentManager()->flush();

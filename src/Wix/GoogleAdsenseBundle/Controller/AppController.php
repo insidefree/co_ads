@@ -177,33 +177,12 @@ class AppController extends Controller
     }
 
     /**
-     * @return Settings
-     */
-    protected function getSettingsDocument()
-    {
-        $componentId = $this->getComponentId();
-        $instanceId = $this->getInstance()->getInstanceId();
-
-        $settings = $this->getRepository('WixGoogleAdsenseBundle:Settings')
-            ->findOneBy(array(
-                'instanceId' => $instanceId,
-                'componentId' => (string) $componentId,
-            ));
-
-        if ($settings === null) {
-            $settings = new Settings($instanceId, $componentId);
-        }
-
-        return $settings;
-    }
-
-    /**
      * returns the current user's ad unit
      * @return AdUnit
      */
     protected function getAdUnit()
     {
-        $adUnit = $this->getSettingsDocument()->getAdUnit();
+        $adUnit = $this->getUserDocument()->getAdUnit();
 
         if ($adUnit === null) {
             $adUnit = new AdUnit();
