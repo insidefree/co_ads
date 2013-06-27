@@ -8,6 +8,7 @@ use Wix\GoogleAdsenseBundle\Document\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Wix\GoogleAdsenseBundle\Configuration\Permission;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -41,13 +42,10 @@ class SettingsController extends AppController
      * redirects the user to Google Adsense for authentication
      * @Route("/authenticate", name="authenticate", options={"expose"=true})
      * @Method({"GET"})
+     * @Permission({"OWNER"})
      */
     public function authenticateAction()
     {
-        if ($this->getInstance()->isOwner() === false) {
-            throw new PermissionsDeniedException('access denied.');
-        }
-
         $websiteUrl = $this->getRequest()->query->get('websiteUrl');
 
         if ($websiteUrl === null) {
@@ -136,13 +134,10 @@ class SettingsController extends AppController
     /**
      * @Route("/disconnect", name="disconnect", options={"expose"=true})
      * @Method({"POST"})
+     * @Permission({"OWNER"})
      */
     public function disconnectAction()
     {
-        if ($this->getInstance()->isOwner() === false) {
-            throw new PermissionsDeniedException('access denied.');
-        }
-
         $user = $this->getUserDocument();
 
         if ($user->connected() === false) {
@@ -179,10 +174,9 @@ class SettingsController extends AppController
      */
     public function getUserAction()
     {
-        $user = $this->getSerializer()->normalize($this->getUserDocument());
-        unset($user['adUnit']);
-
-        return new JsonResponse($user);
+        return $this->jsonResponse(
+            $this->getUserDocument()
+        );
     }
 
     /**
@@ -201,30 +195,25 @@ class SettingsController extends AppController
             $adUnit = $this->getAdUnit();
         }
 
-        return new JsonResponse(
-            $this->getSerializer()->normalize($adUnit)
-        );
+        return $this->jsonResponse($adUnit, 'json');
     }
 
     /**
-    * updates an ad unit with new width and height
-    * @Route("/adunit/size", name="saveAdUnitSize", options={"expose"=true})
-    * @Method({"POST"})
-    */
+     * updates an ad unit with new width and height
+     * @Route("/adunit/size", name="saveAdUnitSize", options={"expose"=true})
+     * @Method({"POST"})
+     * @Permission({"OWNER"})
+     */
     public function saveAdUnitSizeAction()
     {
-        if ($this->getInstance()->isOwner() === false) {
-            throw new PermissionsDeniedException('access denied.');
-        }
-
         $size = $this->getRequest()->getContent();
         $user = $this->getUserDocument();
 
         $this->saveAdUnitSize($user, $size);
 
-        $data = $this->getSerializer()->normalize($user->getAdUnit(), 'json');
-
-        return new JsonResponse($data);
+        return $this->jsonResponse(
+            $user->getAdUnit()
+        );
     }
 
     /**
@@ -245,13 +234,10 @@ class SettingsController extends AppController
      * updates or creates an ad unit with the provided data
      * @Route("/adunit", name="saveAdUnit", options={"expose"=true})
      * @Method({"POST"})
+     * @Permission({"OWNER"})
      */
     public function saveAdUnitAction()
     {
-        if ($this->getInstance()->isOwner() === false) {
-            throw new PermissionsDeniedException('access denied.');
-        }
-
         $data = $this->getRequest()->getContent();
 
         if (empty($data)) {
@@ -331,13 +317,10 @@ class SettingsController extends AppController
     /**
      * @Route("/submit", name="submit", options={"expose"=true})
      * @Method({"POST"})
+     * @Permission({"OWNER"})
      */
     public function submitAction()
     {
-        if ($this->getInstance()->isOwner() === false) {
-            throw new PermissionsDeniedException('access denied.');
-        }
-
         if ($this->getUserDocument()->connected() === false) {
             throw new AccountConnectionRequiredException('you have to connect your account before you can submit an ad creation request.');
         }

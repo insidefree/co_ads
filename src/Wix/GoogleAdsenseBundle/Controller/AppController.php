@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 use Wix\APIBundle\Base\Instance;
 
@@ -130,6 +129,19 @@ class AppController extends Controller
     }
 
     /**
+     * @param mixed $data
+     * @return Response
+     */
+    protected function jsonResponse($data)
+    {
+        $data = $this->getSerializer()->serialize($data, 'json');
+
+        return new Response($data, 200, array(
+            'Content-Type' => 'application/json',
+        ));
+    }
+
+    /**
      * @param $componentId
      * @return mixed
      * @throws \Wix\GoogleAdsenseBundle\Exceptions\MissingParametersException
@@ -197,7 +209,7 @@ class AppController extends Controller
      */
     protected function getSerializer()
     {
-        return new Serializer(array(new GetSetMethodNormalizer()), array(new JsonEncoder()));
+        return $this->get('jms_serializer');
     }
 
     /**
