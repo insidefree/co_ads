@@ -110,35 +110,16 @@
 
                     elm.on('colorChanged', function(event, data) {
                         scope.$apply(function() {
-                            ctrl.$setViewValue(data.selected_color);
+                            ctrl.$setViewValue(data.selected_color.substring(1));
                         });
                     });
 
                     ctrl.$render = function() {
                         elm.ColorPicker({
-                            startWithColor: ctrl.$viewValue,
+                            startWithColor: '#' + ctrl.$viewValue,
                             placement: attr.placement
                         });
                     };
-                }
-            };
-        })
-
-        /**
-         * colorpicker directive
-         */
-        .directive('uiColorpicker', function() {
-            return {
-                require: 'ngModel',
-                link: function(scope, elm, attr, ctrl) {
-                    elm.colorPicker({
-                        onColorChange: function(id, value) {
-                            scope.$apply(function() {
-                                ctrl.$setViewValue(value);
-                            });
-                        },
-                        pickerDefault: scope.$eval(attr.ngModel)
-                    });
                 }
             };
         });
