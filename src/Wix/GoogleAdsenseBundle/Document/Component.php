@@ -2,7 +2,7 @@
 /**
  * Ronen Amiel <ronen.amiel@gmail.com>
  * 01/12/12, 14:55
- * User.php
+ * Component.php
  */
 
 namespace Wix\GoogleAdsenseBundle\Document;
@@ -35,6 +35,11 @@ class Component
      * @MongoDB\String
      */
     protected $adUnitId;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $adUnitCode;
 
     /**
      * @MongoDB\EmbedOne(targetDocument="AdUnit")
@@ -89,7 +94,7 @@ class Component
      * Set instanceId
      *
      * @param string $instanceId
-     * @return User
+     * @return Component
      */
     public function setInstanceId($instanceId)
     {
@@ -111,7 +116,7 @@ class Component
      * Set componentId
      *
      * @param string $componentId
-     * @return User
+     * @return Component
      */
     public function setComponentId($componentId)
     {
@@ -133,7 +138,7 @@ class Component
      * Set adUnit
      *
      * @param AdUnit $adUnit
-     * @return User
+     * @return Component
      */
     public function setAdUnit(\Wix\GoogleAdsenseBundle\Document\AdUnit $adUnit)
     {
@@ -155,7 +160,7 @@ class Component
      * Set adUnitId
      *
      * @param string $adUnitId
-     * @return \User
+     * @return Component
      */
     public function setAdUnitId($adUnitId)
     {
@@ -171,5 +176,27 @@ class Component
     public function getAdUnitId()
     {
         return $this->adUnitId;
+    }
+
+    /**
+     * Set adUnitCode
+     *
+     * @param string $adUnitCode
+     * @return Component
+     */
+    public function setAdUnitCode($adUnitCode)
+    {
+        $this->adUnitCode = $adUnitCode;
+        return $this;
+    }
+
+    /**
+     * Get adUnitCode
+     *
+     * @return string $adUnitCode
+     */
+    public function getAdUnitCode()
+    {
+        return $this->adUnitCode;
     }
 }

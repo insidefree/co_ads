@@ -3,8 +3,6 @@
 namespace Wix\GoogleAdsenseBundle\Controller;
 
 use Wix\GoogleAdsenseBundle\Document\AdUnit;
-use Wix\GoogleAdsenseBundle\Document\Component;
-use Wix\GoogleAdsenseBundle\Document\User;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -13,7 +11,6 @@ use Wix\GoogleAdsenseBundle\Configuration\Permission;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Wix\GoogleAdsenseBundle\Exceptions\PermissionsDeniedException;
 use Wix\GoogleAdsenseBundle\Exceptions\MissingTokenException;
 use Wix\GoogleAdsenseBundle\Exceptions\MissingParametersException;
 use Wix\GoogleAdsenseBundle\Exceptions\AssociationRejectedException;
@@ -29,9 +26,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class SettingsController extends AppController
 {
     /**
-     * sends html back to the user
+     * sends the initial angularjs application.
+     *
      * @Route("/", name="settings", options={"expose"=true})
      * @Method({"GET"})
+     * @Permission({"OWNER"})
      * @Template()
      */
     public function indexAction()
@@ -40,7 +39,8 @@ class SettingsController extends AppController
     }
 
     /**
-     * redirects the user to Google Adsense for authentication
+     * redirects users to google adsense for authentication.
+     *
      * @Route("/authenticate", name="authenticate", options={"expose"=true})
      * @Method({"GET"})
      * @Permission({"OWNER"})
@@ -63,6 +63,9 @@ class SettingsController extends AppController
     }
 
     /**
+     * after a successful authentication google will redirect users to this route that will save the association to the
+     * database.
+     *
      * @Route("/redirect", name="redirect")
      * @Template()
      * @Method({"GET"})
@@ -89,27 +92,37 @@ class SettingsController extends AppController
     }
 
     /**
+     * disconnects a user and removes the information about it's google adsense account.
+     *
      * @Route("/disconnect", name="disconnect", options={"expose"=true})
      * @Method({"POST"})
      * @Permission({"OWNER"})
      */
     public function disconnectAction()
     {
-        $user = $this
-            ->getUserDocument();
+        $this->getUserDocument()
+            ->setAccountId(null)
+            ->setClientId(null);
 
-        $component = $this
-            ->getComponentDocument();
+        $component = $this->getComponentDocument()
+            ->setAdUnitId(null)
+            ->setAdUnitCode(null);
 
-        $this->deleteUserInformation($user, $component);
+        $this->persistUser();
+
+        if ($component->hasAdUnit()) {
+            $this->removeAdUnit();
+        }
 
         return new JsonResponse('OK');
     }
 
     /**
-     * returns a JSON representation of a user
+     * returns a JSON representation of a user in the database.
+     *
      * @Route("/user", name="getUser", options={"expose"=true})
      * @Method({"GET"})
+     * @Permission({"OWNER"})
      */
     public function getUserAction()
     {
@@ -120,7 +133,8 @@ class SettingsController extends AppController
     }
 
     /**
-     * returns a JSON representation of an ad unit
+     * returns a JSON representation of an ad unit in the database.
+     *
      * @Route("/adunit", name="getAdUnit", options={"expose"=true})
      * @Method({"GET"})
      */
@@ -134,7 +148,8 @@ class SettingsController extends AppController
     }
 
     /**
-     * updates or creates an ad unit with the provided data
+     * updates an ad unit in the database. if the user has an ad unit connected on google it will also get updated.
+     *
      * @Route("/adunit", name="updateAdUnit", options={"expose"=true})
      * @Method({"POST"})
      * @Permission({"OWNER"})
@@ -156,6 +171,8 @@ class SettingsController extends AppController
     }
 
     /**
+     * creates an ad unit on google and associates it with the current component.
+     *
      * @Route("/submit", name="submit", options={"expose"=true})
      * @Method({"POST"})
      * @Permission({"OWNER"})
@@ -166,7 +183,7 @@ class SettingsController extends AppController
             throw new AccountConnectionRequiredException('you have to connect your account before you can submit an ad creation request.');
         }
 
-        if ($this->getComponentDocument()->getAdUnitId()) {
+        if ($this->getComponentDocument()->hasAdUnit()) {
             throw new AdUnitAlreadyExistsException('an ad unit already exists for this component id. you can only submit an ad unit once per component.');
         }
 
@@ -177,7 +194,18 @@ class SettingsController extends AppController
     }
 
     /**
-     * authenticates a user with a session
+     * saves the current user and component documents into the database.
+     */
+    protected function persistUser()
+    {
+        $this->getDocumentManager()->persist($this->getUserDocument());
+        $this->getDocumentManager()->persist($this->getComponentDocument());
+        $this->getDocumentManager()->flush();
+    }
+
+    /**
+     * authenticates a user with a session.
+     *
      * @param \Google_AssociationSession $session
      */
     protected function authenticateUser(\Google_AssociationSession $session)
@@ -192,6 +220,8 @@ class SettingsController extends AppController
     }
 
     /**
+     * saves information on a user.
+     *
      * @param \Google_AssociationSession $session
      * @throws InvalidAssociationIdException
      */
@@ -218,32 +248,23 @@ class SettingsController extends AppController
     }
 
     /**
-     * @param User $user
-     * @param Component $component
+     * removes an ad unit.
      */
-    protected function deleteUserInformation(User $user, Component $component)
+    protected function removeAdUnit()
     {
-        if ($component->hasAdUnit()) {
-            $this
-                ->getService()
-                ->accounts_adunits
-                ->delete($user->getAccountId(), $user->getClientId(), $component->getAdUnitId());
-        }
-
-        $user
-            ->setAccountId(null)
-            ->setClientId(null);
-
-        $component
-            ->setAdUnitId(null);
-
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->persist($component);
-        $this->getDocumentManager()->flush();
+        $this
+            ->getService()
+            ->accounts_adunits
+            ->delete(
+                $this->getUserDocument()->getAccountId(),
+                $this->getUserDocument()->getClientId(),
+                $this->getComponentDocument()->getAdUnitId()
+            );
     }
 
     /**
-     * saves an ad unit for this user
+     * saves an ad unit for this user.
+     *
      * @param AdUnit $adUnit
      */
     protected function saveAdUnit(AdUnit $adUnit)
@@ -255,17 +276,14 @@ class SettingsController extends AppController
         $this->getDocumentManager()->persist($component);
         $this->getDocumentManager()->flush();
 
-        // if the user has an ad unit created on google, update it too
-        $component = $this
-            ->getComponentDocument();
-
         if ($component->hasAdUnit()) {
             $this->updateAdUnit($adUnit);
         }
     }
 
     /**
-     * updates an ad unit on google
+     * updates an ad unit on google.
+     *
      * @param AdUnit $adUnit
      * @return $this
      */
@@ -274,33 +292,32 @@ class SettingsController extends AppController
         $user = $this
             ->getUserDocument();
 
-        $component = $this
-            ->getComponentDocument();
-
-        $googleAdUnit = $this
-            ->getService()
-            ->accounts_adunits
-            ->get($user->getAccountId(), $user->getClientId(), $component->getAdUnitId());
-
-        $googleAdUnit = $this
-            ->populateAdUnit($adUnit, $googleAdUnit);
+        $adUnit = $this
+            ->populateAdUnit($adUnit, $this->createEmptyAdUnit());
 
         $this
             ->getService()
             ->accounts_adunits
-            ->update($user->getAccountId(), $user->getClientId(), $googleAdUnit);
+            ->update($user->getAccountId(), $user->getClientId(), $adUnit);
 
         return $this;
     }
 
     /**
-     * populates a google ad unit with the values of an ad unit
+     * populates a google ad unit with the values of an ad unit.
+     *
      * @param AdUnit $adUnit
      * @param \Google_AdUnit $googleAdUnit
      * @return \Google_AdUnit
      */
     protected function populateAdUnit(AdUnit $adUnit, \Google_AdUnit $googleAdUnit)
     {
+        $googleAdUnit
+            ->setId($this->getComponentDocument()->getAdUnitId());
+
+        $googleAdUnit
+            ->setCode($this->getComponentDocument()->getAdUnitCode());
+
         $googleAdUnit
             ->getContentAdsSettings()
             ->setType($adUnit->getType());
@@ -356,7 +373,7 @@ class SettingsController extends AppController
     /**
      * @return \Google_AdUnit
      */
-    protected function getEmptyAdUnit()
+    protected function createEmptyAdUnit()
     {
         /* backup option */
         $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
@@ -388,7 +405,8 @@ class SettingsController extends AppController
     }
 
     /**
-     * inserts a new ad unit for this account and returns an object representation of it
+     * inserts a new ad unit for this account and returns an object representation of it.
+     *
      * @return \Google_AdUnit
      */
     protected function insertNewAdUnit()
@@ -398,7 +416,7 @@ class SettingsController extends AppController
             ->getAdUnit();
 
         $googleAdUnit = $this
-            ->populateAdUnit($adUnit, $this->getEmptyAdUnit());
+            ->populateAdUnit($adUnit, $this->createEmptyAdUnit());
 
         $googleAdUnit = $this
             ->getService()
@@ -407,7 +425,8 @@ class SettingsController extends AppController
 
         $this
             ->getComponentDocument()
-            ->setAdUnitId($googleAdUnit->getId());
+            ->setAdUnitId($googleAdUnit->getId())
+            ->setAdUnitCode($googleAdUnit->getCode());
 
         $this->getDocumentManager()->persist($this->getUserDocument());
         $this->getDocumentManager()->flush();
