@@ -309,6 +309,10 @@ class SettingsController extends AppController
             ->setType($adUnit->getType());
 
         $googleAdUnit
+            ->getContentAdsSettings()
+            ->setSize($adUnit->getSize());
+
+        $googleAdUnit
             ->getCustomStyle()
             ->setCorners($adUnit->getCornerStyle());
 
@@ -353,6 +357,40 @@ class SettingsController extends AppController
     }
 
     /**
+     * @return \Google_AdUnit
+     */
+    protected function getEmptyAdUnit()
+    {
+        /* backup option */
+        $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
+        $backupOption->setType('COLOR');
+        $backupOption->setColor('ffffff');
+
+        /* ads settings */
+        $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
+        $contentAdsSettings->setBackupOption($backupOption);
+
+        /* colors */
+        $colors = new \Google_AdStyleColors();
+
+        /* font */
+        $font = new \Google_AdStyleFont();
+
+        /* custom style */
+        $customStyle = new \Google_AdStyle();
+        $customStyle->setColors($colors);
+        $customStyle->setFont($font);
+
+        /* ad unit */
+        $googleAdUnit = new \Google_AdUnit();
+        $googleAdUnit->setContentAdsSettings($contentAdsSettings);
+        $googleAdUnit->setCustomStyle($customStyle);
+        $googleAdUnit->setName($this->getAdUnitName());
+
+        return $googleAdUnit;
+    }
+
+    /**
      * inserts a new ad unit for this account and returns an object representation of it
      * @return \Google_AdUnit
      */
@@ -363,7 +401,7 @@ class SettingsController extends AppController
             ->getAdUnit();
 
         $googleAdUnit = $this
-            ->populateAdUnit($adUnit, new \Google_AdUnit());
+            ->populateAdUnit($adUnit, $this->getEmptyAdUnit());
 
         $googleAdUnit = $this
             ->getService()
