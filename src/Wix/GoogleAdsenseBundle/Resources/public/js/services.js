@@ -2,7 +2,7 @@
 (function(window) {
     'use strict';
 
-    window.angular.module('adSenseApp.services', [])
+    window.angular.module('AdsenseApp.services', [])
         /**
          * allows access to query string parameters.
          */
@@ -12,7 +12,9 @@
                 param;
 
             for(param in params) {
-                object[params[param].split('=')[0]] = params[param].split('=')[1];
+                if (params.hasOwnProperty(param)) {
+                    object[params[param].split('=')[0]] = params[param].split('=')[1];
+                }
             }
 
             return object;

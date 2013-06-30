@@ -3,6 +3,7 @@
 namespace Wix\GoogleAdsenseBundle\Controller;
 
 use Wix\GoogleAdsenseBundle\Document\AdUnit;
+use Wix\GoogleAdsenseBundle\Document\Component;
 use Wix\GoogleAdsenseBundle\Document\User;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -46,9 +47,7 @@ class SettingsController extends AppController
      */
     public function authenticateAction()
     {
-        $websiteUrl = $this->getRequest()->query->get('websiteUrl');
-
-        if ($websiteUrl === null) {
+        if (!$websiteUrl = $this->getRequest()->query->get('websiteUrl')) {
             throw new  MissingParametersException('websiteUrl query string parameter is missing.');
         }
 
@@ -64,29 +63,13 @@ class SettingsController extends AppController
     }
 
     /**
-     * authenticates a user with a session
-     * @param \Google_AssociationSession $session
-     */
-    protected function authenticateUser(\Google_AssociationSession $session)
-    {
-        $user = $this->getUserDocument();
-        $user->setAssociationId($session->getId());
-        $user->setDomain($session->getWebsiteUrl());
-
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
-    }
-
-    /**
      * @Route("/redirect", name="redirect")
      * @Template()
      * @Method({"GET"})
      */
     public function redirectAction()
     {
-        $token = $this->getRequest()->query->get('token');
-
-        if ($token === null) {
+        if (!$token = $this->getRequest()->query->get('token')) {
             throw new MissingTokenException('could not find a token query string parameter.');
         }
 
@@ -106,6 +89,113 @@ class SettingsController extends AppController
     }
 
     /**
+     * @Route("/disconnect", name="disconnect", options={"expose"=true})
+     * @Method({"POST"})
+     * @Permission({"OWNER"})
+     */
+    public function disconnectAction()
+    {
+        $user = $this
+            ->getUserDocument();
+
+        $component = $this
+            ->getComponentDocument();
+
+        if (!$user->connected()) {
+            throw new \Exception('the associated user is not connected to an AdSense account.');
+        }
+
+        $this->deleteUserInformation($user, $component);
+
+        return new JsonResponse('OK');
+    }
+
+    /**
+     * returns a JSON representation of a user
+     * @Route("/user", name="getUser", options={"expose"=true})
+     * @Method({"GET"})
+     */
+    public function getUserAction()
+    {
+        $user = $this
+            ->getUserDocument();
+
+        return $this->jsonResponse($user);
+    }
+
+    /**
+     * returns a JSON representation of an ad unit
+     * @Route("/adunit", name="getAdUnit", options={"expose"=true})
+     * @Method({"GET"})
+     */
+    public function getAdUnitAction()
+    {
+        $component = $this
+            ->getComponentDocument()
+            ->getAdUnit();
+
+        return $this->jsonResponse($component);
+    }
+
+    /**
+     * updates or creates an ad unit with the provided data
+     * @Route("/adunit", name="updateAdUnit", options={"expose"=true})
+     * @Method({"POST"})
+     * @Permission({"OWNER"})
+     */
+    public function updateAdUnitAction()
+    {
+        if (!$data = $this->getRequest()->getContent()) {
+            throw new MissingParametersException('could not find request data (expecting request payload to be sent)');
+        }
+
+        /** @var AdUnit $adUnit */
+        $adUnit = $this
+            ->getSerializer()
+            ->deserialize($data, 'Wix\GoogleAdsenseBundle\Document\AdUnit', 'json');
+
+        $this->saveAdUnit($adUnit);
+
+        return $this->jsonResponse($adUnit);
+    }
+
+    /**
+     * @Route("/submit", name="submit", options={"expose"=true})
+     * @Method({"POST"})
+     * @Permission({"OWNER"})
+     */
+    public function submitAction()
+    {
+        if (!$this->getUserDocument()->connected()) {
+            throw new AccountConnectionRequiredException('you have to connect your account before you can submit an ad creation request.');
+        }
+
+        if ($this->getComponentDocument()->getAdUnitId()) {
+            throw new AdUnitAlreadyExistsException('an ad unit already exists for this component id. you can only submit an ad unit once per component.');
+        }
+
+        $adUnit = $this
+            ->insertNewAdUnit();
+
+        return $this->jsonResponse($adUnit);
+    }
+
+    /**
+     * authenticates a user with a session
+     * @param \Google_AssociationSession $session
+     */
+    protected function authenticateUser(\Google_AssociationSession $session)
+    {
+        $user = $this->getUserDocument();
+
+        $user->setAssociationId($session->getId());
+        $user->setDomain($session->getWebsiteUrl());
+
+        $this->getDocumentManager()->persist($user);
+        $this->getDocumentManager()->flush();
+    }
+
+    /**
      * @param \Google_AssociationSession $session
      * @throws InvalidAssociationIdException
      */
@@ -114,7 +204,7 @@ class SettingsController extends AppController
         $user = $this->getRepository('WixGoogleAdsenseBundle:User')
             ->findOneBy(array('associationId' => $session->getId()));
 
-        if ($user === null) {
+        if (!$user) {
             throw new InvalidAssociationIdException('could not find a matching association Id in the database.');
         }
 
@@ -132,131 +222,27 @@ class SettingsController extends AppController
     }
 
     /**
-     * @Route("/disconnect", name="disconnect", options={"expose"=true})
-     * @Method({"POST"})
-     * @Permission({"OWNER"})
-     */
-    public function disconnectAction()
-    {
-        $user = $this->getUserDocument();
-
-        if ($user->connected() === false) {
-            throw new \Exception('the associated user is not connected to an AdSense account.');
-        }
-
-        $this->deleteUserInformation($user);
-
-        return new JsonResponse('OK');
-    }
-
-    /**
-     * removes information related to this user's google account
      * @param User $user
+     * @param Component $component
      */
-    protected function deleteUserInformation(User $user)
+    protected function deleteUserInformation(User $user, Component $component)
     {
-        if ($user->hasAdUnit()) {
-            $this->getService()->accounts_adunits->delete($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
+        if ($component->hasAdUnit()) {
+            $this
+                ->getService()
+                ->accounts_adunits
+                ->delete($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
         }
 
-        $user->setAccountId(null);
-        $user->setClientId(null);
-        $user->setAdUnitId(null);
+        $user
+            ->setAccountId(null)
+            ->setClientId(null);
+
+        $component
+            ->setAdUnitId(null);
 
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
-    }
-
-    /**
-     * returns a JSON representation of a user
-     * @Route("/user", name="getUser", options={"expose"=true})
-     * @Method({"GET"})
-     */
-    public function getUserAction()
-    {
-        return $this->jsonResponse(
-            $this->getUserDocument()
-        );
-    }
-
-    /**
-     * returns a JSON representation of an ad unit
-     * @Route("/adunit", name="getAdUnit", options={"expose"=true})
-     * @Method({"GET"})
-     */
-    public function getAdUnitAction()
-    {
-        $user = $this->getUserDocument();
-
-        if ($user->hasAdUnit()) {
-            $adUnit = $this->getService()->accounts_adunits->get($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
-            $adUnit = $this->decodeAdUnit($adUnit);
-        } else {
-            $adUnit = $this->getAdUnit();
-        }
-
-        return $this->jsonResponse($adUnit, 'json');
-    }
-
-    /**
-     * updates an ad unit with new width and height
-     * @Route("/adunit/size", name="saveAdUnitSize", options={"expose"=true})
-     * @Method({"POST"})
-     * @Permission({"OWNER"})
-     */
-    public function saveAdUnitSizeAction()
-    {
-        $size = $this->getRequest()->getContent();
-        $user = $this->getUserDocument();
-
-        $this->saveAdUnitSize($user, $size);
-
-        return $this->jsonResponse(
-            $user->getAdUnit()
-        );
-    }
-
-    /**
-     * updates a user's ad unit with new sizes
-     * @param User $user
-     * @param array $size
-     */
-    protected function saveAdUnitSize(User $user, array $size)
-    {
-        $user->getAdUnit()->setWidth($size['width']);
-        $user->getAdUnit()->setHeight($size['height']);
-
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
-    }
-
-    /**
-     * updates or creates an ad unit with the provided data
-     * @Route("/adunit", name="saveAdUnit", options={"expose"=true})
-     * @Method({"POST"})
-     * @Permission({"OWNER"})
-     */
-    public function saveAdUnitAction()
-    {
-        $data = $this->getRequest()->getContent();
-
-        if (empty($data)) {
-            throw new MissingParametersException('could not find request data (expecting request payload to be sent)');
-        }
-
-        $adUnit = $this->getSerializer()->deserialize($data, 'Wix\GoogleAdsenseBundle\Document\AdUnit', 'json');
-        $user = $this->getUserDocument();
-
-        $this->saveAdUnit($adUnit);
-
-        // if the user has an ad unit created on google, update it too
-        if ($user->hasAdUnit()) {
-            $this->updateAdUnit($adUnit);
-        }
-
-        return new JsonResponse(
-            $this->getSerializer()->normalize($user->getAdUnit())
-        );
     }
 
     /**
@@ -265,27 +251,49 @@ class SettingsController extends AppController
      */
     protected function saveAdUnit(AdUnit $adUnit)
     {
-        $user = $this->getUserDocument();
-        $user->setAdUnit($adUnit);
+        $component = $this
+            ->getComponentDocument()
+            ->setAdUnit($adUnit);
 
-        $this->getDocumentManager()->persist($user);
+        $this->getDocumentManager()->persist($component);
         $this->getDocumentManager()->flush();
+
+        // if the user has an ad unit created on google, update it too
+        $component = $this
+            ->getComponentDocument();
+
+        if ($component->hasAdUnit()) {
+            $this->updateAdUnit($adUnit);
+        }
     }
 
     /**
      * updates an ad unit on google
      * @param AdUnit $adUnit
-     * @return \Google_AdUnit
+     * @return $this
      */
     protected function updateAdUnit(AdUnit $adUnit)
     {
-        $user = $this->getUserDocument();
+        $user = $this
+            ->getUserDocument();
 
-        $googleAdUnit = $this->getService()->accounts_adunits->get($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
+        $component = $this
+            ->getComponentDocument();
 
-        $googleAdUnit = $this->populateAdUnit($adUnit, $googleAdUnit);
+        $googleAdUnit = $this
+            ->getService()
+            ->accounts_adunits
+            ->get($user->getAccountId(), $user->getClientId(), $component->getAdUnitId());
 
-        $this->getService()->accounts_adunits->update($user->getAccountId(), $user->getClientId(), $googleAdUnit);
+        $googleAdUnit = $this
+            ->populateAdUnit($adUnit, $googleAdUnit);
+
+        $this
+            ->getService()
+            ->accounts_adunits
+            ->update($user->getAccountId(), $user->getClientId(), $googleAdUnit);
+
+        return $this;
     }
 
     /**
@@ -296,47 +304,52 @@ class SettingsController extends AppController
      */
     protected function populateAdUnit(AdUnit $adUnit, \Google_AdUnit $googleAdUnit)
     {
-        $googleAdUnit->getContentAdsSettings()->setType($adUnit->getType());
-        $googleAdUnit->getCustomStyle()->setCorners($adUnit->getCornerStyle());
+        $googleAdUnit
+            ->getContentAdsSettings()
+            ->setType($adUnit->getType());
+
+        $googleAdUnit
+            ->getCustomStyle()
+            ->setCorners($adUnit->getCornerStyle());
 
         /* font */
-        $googleAdUnit->getCustomStyle()->getFont()->setFamily($adUnit->getFontFamily());
-        $googleAdUnit->getCustomStyle()->getFont()->setSize($adUnit->getFontSize());
+        $googleAdUnit
+            ->getCustomStyle()
+            ->getFont()
+            ->setFamily($adUnit->getFontFamily());
+
+        $googleAdUnit
+            ->getCustomStyle()
+            ->getFont()
+            ->setSize($adUnit->getFontSize());
 
         /* colors */
-        $googleAdUnit->getCustomStyle()->getColors()->setBackground($adUnit->getBackgroundColor());
-        $googleAdUnit->getCustomStyle()->getColors()->setBorder($adUnit->getBorderColor());
-        $googleAdUnit->getCustomStyle()->getColors()->setText($adUnit->getTextColor());
-        $googleAdUnit->getCustomStyle()->getColors()->setTitle($adUnit->getTitleColor());
-        $googleAdUnit->getCustomStyle()->getColors()->setUrl($adUnit->getUrlColor());
+        $googleAdUnit
+            ->getCustomStyle()
+            ->getColors()
+            ->setBackground($adUnit->getBackgroundColor());
+
+        $googleAdUnit
+            ->getCustomStyle()
+            ->getColors()
+            ->setBorder($adUnit->getBorderColor());
+
+        $googleAdUnit
+            ->getCustomStyle()
+            ->getColors()
+            ->setText($adUnit->getTextColor());
+
+        $googleAdUnit
+            ->getCustomStyle()
+            ->getColors()
+            ->setTitle($adUnit->getTitleColor());
+
+        $googleAdUnit
+            ->getCustomStyle()
+            ->getColors()
+            ->setUrl($adUnit->getUrlColor());
 
         return $googleAdUnit;
-
-    }
-
-    /**
-     * @Route("/submit", name="submit", options={"expose"=true})
-     * @Method({"POST"})
-     * @Permission({"OWNER"})
-     */
-    public function submitAction()
-    {
-        if ($this->getUserDocument()->connected() === false) {
-            throw new AccountConnectionRequiredException('you have to connect your account before you can submit an ad creation request.');
-        }
-
-        if ($this->getUserDocument()->getAdUnitId() !== null) {
-            throw new AdUnitAlreadyExistsException('an ad unit already exists for this component id. you can only submit an ad unit once per component.');
-        }
-
-        $adUnit = $this->insertNewAdUnit();
-
-        return new JsonResponse(
-            $this->getSerializer()->normalize(
-                $this->decodeAdUnit($adUnit),
-                'json'
-            )
-        );
     }
 
     /**
@@ -345,9 +358,21 @@ class SettingsController extends AppController
      */
     protected function insertNewAdUnit()
     {
-        $adUnit = $this->encodeAdUnit($this->getAdUnit());
-        $adUnit = $this->getService()->accounts_adunits->insert($this->getUserDocument()->getAccountId(), $this->getUserDocument()->getClientId(), $adUnit);
-        $this->getUserDocument()->setAdUnitId($adUnit->getId());
+        $adUnit = $this
+            ->getComponentDocument()
+            ->getAdUnit();
+
+        $googleAdUnit = $this
+            ->populateAdUnit($adUnit, new \Google_AdUnit());
+
+        $googleAdUnit = $this
+            ->getService()
+            ->accounts_adunits
+            ->insert($this->getUserDocument()->getAccountId(), $this->getUserDocument()->getClientId(), $googleAdUnit);
+
+        $this
+            ->getComponentDocument()
+            ->setAdUnitId($googleAdUnit->getId());
 
         $this->getDocumentManager()->persist($this->getUserDocument());
         $this->getDocumentManager()->flush();

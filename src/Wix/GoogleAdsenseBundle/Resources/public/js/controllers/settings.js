@@ -44,7 +44,7 @@
             if (adUnit === oldAdUnit) {
                 return;
             }
-            $http.post(Router.path('saveAdUnit'), adUnit)
+            $http.post(Router.path('updateAdUnit'), adUnit)
                 .success(function() {
                     WixSDK.refreshAppByCompIds(QueryParams.origCompId);
                 });
@@ -54,6 +54,8 @@
          * opens an authentication window
          */
         $scope.authenticate = function() {
+            $scope.websiteUrl = 'http://test-wix-adsense.com/';
+
             if (!$scope.websiteUrl) {
                 uiDialog.alert('/bundles/wixgoogleadsense/partials/publish.html');
                 return;
@@ -126,7 +128,7 @@
          * resolves an ad unit
          */
         adUnit: ['$http', '$q', 'Router', function($http, $q, Router) {
-            return $http.get(Router.path('getAdUnit')).success(function(response) {
+            return $http.get(Router.path('getAdUnit')).then(function(response) {
                 return response.data;
             });
         }],
@@ -134,7 +136,7 @@
          * resolves a user object
          */
         user: ['$http', '$q', 'Router', function($http, $q, Router) {
-            return $http.get(Router.path('getUser')).success(function(response) {
+            return $http.get(Router.path('getUser')).then(function(response) {
                 return response.data;
             });
         }]

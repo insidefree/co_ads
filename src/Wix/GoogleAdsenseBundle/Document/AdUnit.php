@@ -9,6 +9,7 @@ namespace Wix\GoogleAdsenseBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @MongoDB\EmbeddedDocument
@@ -17,63 +18,69 @@ class AdUnit
 {
     /**
      * @MongoDB\Id
+     * @JMS\Exclude
      */
     protected $id;
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $type = 'TEXT';
 
     /**
-     * @MongoDB\Int
-     */
-    protected $width = 300;
-
-    /**
-     * @MongoDB\Int
-     */
-    protected $height = 250;
-
-    /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $cornerStyle = 'SQUARE';
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $fontFamily = 'ARIAL';
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $fontSize = 'MEDIUM';
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $backgroundColor = 'ffffff';
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $titleColor = '333333';
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $textColor = '666666';
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $urlColor = '0066cc';
 
     /**
      * @MongoDB\String
+     * @JMS\Type("string")
      */
     protected $borderColor = 'cccccc';
+
+    /**
+     * @MongoDB\String
+     * @JMS\Type("string")
+     */
+    protected $size = 'SIZE_300_250';
 
     /**
      * Get id
@@ -120,69 +127,25 @@ class AdUnit
     }
 
     /**
-     * Set width
+     * Set size
      *
-     * @param int $width
+     * @param int $size
      * @return AdUnit
-     */
-    public function setWidth($width)
-    {
-        $this->width = $width;
-        return $this;
-    }
-
-    /**
-     * Get width
-     *
-     * @return int $width
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    /**
-     * Set height
-     *
-     * @param int $height
-     * @return AdUnit
-     */
-    public function setHeight($height)
-    {
-        $this->height = $height;
-        return $this;
-    }
-
-    /**
-     * Get height
-     *
-     * @return int $height
-     */
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSize()
-    {
-        return 'SIZE_' . $this->width . '_' . $this->height;
-    }
-
-    /**
-     * @param $size
-     * @return $this
      */
     public function setSize($size)
     {
-        $size = explode('_', substr($size, 5));
-
-        $this->width = $size[0];
-        $this->height = $size[1];
-
+        $this->size = $size;
         return $this;
+    }
+
+    /**
+     * Get size
+     *
+     * @return int $size
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 
     /**

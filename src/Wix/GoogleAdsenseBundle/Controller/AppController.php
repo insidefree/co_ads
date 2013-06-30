@@ -15,9 +15,8 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 use Wix\APIBundle\Base\Instance;
 
-use Wix\GoogleAdsenseBundle\Document\AdUnit;
+use Wix\GoogleAdsenseBundle\Document\Component;
 use Wix\GoogleAdsenseBundle\Document\User;
-use Wix\GoogleAdsenseBundle\Document\Token;
 use Wix\GoogleAdsenseBundle\Exceptions\MissingParametersException;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -31,7 +30,8 @@ class AppController extends Controller
      */
     protected function getClient()
     {
-        return $this->get('google_api.oauth2.client');
+        return $this
+            ->get('google_api.oauth2.client');
     }
 
     /**
@@ -40,7 +40,8 @@ class AppController extends Controller
      */
     protected function getService()
     {
-        return $this->get('google_api.oauth2.adsense_host_service');
+        return $this
+            ->get('google_api.oauth2.adsense_host_service');
     }
 
     /**
@@ -49,7 +50,9 @@ class AppController extends Controller
      */
     protected function getConfig()
     {
-        return $this->container->getParameter('wix_google_adsense.config');
+        return $this
+            ->container
+            ->getParameter('wix_google_adsense.config');
     }
 
     /**
@@ -58,7 +61,18 @@ class AppController extends Controller
      */
     protected function getDocumentManager()
     {
-        return $this->get('doctrine.odm.mongodb.document_manager');
+        return $this
+            ->get('doctrine.odm.mongodb.document_manager');
+    }
+
+    /**
+     * returns a serializer object
+     * @return Serializer
+     */
+    protected function getSerializer()
+    {
+        return $this
+            ->get('jms_serializer');
     }
 
     /**
@@ -68,7 +82,9 @@ class AppController extends Controller
      */
     protected function getRepository($class)
     {
-        return $this->getDocumentManager()->getRepository($class);
+        return $this
+            ->getDocumentManager()
+            ->getRepository($class);
     }
 
     /**
@@ -76,7 +92,9 @@ class AppController extends Controller
      */
     protected function getInstanceId()
     {
-        return $this->getInstance()->getInstanceId();
+        return $this
+            ->getInstance()
+            ->getInstanceId();
     }
 
     /**
@@ -86,9 +104,7 @@ class AppController extends Controller
      */
     protected function getInstance()
     {
-        $instance = $this->getRequest()->query->get('instance');
-
-        if ($instance === null) {
+        if (!$instance = $this->getRequest()->query->get('instance')) {
             throw new \Exception('Missing instance query string parameter.');
         }
 
@@ -121,7 +137,7 @@ class AppController extends Controller
             $this->getCorrectComponentId()
         );
 
-        if ($full === false) {
+        if (!$full) {
             $componentId = preg_replace("/^(TPWdgt|TPSttngs)/", "", $componentId);
         }
 
@@ -166,126 +182,34 @@ class AppController extends Controller
     protected function getUserDocument()
     {
         $instanceId = $this->getInstanceId();
-        $componentId = $this->getComponentId();
 
-        $user = $this->findUserDocument($instanceId, $componentId);
+        $user = $this->getRepository('WixGoogleAdsenseBundle:User')
+            ->findOneBy(array('instanceId' => $instanceId));
 
-        if ($user === null) {
-            $user = new User($instanceId, $componentId);
+        if (!$user) {
+            $user = new User($instanceId);
         }
 
         return $user;
     }
 
     /**
-     * @param $instanceId
-     * @param $componentId
-     * @return object
+     * returns a user document that represents the current user
+     * @return Component
      */
-    protected function findUserDocument($instanceId, $componentId)
+    protected function getComponentDocument()
     {
-        return $this->getRepository('WixGoogleAdsenseBundle:User')
+        $instanceId = $this->getInstanceId();
+        $componentId = $this->getComponentId();
+
+        $component = $this->getRepository('WixGoogleAdsenseBundle:Component')
             ->findOneBy(array('instanceId' => $instanceId, 'componentId' => $componentId));
-    }
 
-    /**
-     * returns the current user's ad unit
-     * @return AdUnit
-     */
-    protected function getAdUnit()
-    {
-        $adUnit = $this->getUserDocument()->getAdUnit();
-
-        if ($adUnit === null) {
-            $adUnit = new AdUnit();
+        if (!$component) {
+            $component = new Component($instanceId, $componentId);
         }
 
-        return $adUnit;
-    }
-
-    /**
-     * returns a serializer object
-     * @return Serializer
-     */
-    protected function getSerializer()
-    {
-        return $this->get('jms_serializer');
-    }
-
-    /**
-     * encodes an ad unit to a google ad unit format
-     * @param AdUnit $adUnit
-     * @return \Google_AdUnit
-     */
-    protected function encodeAdUnit(AdUnit $adUnit)
-    {
-        /* backup option */
-        $backupOption = new \Google_AdUnitContentAdsSettingsBackupOption();
-        $backupOption->setType('COLOR');
-        $backupOption->setColor('ffffff');
-
-        /* ads settings */
-        $contentAdsSettings = new \Google_AdUnitContentAdsSettings();
-        $contentAdsSettings->setSize($adUnit->getSize());
-        $contentAdsSettings->setType($adUnit->getType());
-        $contentAdsSettings->setBackupOption($backupOption);
-
-        /* colors */
-        $colors = new \Google_AdStyleColors();
-        $colors->setBackground($adUnit->getBackgroundColor());
-        $colors->setBorder($adUnit->getBorderColor());
-        $colors->setText($adUnit->getTextColor());
-        $colors->setTitle($adUnit->getTitleColor());
-        $colors->setUrl($adUnit->getUrlColor());
-
-        /* font */
-        $font = new \Google_AdStyleFont();
-        $font->setFamily($adUnit->getFontFamily());
-        $font->setSize($adUnit->getFontSize());
-
-        /* custom style */
-        $customStyle = new \Google_AdStyle();
-        $customStyle->setCorners($adUnit->getCornerStyle());
-        $customStyle->setColors($colors);
-        $customStyle->setFont($font);
-
-        /* ad unit */
-        $googleAdUnit = new \Google_AdUnit();
-        $googleAdUnit->setContentAdsSettings($contentAdsSettings);
-        $googleAdUnit->setCustomStyle($customStyle);
-        $googleAdUnit->setName($this->getAdUnitName());
-
-        return $googleAdUnit;
-    }
-
-    /**
-     * decodes a google ad unit to an ad unit
-     * @param \Google_AdUnit $googleAdUnit
-     * @return AdUnit
-     */
-    protected function decodeAdUnit(\Google_AdUnit $googleAdUnit)
-    {
-        $adUnit = new AdUnit();
-
-        /* ads settings */
-        $adUnit->setType($googleAdUnit->getContentAdsSettings()->getType());
-        $adUnit->setSize($googleAdUnit->getContentAdsSettings()->getSize());
-
-        /* style */
-        $adUnit->setCornerStyle($googleAdUnit->getCustomStyle()->getCorners());
-
-        /* font */
-        $adUnit->setFontFamily($googleAdUnit->getCustomStyle()->getFont()->getFamily());
-        $adUnit->setFontSize($googleAdUnit->getCustomStyle()->getFont()->getSize());
-
-        /* colors */
-        $adUnit->setBackgroundColor($googleAdUnit->getCustomStyle()->getColors()->getBackground());
-        $adUnit->setBorderColor($googleAdUnit->getCustomStyle()->getColors()->getBorder());
-        $adUnit->setTextColor($googleAdUnit->getCustomStyle()->getColors()->getText());
-        $adUnit->setTitleColor($googleAdUnit->getCustomStyle()->getColors()->getTitle());
-        $adUnit->setUrlColor($googleAdUnit->getCustomStyle()->getColors()->getUrl());
-
-        return $adUnit;
+        return $component;
     }
 
     /**
@@ -294,9 +218,8 @@ class AppController extends Controller
      */
     protected function getAdUnitName()
     {
-        return sprintf(
-            'Wix ad unit for user %s #%s',
-            $this->getInstance()->getInstanceId(),
+        return sprintf('Wix ad unit for user %s #%s',
+            $this->getInstanceId(),
             $this->getComponentId()
         );
     }
