@@ -16,7 +16,7 @@
 	 */
 	html 									{ font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
 	body 									{ margin: 0; font-size: 13px; line-height: 1.231; }
-	body, button, input, select, textarea 	{ font-family: sans-serif; color: #222; }
+	body, button, input, select, textarea 	{ font-family: sans-serif; color: #222; outline: none; }
 
 	/*
 	 * Remove text-shadow in selection highlight: h5bp.com/i
