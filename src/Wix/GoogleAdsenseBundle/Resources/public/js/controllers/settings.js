@@ -54,8 +54,6 @@
          * opens an authentication window
          */
         $scope.authenticate = function() {
-            $scope.websiteUrl = 'http://test-wix-adsense.com/';
-
             if (!$scope.websiteUrl) {
                 uiDialog.alert('/bundles/wixgoogleadsense/partials/publish.html');
                 return;
