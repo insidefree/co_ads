@@ -187,7 +187,10 @@ class SettingsController extends AppController
         }
 
         $adUnit = $this
-            ->insertNewAdUnit();
+            ->getComponentDocument()
+            ->getAdUnit();
+
+        $this->insertAdUnit($adUnit);
 
         return $this->jsonResponse($adUnit);
     }
@@ -247,21 +250,6 @@ class SettingsController extends AppController
     }
 
     /**
-     * removes an ad unit.
-     */
-    protected function removeAdUnit()
-    {
-        $this
-            ->getService()
-            ->accounts_adunits
-            ->delete(
-                $this->getUserDocument()->getAccountId(),
-                $this->getUserDocument()->getClientId(),
-                $this->getComponentDocument()->getAdUnitId()
-            );
-    }
-
-    /**
      * saves an ad unit for this user.
      *
      * @param AdUnit $adUnit
@@ -278,33 +266,6 @@ class SettingsController extends AppController
         if ($component->hasAdUnit()) {
             $this->updateAdUnit($adUnit);
         }
-    }
-
-    /**
-     * updates an ad unit on google.
-     *
-     * @param AdUnit $adUnit
-     * @return $this
-     */
-    protected function updateAdUnit(AdUnit $adUnit)
-    {
-        $user = $this
-            ->getUserDocument();
-
-        $googleAdUnit = $this
-            ->getService()
-            ->accounts_adunits
-            ->get($user->getAccountId(), $user->getClientId(), $this->getComponentDocument()->getAdUnitId());
-
-        $adUnit = $this
-            ->populateAdUnit($adUnit, $googleAdUnit);
-
-        $this
-            ->getService()
-            ->accounts_adunits
-            ->update($user->getAccountId(), $user->getClientId(), $adUnit);
-
-        return $this;
     }
 
     /**
@@ -408,14 +369,11 @@ class SettingsController extends AppController
     /**
      * inserts a new ad unit for this account and returns an object representation of it.
      *
-     * @return \Google_AdUnit
+     * @param AdUnit $adUnit
+     * @return mixed
      */
-    protected function insertNewAdUnit()
+    protected function insertAdUnit(AdUnit $adUnit)
     {
-        $adUnit = $this
-            ->getComponentDocument()
-            ->getAdUnit();
-
         $googleAdUnit = $this
             ->populateAdUnit($adUnit, $this->createEmptyAdUnit());
 
@@ -436,7 +394,47 @@ class SettingsController extends AppController
 
         $this->getDocumentManager()->persist($this->getUserDocument());
         $this->getDocumentManager()->flush();
+    }
 
-        return $adUnit;
+    /**
+     * removes an ad unit.
+     */
+    protected function removeAdUnit()
+    {
+        $this
+            ->getService()
+            ->accounts_adunits
+            ->delete(
+                $this->getUserDocument()->getAccountId(),
+                $this->getUserDocument()->getClientId(),
+                $this->getComponentDocument()->getAdUnitId()
+            );
+    }
+
+    /**
+     * updates an ad unit on google.
+     *
+     * @param AdUnit $adUnit
+     * @return $this
+     */
+    protected function updateAdUnit(AdUnit $adUnit)
+    {
+        $user = $this
+            ->getUserDocument();
+
+        $googleAdUnit = $this
+            ->getService()
+            ->accounts_adunits
+            ->get($user->getAccountId(), $user->getClientId(), $this->getComponentDocument()->getAdUnitId());
+
+        $adUnit = $this
+            ->populateAdUnit($adUnit, $googleAdUnit);
+
+        $this
+            ->getService()
+            ->accounts_adunits
+            ->update($user->getAccountId(), $user->getClientId(), $adUnit);
+
+        return $this;
     }
 }
