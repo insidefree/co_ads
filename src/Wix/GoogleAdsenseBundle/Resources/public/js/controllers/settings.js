@@ -34,7 +34,7 @@
          * returns true if the user has connected his account
          */
         $scope.connected = function() {
-            return $scope.user.accountId !== null;
+            return !!$scope.user.account_id;
         };
 
         /**
@@ -88,7 +88,7 @@
          * returns true if this user has an active ad unit
          */
         $scope.hasAdUnit = function() {
-            return $scope.user.adUnitId !== null;
+            return !!$scope.user.ad_unit_id;
         };
 
         /**
@@ -126,25 +126,17 @@
          * resolves an ad unit
          */
         adUnit: ['$http', '$q', 'Router', function($http, $q, Router) {
-            var dfd = $q.defer();
-
-            $http.get(Router.path('getAdUnit')).success(function(response) {
-                dfd.resolve(response);
+            return $http.get(Router.path('getAdUnit')).success(function(response) {
+                return response.data;
             });
-
-            return dfd.promise;
         }],
         /**
          * resolves a user object
          */
         user: ['$http', '$q', 'Router', function($http, $q, Router) {
-            var dfd = $q.defer();
-
-            $http.get(Router.path('getUser')).success(function(response) {
-                dfd.resolve(response);
+            return $http.get(Router.path('getUser')).success(function(response) {
+                return response.data;
             });
-
-            return dfd.promise;
         }]
     };
 }(window));
