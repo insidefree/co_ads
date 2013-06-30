@@ -83,6 +83,11 @@ class AdUnit
     protected $size = 'SIZE_300_250';
 
     /**
+     * @JMS\Type("boolean")
+     */
+    protected $hasAdUnit;
+
+    /**
      * Get id
      *
      * @return id $id
@@ -90,6 +95,28 @@ class AdUnit
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set hasAdUnit
+     *
+     * @param string $hasAdUnit
+     * @return AdUnit
+     */
+    public function setHasAdUnit($hasAdUnit)
+    {
+        $this->hasAdUnit = $hasAdUnit;
+        return $this;
+    }
+
+    /**
+     * Get hasAdUnit
+     *
+     * @return string $hasAdUnit
+     */
+    public function getHasAdUnit()
+    {
+        return $this->hasAdUnit;
     }
 
     /**
