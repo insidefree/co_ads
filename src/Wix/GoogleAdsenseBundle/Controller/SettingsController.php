@@ -136,6 +136,7 @@ class SettingsController extends AppController
      *
      * @Route("/adunit", name="getAdUnit", options={"expose"=true})
      * @Method({"GET"})
+     * @Permission({"OWNER"})
      */
     public function getAdUnitAction()
     {
