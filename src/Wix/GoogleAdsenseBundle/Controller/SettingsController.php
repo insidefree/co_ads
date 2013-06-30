@@ -105,8 +105,7 @@ class SettingsController extends AppController
             ->setClientId(null);
 
         $component = $this->getComponentDocument()
-            ->setAdUnitId(null)
-            ->setAdUnitCode(null);
+            ->setAdUnitId(null);
 
         $this->persistUser();
 
@@ -425,10 +424,15 @@ class SettingsController extends AppController
             ->accounts_adunits
             ->insert($this->getUserDocument()->getAccountId(), $this->getUserDocument()->getClientId(), $googleAdUnit);
 
+        $adCode = $this
+            ->getService()
+            ->accounts_adunits
+            ->getAdCode($this->getUserDocument()->getAccountId(), $this->getUserDocument()->getClientId(), $googleAdUnit->getId());
+
         $this
             ->getComponentDocument()
             ->setAdUnitId($googleAdUnit->getId())
-            ->setAdUnitCode($googleAdUnit->getCode());
+            ->setAdCode($adCode->getAdCode());
 
         $this->getDocumentManager()->persist($this->getUserDocument());
         $this->getDocumentManager()->flush();

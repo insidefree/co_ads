@@ -351,11 +351,17 @@ class AdUnit
         return $this->borderColor;
     }
 
+    /**
+     * @return array
+     */
     protected function getDimensions()
     {
         return explode('_', substr($this->size, 5));
     }
 
+    /**
+     * @return int
+     */
     public function getWidth()
     {
         $dimensions = $this->getDimensions();
@@ -363,6 +369,9 @@ class AdUnit
         return $dimensions[0];
     }
 
+    /**
+     * @return int
+     */
     public function getHeight()
     {
         $dimensions = $this->getDimensions();
