@@ -39,7 +39,7 @@ class Component
     /**
      * @MongoDB\String
      */
-    protected $adUnitCode;
+    protected $adCode;
 
     /**
      * @MongoDB\EmbedOne(targetDocument="AdUnit")
@@ -179,14 +179,14 @@ class Component
     }
 
     /**
-     * Set adUnitCode
+     * Set adCode
      *
-     * @param string $adUnitCode
+     * @param string $adCode
      * @return Component
      */
-    public function setAdUnitCode($adUnitCode)
+    public function setAdCode($adCode)
     {
-        $this->adUnitCode = $adUnitCode;
+        $this->adCode = $adCode;
         return $this;
     }
 
@@ -195,8 +195,8 @@ class Component
      *
      * @return string $adUnitCode
      */
-    public function getAdUnitCode()
+    public function getAdCode()
     {
-        return $this->adUnitCode;
+        return $this->adCode;
     }
 }

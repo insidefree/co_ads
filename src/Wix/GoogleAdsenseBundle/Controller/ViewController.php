@@ -30,17 +30,8 @@ class ViewController extends AppController
             ->getComponentDocument();
 
         if ($component->hasAdUnit()) {
-            $code = $this
-                ->getService()
-                ->accounts_adunits
-                ->getAdCode(
-                    $user->getAccountId(),
-                    $user->getClientId(),
-                    $component->getAdUnitId()
-                );
-
             $params = array_merge($params, array(
-                'code' => $code,
+                'code' => $component->getAdCode(),
                 'domain' => $user->getDomain(),
             ));
         }
