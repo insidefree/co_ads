@@ -90,7 +90,7 @@
          * returns true if this user has an active ad unit
          */
         $scope.hasAdUnit = function() {
-            return !!$scope.user.ad_unit_id;
+            return !!$scope.adUnit.has_ad_unit;
         };
 
         /**

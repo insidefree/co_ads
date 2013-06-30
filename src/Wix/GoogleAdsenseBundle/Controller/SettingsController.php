@@ -101,10 +101,6 @@ class SettingsController extends AppController
         $component = $this
             ->getComponentDocument();
 
-        if (!$user->connected()) {
-            throw new \Exception('the associated user is not connected to an AdSense account.');
-        }
-
         $this->deleteUserInformation($user, $component);
 
         return new JsonResponse('OK');
@@ -231,7 +227,7 @@ class SettingsController extends AppController
             $this
                 ->getService()
                 ->accounts_adunits
-                ->delete($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
+                ->delete($user->getAccountId(), $user->getClientId(), $component->getAdUnitId());
         }
 
         $user
@@ -242,6 +238,7 @@ class SettingsController extends AppController
             ->setAdUnitId(null);
 
         $this->getDocumentManager()->persist($user);
+        $this->getDocumentManager()->persist($component);
         $this->getDocumentManager()->flush();
     }
 

@@ -51,6 +51,16 @@ class Component
         $this->componentId = $componentId;
 
         $this->adUnit = new AdUnit();
+
+        $this->onPostLoad();
+    }
+
+    /**
+     * @MongoDB\PostLoad
+     */
+    public function onPostLoad()
+    {
+        $this->adUnit->setHasAdUnit((bool) $this->adUnitId);
     }
 
     /**
