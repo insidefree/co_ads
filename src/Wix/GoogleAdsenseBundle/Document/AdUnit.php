@@ -350,4 +350,23 @@ class AdUnit
     {
         return $this->borderColor;
     }
+
+    protected function getDimensions()
+    {
+        return explode('_', substr($this->size, 5));
+    }
+
+    public function getWidth()
+    {
+        $dimensions = $this->getDimensions();
+
+        return $dimensions[0];
+    }
+
+    public function getHeight()
+    {
+        $dimensions = $this->getDimensions();
+
+        return $dimensions[1];
+    }
 }

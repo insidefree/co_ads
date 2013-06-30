@@ -18,14 +18,27 @@ class ViewController extends AppController
     public function indexAction()
     {
         $params = array(
-            'adUnit' => $this->getAdUnit(),
+            'adUnit' => $this
+                ->getComponentDocument()
+                ->getAdUnit(),
             'mobile' => array("width" => 320, "height" => 50)
         );
 
-        $user = $this->getUserDocument();
+        $user = $this
+            ->getUserDocument();
 
-        if ($user->hasAdUnit()) {
-            $code = $this->getService()->accounts_adunits->getAdCode($user->getAccountId(), $user->getClientId(), $user->getAdUnitId());
+        $component = $this
+            ->getComponentDocument();
+
+        if ($component->hasAdUnit()) {
+            $code = $this
+                ->getService()
+                ->accounts_adunits
+                ->getAdCode(
+                    $user->getAccountId(),
+                    $user->getClientId(),
+                    $component->getAdUnitId()
+                );
 
             $params = array_merge($params, array(
                 'code' => $code,
