@@ -29,11 +29,6 @@ class User
     /**
      * @MongoDB\String
      */
-    protected $componentId;
-
-    /**
-     * @MongoDB\String
-     */
     protected $domain;
 
     /**
@@ -64,27 +59,14 @@ class User
     /**
      * @MongoDB\String
      */
-    protected $adUnitId;
-
-    /**
-     * @MongoDB\String
-     */
     protected $clientId;
 
     /**
-     * @MongoDB\EmbedOne(targetDocument="AdUnit")
-     */
-    protected $adUnit;
-
-    /**
      * @param $instanceId
-     * @param $componentId
      */
-    public function __construct($instanceId, $componentId)
+    public function __construct($instanceId)
     {
         $this->instanceId = $instanceId;
-        $this->componentId = $componentId;
-
         $this->createdAt = new \DateTime();
     }
 
@@ -94,20 +76,6 @@ class User
     public function connected()
     {
         return $this->accountId !== null;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasAdUnit()
-    {
-        $adUnitId = $this->getAdUnitId();
-
-        if ($adUnitId === null) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -209,28 +177,6 @@ class User
     }
 
     /**
-     * Set componentId
-     *
-     * @param string $componentId
-     * @return User
-     */
-    public function setComponentId($componentId)
-    {
-        $this->componentId = $componentId;
-        return $this;
-    }
-
-    /**
-     * Get componentId
-     *
-     * @return $componentId
-     */
-    public function getComponentId()
-    {
-        return $this->componentId;
-    }
-
-    /**
      * Set domain
      *
      * @param string $domain
@@ -294,50 +240,6 @@ class User
     {
         $this->associationId = $associationId;
         return $this;
-    }
-
-    /**
-     * Set adUnit
-     *
-     * @param AdUnit $adUnit
-     * @return User
-     */
-    public function setAdUnit(\Wix\GoogleAdsenseBundle\Document\AdUnit $adUnit)
-    {
-        $this->adUnit = $adUnit;
-        return $this;
-    }
-
-    /**
-     * Get adUnit
-     *
-     * @return AdUnit $adUnit
-     */
-    public function getAdUnit()
-    {
-        return $this->adUnit;
-    }
-
-    /**
-     * Set adUnitId
-     *
-     * @param string $adUnitId
-     * @return \User
-     */
-    public function setAdUnitId($adUnitId)
-    {
-        $this->adUnitId = $adUnitId;
-        return $this;
-    }
-
-    /**
-     * Get adUnitId
-     *
-     * @return string $adUnitId
-     */
-    public function getAdUnitId()
-    {
-        return $this->adUnitId;
     }
 
     /**

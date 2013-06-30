@@ -1,7 +1,7 @@
 (function(window) {
     'use strict';
 
-    window.angular.module('adSenseApp', ['adSenseApp.filters', 'adSenseApp.services', 'adSenseApp.directives', 'jQueryUI'])
+    window.angular.module('AdsenseApp', ['AdsenseApp.filters', 'AdsenseApp.services', 'AdsenseApp.directives', 'jQueryUI'])
     /**
      * config
      */

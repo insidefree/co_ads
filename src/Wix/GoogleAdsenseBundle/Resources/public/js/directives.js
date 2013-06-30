@@ -2,7 +2,7 @@
 (function(window) {
     'use strict';
 
-    window.angular.module('adSenseApp.directives', ['ajaxEvents'])
+    window.angular.module('AdsenseApp.directives', ['ajaxEvents'])
 
         /**
          * ajax loader directive
@@ -17,13 +17,34 @@
                         elm.fadeIn('fast');
                     });
 
-                    $rootScope.$on('ajaxSuccess', function() {
+                    $rootScope.$on('ajaxFinish', function() {
                         elm.fadeOut('fast');
                     });
 
-                    $rootScope.$on('ajaxFailure', function() {
+                    $rootScope.$on('ajaxFinish', function() {
                         elm.fadeOut('fast');
                     });
+                }
+            };
+        }])
+
+        /**
+         * @name AppMarket.directives.script
+         * @description
+         * Used as a way to create initial payload. Creating a script tag with type of text/initial-payload will get the
+         * data it includes into the $http cache.
+         */
+        .directive('script', ['$cacheFactory', function($cacheFactory) {
+            return {
+                restrict: 'E',
+                terminal: true,
+                compile: function(elm, attr) {
+                    if (attr.type === 'text/initial-payload') {
+                        var templateUrl = attr.id,
+                            text = elm.text();
+
+                        $cacheFactory.get('$http').put(templateUrl, [200, text]);
+                    }
                 }
             };
         }])

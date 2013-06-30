@@ -1,53 +1,58 @@
 <!doctype html>
-<html lang="en" data-ng-app="adSenseApp">
+<html lang="en" data-ng-app="AdsenseApp">
 <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
     <title>Google AdSense Settings</title>
-    {% stylesheets filter='yui_css, cssrewrite'
-    '@WixGoogleAdsenseBundle/Resources/public/lib/bootstrap/css/bootstrap.css'
-    '@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-picker.css'
-    '@WixGoogleAdsenseBundle/Resources/public/lib/chosen/chosen.css'
-    '@WixGoogleAdsenseBundle/Resources/public/css/emphasize.css'
-    '@WixGoogleAdsenseBundle/Resources/public/css/master.css'
-    '@WixGoogleAdsenseBundle/Resources/public/css/settings.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+
+    {# stylesheets #}
+    {% block stylesheets %}
+        {% stylesheets filter='cssrewrite, ?yui_css'
+        '@WixGoogleAdsenseBundle/Resources/public/lib/bootstrap/css/bootstrap.css'
+        '@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-picker.css'
+        '@WixGoogleAdsenseBundle/Resources/public/lib/chosen/chosen.css'
+        '@WixGoogleAdsenseBundle/Resources/public/css/emphasize.css'
+        '@WixGoogleAdsenseBundle/Resources/public/css/master.css'
+        '@WixGoogleAdsenseBundle/Resources/public/css/settings.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
 </head>
 <body>
 
-<!-- container for the adsense app -->
-<div data-ng-view></div>
+{% block body %}
+    <div data-ng-view></div>
+{% endblock %}
 
-<!-- wix sdk -->
-<script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.16.0/js/Wix.js"></script>
+{# scritps #}
+{% block javascripts %}
+    <script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.16.0/js/Wix.js"></script>
 
-<!-- fos js routing bundle -->
-<script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-<script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
-<!-- scripts -->
-{% javascripts
-'@WixGoogleAdsenseBundle/Resources/public/lib/jquery/jquery.min.js'
-'@WixGoogleAdsenseBundle/Resources/public/lib/bootstrap/js/bootstrap.min.js'
-'@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-pickers/simple.js'
-'@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-pickers/advanced.js'
-'@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-picker.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
+    {% javascripts
+    '@WixGoogleAdsenseBundle/Resources/public/lib/jquery/jquery.min.js'
+    '@WixGoogleAdsenseBundle/Resources/public/lib/bootstrap/js/bootstrap.min.js'
+    '@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-pickers/simple.js'
+    '@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-pickers/advanced.js'
+    '@WixGoogleAdsenseBundle/Resources/public/lib/color-picker/color-picker.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
-{% javascripts filter='closure'
-'@WixGoogleAdsenseBundle/Resources/public/lib/jquery-ui/js/jquery-ui.js'
-'@WixGoogleAdsenseBundle/Resources/public/lib/chosen/chosen.jquery.js'
-'@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular.min.js'
-'@WixGoogleAdsenseBundle/Resources/public/js/jquery-ui.js'
-'@WixGoogleAdsenseBundle/Resources/public/js/app.js'
-'@WixGoogleAdsenseBundle/Resources/public/js/services.js'
-'@WixGoogleAdsenseBundle/Resources/public/js/filters.js'
-'@WixGoogleAdsenseBundle/Resources/public/js/directives.js'
-'@WixGoogleAdsenseBundle/Resources/public/js/ajax-events.js'
-'@WixGoogleAdsenseBundle/Resources/public/js/controllers/settings.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
+    {% javascripts filter='?yui_js'
+    '@WixGoogleAdsenseBundle/Resources/public/lib/jquery-ui/js/jquery-ui.js'
+    '@WixGoogleAdsenseBundle/Resources/public/lib/chosen/chosen.jquery.js'
+    '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular.min.js'
+    '@WixGoogleAdsenseBundle/Resources/public/js/jquery-ui.js'
+    '@WixGoogleAdsenseBundle/Resources/public/js/app.js'
+    '@WixGoogleAdsenseBundle/Resources/public/js/services.js'
+    '@WixGoogleAdsenseBundle/Resources/public/js/filters.js'
+    '@WixGoogleAdsenseBundle/Resources/public/js/directives.js'
+    '@WixGoogleAdsenseBundle/Resources/public/js/ajax-events.js'
+    '@WixGoogleAdsenseBundle/Resources/public/js/controllers/settings.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 </body>
 </html>
