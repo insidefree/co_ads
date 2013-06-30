@@ -104,14 +104,17 @@ class SettingsController extends AppController
             ->setAccountId(null)
             ->setClientId(null);
 
-        $component = $this->getComponentDocument()
-            ->setAdUnitId(null);
+        foreach($this->getAllComponents() as $component) {
+            $component
+                ->setAdUnitId(null)
+                ->setAdCode(null);
 
-        $this->persistUser();
-
-        if ($component->hasAdUnit()) {
-            $this->removeAdUnit();
+            if ($component->hasAdUnit()) {
+                $this->removeAdUnit($component->getAdUnitId());
+            }
         }
+
+        $this->persist();
 
         return new JsonResponse('OK');
     }
@@ -199,7 +202,7 @@ class SettingsController extends AppController
     /**
      * saves the current user and component documents into the database.
      */
-    protected function persistUser()
+    protected function persist()
     {
         $this->getDocumentManager()->persist($this->getUserDocument());
         $this->getDocumentManager()->persist($this->getComponentDocument());
@@ -393,14 +396,15 @@ class SettingsController extends AppController
             ->setAdUnitId($googleAdUnit->getId())
             ->setAdCode($adCode->getAdCode());
 
-        $this->getDocumentManager()->persist($this->getUserDocument());
-        $this->getDocumentManager()->flush();
+        $this->persist();
     }
 
     /**
      * removes an ad unit.
+     *
+     * @param $adUnitId
      */
-    protected function removeAdUnit()
+    protected function removeAdUnit($adUnitId)
     {
         $this
             ->getService()
@@ -408,7 +412,7 @@ class SettingsController extends AppController
             ->delete(
                 $this->getUserDocument()->getAccountId(),
                 $this->getUserDocument()->getClientId(),
-                $this->getComponentDocument()->getAdUnitId()
+                $adUnitId
             );
     }
 

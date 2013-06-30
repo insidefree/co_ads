@@ -25,6 +25,16 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 class AppController extends Controller
 {
     /**
+     * @var User
+     */
+    protected $user;
+
+    /**
+     * @var Component
+     */
+    protected $component;
+
+    /**
      * returns a google client
      * @return \Google_Client
      */
@@ -181,6 +191,10 @@ class AppController extends Controller
      */
     protected function getUserDocument()
     {
+        if ($this->user) {
+            return $this->user;
+        }
+
         $instanceId = $this->getInstanceId();
 
         $user = $this->getRepository('WixGoogleAdsenseBundle:User')
@@ -189,6 +203,8 @@ class AppController extends Controller
         if (!$user) {
             $user = new User($instanceId);
         }
+
+        $this->user = $user;
 
         return $user;
     }
@@ -199,6 +215,10 @@ class AppController extends Controller
      */
     protected function getComponentDocument()
     {
+        if ($this->component) {
+            return $this->component;
+        }
+
         $instanceId = $this->getInstanceId();
         $componentId = $this->getComponentId();
 
@@ -209,7 +229,21 @@ class AppController extends Controller
             $component = new Component($instanceId, $componentId);
         }
 
+        $this->component = $component;
+
         return $component;
+    }
+
+    /**
+     * @return object
+     */
+    protected function getAllComponents()
+    {
+        $instanceId = $this->getInstanceId();
+        $componentId = $this->getComponentId();
+
+        return $this->getRepository('WixGoogleAdsenseBundle:Component')
+            ->findBy(array('instanceId' => $instanceId));
     }
 
     /**
