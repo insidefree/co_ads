@@ -292,8 +292,13 @@ class SettingsController extends AppController
         $user = $this
             ->getUserDocument();
 
+        $googleAdUnit = $this
+            ->getService()
+            ->accounts_adunits
+            ->get($user->getAccountId(), $user->getClientId(), $this->getComponentDocument()->getAdUnitId());
+
         $adUnit = $this
-            ->populateAdUnit($adUnit, $this->createEmptyAdUnit());
+            ->populateAdUnit($adUnit, $googleAdUnit);
 
         $this
             ->getService()
@@ -314,9 +319,6 @@ class SettingsController extends AppController
     {
         $googleAdUnit
             ->setId($this->getComponentDocument()->getAdUnitId());
-
-        $googleAdUnit
-            ->setCode($this->getComponentDocument()->getAdUnitCode());
 
         $googleAdUnit
             ->getContentAdsSettings()
