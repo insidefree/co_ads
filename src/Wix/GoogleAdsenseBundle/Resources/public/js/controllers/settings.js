@@ -78,7 +78,9 @@
             uiDialog.confirm('/bundles/wixgoogleadsense/partials/note.html', {
                 submit: function() {
                     $http.post(Router.path('submit')).success(function() {
-                        reload();
+                        reload().then(function() {
+                            uiDialog.alert('/bundles/wixgoogleadsense/partials/congratulation.html');
+                        });
                     });
                 }
             });
@@ -95,7 +97,9 @@
          * updates the models to the newest data from the backend and refreshes the app
          */
         function reload() {
-            var adUnit = $http.get(Router.path('getAdUnit')).success(function(response) {
+            var defer = $q.defer(),
+                promise = defer.promise,
+                adUnit = $http.get(Router.path('getAdUnit')).success(function(response) {
                     $scope.adUnit = response;
                 }),
                 user = $http.get(Router.path('getUser')).success(function(response) {
@@ -104,7 +108,10 @@
 
             $q.all([adUnit, user]).then(function() {
                 WixSDK.refreshAppByCompIds(QueryParams.origCompId);
+                defer.resolve();
             });
+
+            return promise;
         }
 
         /**
