@@ -79,7 +79,7 @@ class SettingsController extends AppController
         $session = $this->getService()->associationsessions->verify($token);
 
         if ($session->getStatus() === 'REJECTED') {
-            throw new AssociationRejectedException('the association was rejected.');
+            return array('reload' => false);
         }
 
         $account = $this->getService()->accounts->get($session->getAccountId());
@@ -88,7 +88,7 @@ class SettingsController extends AppController
             $this->saveUserInformation($session);
         }
 
-        return array();
+        return array('reload' => true);
     }
 
     /**

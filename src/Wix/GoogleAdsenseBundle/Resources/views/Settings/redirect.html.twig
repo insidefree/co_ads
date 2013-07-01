@@ -13,7 +13,9 @@
 
 <!-- script for updating wix and reloading the page -->
 <script type="text/javascript">
+    {% if reload %}
     (window.opener.reload || function(){})();
+    {% endif %}
     window.close();
 </script>
 </body>
