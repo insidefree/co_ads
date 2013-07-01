@@ -11,7 +11,8 @@
             <p class="create_account">Don't have a Google account? <a target="_blank" href="https://www.google.com/adsense">Create one</a>
         </div>
         <div data-ng-show="connected()" class="connect">
-            <p>You are now connected to your AdSense. </p>
+            <p data-ng-show="hasAdUnit()">You can earn revenue by showing relevant and engaging ads along-side your online content.</p>
+            <p>You are now connected to your AdSense account.</p>
             <p class="disconnect">
                 <a href="" data-ng-click="disconnect()">Disconnect Account</a>
             </p>
