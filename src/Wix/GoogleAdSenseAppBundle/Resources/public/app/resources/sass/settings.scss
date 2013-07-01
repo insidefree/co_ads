@@ -320,24 +320,39 @@ ul { list-style: none; padding: 0; margin: 0; }
 	@include box-shadow(0 0 8px #bbb);
 	background: white;
 	overflow: hidden;
-	padding: 10px;
+	padding-bottom: 17px;
+	z-index: 20 !important; //Temp
+	width: 440px !important;
 
-	.ui-dialog-titlebar span {
-		display: inline-block;
-		padding: 10px 0 15px 65px;
-		color: red; }
-	.ui-dialog-titlebar-close {
-		@include background-image("settings/ge/ge_close.png");
-		position: absolute;
-		right: 10px;
-		top: 10px; }
+	.ui-dialog-titlebar {
+		border-bottom: 1px solid #ccc;
+		margin-bottom: 13px;
+		span {
+			@include inline-block(auto,38px,auto,middle,38px);
+			display: inline-block;
+			font-size: 16px;
+			color: #1fa5fc;
+			text-indent: 20px; }
+		.ui-dialog-titlebar-close {
+			@extend span;
+			@include background-image("settings/ge/ge_close.png",$image_position: center center);
+			position: absolute;
+			top: 0;
+			right: 0;
+			height: 38px;
+			border-left: 1px solid #ccc;
+			padding-left: 23px; }
+	}
+
 	#dialog {
-		margin-bottom: 15px;
-		padding-left: 65px;
-		background: transparent inline-image("settings/ge/ge_exclamation.png") 10px 10px no-repeat; }
+		font-size: 14px;
+		line-height: 1.1;
+		min-height: 60px !important;
+		padding: 0 20px; }
+
 	.ui-dialog-buttonset {
-		button { float: left; }
-		button:first-child { float: right; }
+		button { float: left; margin-left: 20px; }
+		button:first-child { float: right; margin-right: 20px; }
 		button + button {
 			color: $color_wixBlue !important;
 			background: #fff;
