@@ -43,7 +43,13 @@
 
                     $compile(response)(scope, function(elm) {
                         elm.dialog({
-                            modal: true
+                            modal: true,
+                            buttons: {
+                                'Close': function() {
+                                    ((options || {}).close || window.angular.noop)();
+                                    elm.dialog('close');
+                                }
+                            }
                         });
 
                         elm.on('dialogclose', function() {
