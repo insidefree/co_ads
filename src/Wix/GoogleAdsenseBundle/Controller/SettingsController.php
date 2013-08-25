@@ -247,6 +247,7 @@ class SettingsController extends AppController
             throw new InvalidAssociationIdException('could not find ad client id');
         }
 
+        $user->setSignedAt(new \DateTime());
         $user->setClientId($adClients->items[0]->getId());
 
         $this->getDocumentManager()->persist($user);
