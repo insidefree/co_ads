@@ -69,3 +69,9 @@ doctrine_mongodb:
     document_managers:
         default:
             auto_mapping: true
+
+mobile_detect:
+    redirect:
+        mobile: ~
+        tablet: ~
+    switch_device_view: ~

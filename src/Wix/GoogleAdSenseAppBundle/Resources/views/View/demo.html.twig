@@ -7,10 +7,18 @@
 
     google_page_url = 'http://wix.com/';
 
+    {% if is_mobile() and adUnit.width >= mobile.width %}
+    // width and height
+    google_ad_width = {{ mobile.width }};
+    google_ad_height = {{ mobile.height }};
+    google_ad_format = '{{ mobile.width }}x{{ mobile.height }}_as';
+
+    {% else %}
     // width and height
     google_ad_width = {{ adUnit.width }};
     google_ad_height = {{ adUnit.height }};
     google_ad_format = '{{ adUnit.width }}x{{ adUnit.height }}_as';
+    {% endif %}
 
     // type of ad
     {% if adUnit.type != 'IMAGE' %}

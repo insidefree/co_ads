@@ -19,6 +19,7 @@ class ViewController extends AppController
     {
         $params = array(
             'adUnit' => $this->getAdUnit(),
+            'mobile' => array("width" => 320, "height" => 50)
         );
 
         $user = $this->getUserDocument();
