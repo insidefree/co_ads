@@ -28,7 +28,7 @@ google_apio_auth2:
     keys:
         client_id: 417424657964.apps.googleusercontent.com
         client_secret: R1R9PiJd4j9kVT-X4xQf1y76
-        redirect_uri: http://http://adsense.wix.codeoasis.com/settings/redirect
+        redirect_uri: http://adsense.wix.codeoasis.com/settings/redirect
 
     scopes:
         [ https://www.googleapis.com/auth/adsensehost ]
