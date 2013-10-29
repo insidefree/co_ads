@@ -1,29 +1,17 @@
 imports:
     - { resource: config.yml }
 
-framework:
-    router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
-    profiler: { only_exceptions: false }
-
-web_profiler:
-    toolbar: false
-    intercept_redirects: false
 
 monolog:
     handlers:
         main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
             type:  stream
             path:  "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
-        firephp:
-            type:  firephp
-            level: info
-
-assetic:
-    use_controller: true
-
-#swiftmailer:
-#    delivery_address: me@example.com
 
 # Wix API Configuration
 wix_api:
@@ -32,17 +20,15 @@ wix_api:
         instance: Wix\APIBundle\Base\Instance
 
     keys:
-        app_id: 1330f382-7b44-f3bb-86e8-48b76f901d91
-        app_secret: 2ba44c22-672b-41b2-858c-7eb1604b190f
-#        app_id: 12d5833e-f061-7cc8-5122-e1d404f6c8ae
-#        app_secret: d8f2bb9f-7ea1-4a15-b2af-acca6be60fe8
+        app_id: 133190a9-0b50-0090-e6d2-44c93b6e2bde
+        app_secret: 0cc4bb17-fc85-4af8-b411-0c00923187d3
 
 # Google OAuth2 Configuration
 google_apio_auth2:
     keys:
         client_id: 417424657964.apps.googleusercontent.com
         client_secret: R1R9PiJd4j9kVT-X4xQf1y76
-        redirect_uri: http://local.adsense.apps.wix.com/app_dev.php/settings/redirect
+        redirect_uri: http://http://adsense.wix.codeoasis.com/settings/redirect
 
     scopes:
         [ https://www.googleapis.com/auth/adsensehost ]
