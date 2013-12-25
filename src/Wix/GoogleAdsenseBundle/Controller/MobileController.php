@@ -24,7 +24,8 @@ class MobileController extends AppController
 			'mobile' => array(
 				"regular" => array("width" => 250, "height" => 250),
 				"tall" => array("width" => 120, "height" => 240),
-				"large" => array("width" => 320, "height" => 50)
+				"large" => array("width" => 234, "height" => 60),
+				"wide" => array("width" => 320, "height" => 50)
 			)
 		);
 

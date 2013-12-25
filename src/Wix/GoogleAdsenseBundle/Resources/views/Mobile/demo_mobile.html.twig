@@ -14,10 +14,21 @@
 
 
     {% elseif adUnit.size == 'SIZE_468_60' %}
+
+    {% if is_mobile() %}
+    // width and height
+    google_ad_width = {{ mobile.wide.width }};
+    google_ad_height = {{ mobile.wide.height }};
+    google_ad_format = '{{ mobile.wide.width }}x{{ mobile.wide.height }}_as';
+
+    {% else %}
+
     // width and height
     google_ad_width = {{ mobile.large.width }};
     google_ad_height = {{ mobile.large.height }};
     google_ad_format = '{{ mobile.large.width }}x{{ mobile.large.height }}_as';
+
+    {% endif %}
 
     {% elseif adUnit.size == 'SIZE_120_600' %}
     // width and height
