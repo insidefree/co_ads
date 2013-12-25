@@ -6,10 +6,31 @@
 
     google_page_url = 'http://wix.com/';
 
+    {% if adUnit.size == 'SIZE_300_250' %}
+    // width and height
+    google_ad_width = {{ mobile.regular.width }};
+    google_ad_height = {{ mobile.regular.height }};
+    google_ad_format = '{{ mobile.regular.width }}x{{ mobile.regular.height }}_as';
+
+
+    {% elseif adUnit.size == 'SIZE_468_60' %}
+    // width and height
+    google_ad_width = {{ mobile.large.width }};
+    google_ad_height = {{ mobile.large.height }};
+    google_ad_format = '{{ mobile.large.width }}x{{ mobile.large.height }}_as';
+
+    {% elseif adUnit.size == 'SIZE_120_600' %}
+    // width and height
+    google_ad_width = {{ mobile.tall.width }};
+    google_ad_height = {{ mobile.tall.height }};
+    google_ad_format = '{{ mobile.tall.width }}x{{ mobile.tall.height }}_as';
+
+    {% else %}
     // width and height
     google_ad_width = {{ adUnit.width }};
     google_ad_height = {{ adUnit.height }};
     google_ad_format = '{{ adUnit.width }}x{{ adUnit.height }}_as';
+    {% endif %}
 
     // type of ad
     {% if adUnit.type != 'IMAGE' %}
