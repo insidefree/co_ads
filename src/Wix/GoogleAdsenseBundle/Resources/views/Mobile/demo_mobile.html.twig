@@ -28,7 +28,7 @@
     google_ad_height = {{ mobile.large.height }};
     google_ad_format = '{{ mobile.large.width }}x{{ mobile.large.height }}_as';
 
-    google_ad_type = 'text';
+    google_ad_type = 'text_image';
 
     // ----------- tall
     {% elseif adUnit.size == 'SIZE_120_600' %}
@@ -37,12 +37,7 @@
     google_ad_height = {{ mobile.tall.height }};
     google_ad_format = '{{ mobile.tall.width }}x{{ mobile.tall.height }}_as';
 
-    // type of ad
-    {% if adUnit.type != 'IMAGE' %}
-    google_ad_type = 'text';
-    {% else %}
-    google_ad_type = 'image';
-    {% endif %}
+    google_ad_type = 'text_image';
 
     // -------------- other sizes
     {% else %}
