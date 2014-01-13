@@ -22,10 +22,7 @@ class MobileController extends AppController
 					->getComponentDocument()
 					->getAdUnit(),
 			'mobile' => array(
-				"regular" => array("width" => 250, "height" => 250),
-				"tall" => array("width" => 200, "height" => 200),
-				"large" => array("width" => 234, "height" => 60),
-				"wide" => array("width" => 320, "height" => 50)
+				"regular" => array("width" => 200, "height" => 200),
 			)
 		);
 
