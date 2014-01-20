@@ -21,7 +21,9 @@
         "doctrine/mongodb-odm-bundle": "3.0.*",
         "friendsofsymfony/jsrouting-bundle": "1.1.*",
         "jms/serializer-bundle": "dev-master",
-        "suncat/mobile-detect-bundle": "dev-master"
+        "suncat/mobile-detect-bundle": "dev-master",
+	"ekino/newrelic-bundle": "dev-master#749df89fad626c7e47ce1d81c1ad9a67e75f2a5f"
+
     },
     "scripts": {
         "post-install-cmd": [
