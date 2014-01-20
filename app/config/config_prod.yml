@@ -43,3 +43,8 @@ google_apio_auth2:
 
     preferences:
         use_objects: true
+
+ekino_new_relic:
+    application_name: Google AdSense
+    api_key: "%ekino_new_relic_api_key%"
+    log_exceptions: true

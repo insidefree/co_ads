@@ -9,11 +9,13 @@
 <div>Loading...</div>
 
 <!-- wix sdk -->
-<script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.16.0/js/Wix.js"></script>
+<script type="text/javascript" src="https://sslstatic.wix.com/services/js-sdk/1.17.0/js/Wix.js"></script>
 
 <!-- script for updating wix and reloading the page -->
 <script type="text/javascript">
+    {% if reload %}
     (window.opener.reload || function(){})();
+    {% endif %}
     window.close();
 </script>
 </body>

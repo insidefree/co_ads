@@ -16,3 +16,5 @@ build.xml
 .project
 .settings
 .idea/*
+
+app/config/parameters.yml
