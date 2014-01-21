@@ -9,8 +9,8 @@
 <body>
 
     <!-- adsense advertisement -->
-    <div>
-        {% if code is defined and app.request.get('viewMode') != 'editor' %}
+    <div style="text-align: center">
+    {% if code is defined and app.request.get('viewMode') != 'editor' %}
             {% include 'WixGoogleAdsenseBundle:Mobile:ad.html.twig' %}
         {% else %}
             {% include 'WixGoogleAdsenseBundle:Mobile:demo_mobile.html.twig' %}

@@ -9,7 +9,7 @@
 <body>
 
 <!-- adsense advertisement -->
-<div>
+    <div style="text-align: center">
     {% if code is defined and app.request.get('viewMode') != 'editor' %}
         {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
     {% else %}
