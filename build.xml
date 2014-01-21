@@ -101,7 +101,7 @@
         <exec executable="phpmd">
             <arg path="${src.dir}"/>
             <arg value="xml"/>
-            <arg value="${basedir}/app/Resources/jenkins/phpmd.xml"/>
+            <arg value="${basedir}/app/phpmd.xml"/>
             <arg value="--reportfile"/>
             <arg value="${logs.dir}/pmd.xml"/>
         </exec>
