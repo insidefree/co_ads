@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="app_market" default="build">
+    <target name="build" depends="clean,prepare,composer,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,csslint"/>
+    <target name="build-parallel" depends="clean,prepare,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb"/>
+
+    <property name="tools.dir" value="${basedir}/build/tools"/>
+    <property name="build.dir" value="${basedir}/app/build"/>
+    <property name="logs.dir" value="${basedir}/app/build/logs"/>
+    <property name="src.dir" value="${basedir}/src/Wix"/>
+    <property name="assets.dir" value="${basedir}/assets"/>
+
+    <property name="js.rules" value="white,undef,plusplus,newcap,vars,indent=4,adsafe=false,bitwise,browser,css,cap,forin,fragment,maxerr=200,unparam,sloppy"/>
+    <property name="css.rules.error" value="important,empty-rules,display-property-grouping,font-faces,regex-selectors,import,duplicate-properties,ids"/>
+    <property name="css.rules.warning" value="box-model,floats,adjoining-classes,shorthand,font-sizes,qualified-headings,unique-headings,zero-units,vendor-prefix,gradients,compatible-vendor-prefixes"/>
+
+    <target name="tools-parallel" description="Run tools in parallel">
+        <parallel threadCount="2">
+            <sequential>
+                <antcall target="pdepend"/>
+                <antcall target="phpmd-ci"/>
+            </sequential>
+            <antcall target="phpcpd"/>
+            <antcall target="phpcs-ci"/>
+            <antcall target="phploc"/>
+            <antcall target="phpdoc"/>
+        </parallel>
+    </target>
+
+    <target name="clean" description="Cleanup build artifacts">
+        <delete dir="${build.dir}/api"/>
+        <delete dir="${build.dir}/code-browser"/>
+        <delete dir="${build.dir}/coverage"/>
+        <delete dir="${logs.dir}"/>
+        <delete dir="${build.dir}/pdepend"/>
+    </target>
+
+    <target name="prepare" depends="clean" description="Prepare for build">
+        <mkdir dir="${build.dir}/api"/>
+        <mkdir dir="${build.dir}/code-browser"/>
+        <mkdir dir="${build.dir}/coverage"/>
+        <mkdir dir="${logs.dir}"/>
+        <mkdir dir="${build.dir}/pdepend"/>
+    </target>
+
+    <target name="vendors" description="Update vendors">
+        <exec executable="${basedir}/bin/vendors" failonerror="true">
+            <arg value="update"/>
+        </exec>
+    </target>
+
+
+    <target name="pdepend" description="Calculate software metrics using PHP_Depend">
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${logs.dir}/jdepend.xml"/>
+            <arg value="--jdepend-chart=${build.dir}/pdepend/dependencies.svg"/>
+            <arg value="--overview-pyramid=${build.dir}/pdepend/overview-pyramid.svg"/>
+            <arg path="${src.dir}"/>
+        </exec>
+    </target>
+
+    <target name="lint" description="Perform syntax check of sourcecode files">
+        <apply executable="php" failonerror="true">
+            <arg value="-l"/>
+
+            <fileset dir="${basedir}/app">
+                <exclude name="**/cache/**"/>
+                <include name="**/*.php"/>
+                <modified/>
+            </fileset>
+
+            <fileset dir="${src.dir}">
+                <exclude name="**/cache/**"/>
+                <include name="**/*.php"/>
+            </fileset>
+
+        </apply>
+    </target>
+
+    <target name="phploc" description="Measure project size using PHPLOC">
+        <exec executable="phploc">
+            <arg value="--exclude"/>
+            <arg value="${basedir}/app/cache"/>
+            <arg value="--log-csv"/>
+            <arg value="${logs.dir}/phploc.csv"/>
+            <arg path="${src.dir}"/>
+        </exec>
+    </target>
+
+    <target name="phpmd"
+            description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="phpmd">
+            <arg path="${src.dir}"/>
+            <arg value="text"/>
+            <arg value="${logs.dir}/pmd.xml"/>
+        </exec>
+    </target>
+
+    <target name="phpmd-ci"
+            description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
+        <exec executable="phpmd">
+            <arg path="${src.dir}"/>
+            <arg value="xml"/>
+            <arg value="${basedir}/app/Resources/jenkins/phpmd.xml"/>
+            <arg value="--reportfile"/>
+            <arg value="${logs.dir}/pmd.xml"/>
+        </exec>
+    </target>
+
+    <target name="phpcs"
+            description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="phpcs">
+            <arg value="--standard=Symfony2"/>
+            <arg path="${src.dir}"/>
+        </exec>
+    </target>
+
+
+    <target name="phpcs-ci"
+            description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
+        <exec executable="phpcs" output="/dev/null">
+            <arg value="--report=checkstyle"/>
+            <arg value="--report-file=${logs.dir}/checkstyle.xml"/>
+            <arg value="--standard=Symfony2"/>
+            <arg path="${src.dir}"/>
+        </exec>
+    </target>
+
+    <target name="phpcpd" description="Find duplicate code using PHPCPD">
+        <exec executable="phpcpd">
+            <arg value="--log-pmd"/>
+            <arg value="${logs.dir}/pmd-cpd.xml"/>
+            <arg path="${src.dir}"/>
+        </exec>
+    </target>
+
+    <target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+        <exec executable="phpunit" failonerror="true">
+            <arg value="--coverage-clover=${basedir}/app/build/logs/clover.xml"/>
+            <arg value="--coverage-html=${basedir}/app/build/coverage"/>
+            <arg value="--log-junit=${basedir}/app/build/logs/junit.xml"/>
+            <arg value="-c"/>
+            <arg path="${basedir}/app/phpunit.xml"/>
+        </exec>
+    </target>
+
+
+    <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
+        <exec executable="phpcb">
+            <arg value="--log"/>
+            <arg path="${logs.dir}"/>
+            <arg value="--source"/>
+            <arg path="${src.dir}"/>
+            <arg value="--output"/>
+            <arg path="${build.dir}/code-browser"/>
+        </exec>
+    </target>
+
+    <target name="csslint" description="Run the CSSLint tool on CSS files. Choose the rule you want from here: http://csslint.net/about.html ">
+        <apply executable="java" failonerror="false" parallel="true" output="${logs.dir}/csslint.xml">
+            <fileset dir="${assets.dir}" includes="**/*.css"/>
+            <arg line="-jar"/>
+            <arg path="${tools.dir}/csslint/lib/js.jar"/>
+            <arg path="${tools.dir}/csslint/release/csslint-rhino.js"/>
+            <arg line="--format=lint-xml"/>
+            <arg line="--warnings=${css.rules.warning} --errors=${css.rules.error}" />
+            <srcfile/>
+        </apply>
+    </target>
+
+    <target name="phpdoc">
+        <exec executable="phpdoc">
+            <arg value="--directory=${src.dir}"/>
+            <arg value="--target=${basedir}/app/build/api"/>
+        </exec>
+    </target>
+
+    <target name="composer" description="Install the composer dependecies">
+        <exec executable="composer">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+</project>
