@@ -1,5 +1,5 @@
 set :application, "wix-adsense"
-set :domain,      "dev.people.wix.com"
+set :domain,      "wix.codeoasis.com"
 set :user,        "root"
 set :deploy_to,   "/var/www/wix-adsense"
 set :app_path,    "app"
