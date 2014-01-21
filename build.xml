@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="app_market" default="build">
+<project name="wix-adsense" default="build">
     <target name="build" depends="clean,prepare,composer,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,csslint"/>
     <target name="build-parallel" depends="clean,prepare,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb"/>
 
