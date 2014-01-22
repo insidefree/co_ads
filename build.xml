@@ -10,7 +10,7 @@
     <property name="css.rules.error" value="important,empty-rules,display-property-grouping,font-faces,regex-selectors,import,duplicate-properties,ids"/>
     <property name="css.rules.warning" value="box-model,floats,adjoining-classes,shorthand,font-sizes,qualified-headings,unique-headings,zero-units,vendor-prefix,gradients,compatible-vendor-prefixes"/>
 
-    <target name="build" depends="clean,prepare,parameters,composer,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,csslint"/>
+    <target name="build" depends="clean,prepare,parameters,composer,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc"/>
 
     <target name="build-parallel" depends="clean,prepare,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb"/>
 
