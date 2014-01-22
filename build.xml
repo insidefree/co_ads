@@ -2,7 +2,7 @@
 
 <project name="wix-adsense" default="build">
     <property name="workspace" value="${basedir}" />
-    <property name="sourcedir" value="${basedir}/src" />
+    <property name="sourcedir" value="${basedir}/src/Wix" />
     <property name="builddir" value="${workspace}/app/build" />
     <property name="assetsdir" value="${basedir}/assets"/>
     <property name="toolsdir" value="${builddir}/tools"/>
