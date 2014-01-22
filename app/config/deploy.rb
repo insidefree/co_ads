@@ -10,7 +10,7 @@ set :writable_dirs,       ["app/cache", "app/logs"]
 set :webserver_user,      "www-data"
 set :permission_method,   :acl
 set :use_set_permissions, true
-set :use_sudo, false
+set :use_sudo, true
 
 set :shared_files,    ["app/config/parameters.yml"]
 set :shared_children, [app_path + "/logs"]
