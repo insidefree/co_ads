@@ -154,18 +154,6 @@
         </exec>
     </target>
 
-    <target name="csslint" description="Run the CSSLint tool on CSS files. Choose the rule you want from here: http://csslint.net/about.html ">
-        <apply executable="java" failonerror="false" parallel="true" output="${builddir}/logs/csslint.xml">
-            <fileset dir="${assetsdir}" includes="**/*.css"/>
-            <arg line="-jar"/>
-            <arg path="${toolsdir}/csslint/lib/js.jar"/>
-            <arg path="${toolsdir}/csslint/release/csslint-rhino.js"/>
-            <arg line="--format=lint-xml"/>
-            <arg line="--warnings=${css.rules.warning} --errors=${css.rules.error}" />
-            <srcfile/>
-        </apply>
-    </target>
-
     <target name="composer" description="Install the composer dependecies">
         <exec executable="composer">
             <arg value="install"/>
