@@ -15,8 +15,8 @@
 
     <testsuites>
         <testsuite name="Wix Adsense Test Suite">
-            <directory>../src/*/*Bundle/Tests</directory>
-            <directory>../src/*/Bundle/*Bundle/Tests</directory>
+            <directory>../src/Wix/*/*Bundle/Tests</directory>
+            <directory>../src/Wix/*/Bundle/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
 
