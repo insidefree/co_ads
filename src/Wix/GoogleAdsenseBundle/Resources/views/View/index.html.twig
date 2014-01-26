@@ -4,33 +4,81 @@
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
     <meta>
+
+    <style>
+        .overlay-message {
+            margin-top: 3.5em;
+        }
+
+        .overlay-message p {
+            font: 17px/20px 'HelveticaNeueW01-55Roma', Helvetica, Arial, sans-serif;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .overlay-container img {
+                width: 80%;
+                height: 80%;
+            }
+
+            .overlay-message p {
+                font-size: 14px;
+                line-height: 17px;
+            }
+        }
+    </style>
+
     <title>Google AdSense Widget</title>
 </head>
 <body>
 
-<!-- adsense advertisement -->
-    <div style="text-align: center">
-    {% if code is defined and app.request.get('viewMode') != 'editor' %}
-        {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
-    {% else %}
-        {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
-    {% endif %}
-</div>
+    <!-- adsense advertisement -->
+    <div style="text-align: center" id="adblock">
+        {% if code is defined and app.request.get('viewMode') != 'editor' %}
+            {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
+        {% else %}
+            {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
+        {% endif %}
+    </div>
+    <div class="overlay" id="adblock-overlay">
+        <div class="overlay-container">
+            <div class="icon-exclamation">
+                <img src="{{ asset('bundles/wixadsense/images/settings/exclamationmark.png') }}">
+            </div>
+            <div class="overlay-message">
+                It seems that you are blocking ads on your browser.<br>
 
-<!-- wix sdk -->
+                Please turn off your ad blocker to display the content.
+            </div>
+        </div>
+    </div>
+
+    <!-- wix sdk -->
     <script type="text/javascript" src="https://sslstatic.wix.com/services/js-sdk/1.24.0/js/Wix.js"></script>
 
     {% if code is not defined %}
-    <!-- fos js routing bundle -->
-    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        <!-- fos js routing bundle -->
+        <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
-    <!-- scripts -->
-    {% javascripts
-    '@WixGoogleAdsenseBundle/Resources/public/lib/jquery/jquery.js'
-    '@WixGoogleAdsenseBundle/Resources/public/js/responsive.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endif %}
+        <!-- scripts -->
+        {% javascripts
+        '@WixGoogleAdsenseBundle/Resources/public/lib/jquery/jquery.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/responsive.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        <script>
+            function blockAdblockUser() {
+                if ($('#adblock').height() == 0) {
+                    $('#adblock-overlay').show();
+                }
+            }
+
+            $(document).ready(function() {
+                blockAdblockUser();
+            });
+        </script>
+    {% endif %}
 </body>
 </html>
