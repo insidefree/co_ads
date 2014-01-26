@@ -23,6 +23,9 @@ set :deploy_via,  :remote_cache
 # Since Jenkins creates and pushes a tag following a successful build this should always be the last tested version of the code.
 set :branch, "stage"
 
+#Need this to false so it won't remove app_stg and app_dev
+set :clear_controllers,     false
+
 set :model_manager, "doctrine"
 
 role :web,        domain                         # Your HTTP server, Apache/etc
