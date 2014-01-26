@@ -26,6 +26,9 @@ set :branch, "stage"
 #Need this to false so it won't remove app_stg and app_dev
 set :clear_controllers,     false
 
+#Dump Assetic
+set :dump_assetic_assets,   true
+
 set :model_manager, "doctrine"
 
 role :web,        domain                         # Your HTTP server, Apache/etc
