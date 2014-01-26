@@ -17,11 +17,11 @@ set :shared_children, [app_path + "/logs"]
 
 set :repository,  "git@git.codeoasis.com:wix/wix-adsense.git"
 set :scm,         :git
-set :deploy_via,  :copy
+set :deploy_via,  :remote_cache
 
 # The following line tells Capifony to deploy the last Git tag.
 # Since Jenkins creates and pushes a tag following a successful build this should always be the last tested version of the code.
-set :branch, `git tag`.split("\n").last
+set :branch, jenkins
 
 set :model_manager, "doctrine"
 
