@@ -19,6 +19,10 @@ set :repository,  "git@git.codeoasis.com:wix/wix-adsense.git"
 set :scm,         :git
 set :deploy_via,  :remote_cache
 
+# The following line tells Capifony to deploy the last Git tag.
+# Since Jenkins creates and pushes a tag following a successful build this should always be the last tested version of the code.
+set :branch, `git tag`.split("\n").last
+
 set :model_manager, "doctrine"
 
 role :web,        domain                         # Your HTTP server, Apache/etc
@@ -31,10 +35,6 @@ set  :keep_releases,  5
 
 # Confirmations will not be requested from the command line.
 set :interactive_mode, false
-
-# The following line tells Capifony to deploy the last Git tag.
-# set :branch, `git tag`.split("\n").last
-set :branch, "jenkins"
 
 task :restart_php do
   run "cd #{release_path}; service php-fpm reload"
