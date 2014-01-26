@@ -21,7 +21,7 @@ set :deploy_via,  :remote_cache
 
 # The following line tells Capifony to deploy the last Git tag.
 # Since Jenkins creates and pushes a tag following a successful build this should always be the last tested version of the code.
-set :branch, `git tag | sort -n`
+set :branch, `git tag`.split("\n").last
 
 set :model_manager, "doctrine"
 
