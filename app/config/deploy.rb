@@ -1,5 +1,5 @@
 set :application,  "wix-adsense"
-set :domain,       "wix.codeoasis.com"
+set :domain,       "54.204.183.121"
 set :user,            "deploy"
 set :deploy_to,    "/var/www/wix-adsense"
 set :app_path,     "app"
@@ -9,7 +9,7 @@ set :web_path,     "web"
 set :writable_dirs,       ["app/cache", "app/logs"]
 set :webserver_user,      "www-data"
 set :permission_method,   :acl
-set :use_set_permissions, false
+set :use_set_permissions, true
 set :use_sudo, false
 
 set :shared_files,    ["app/config/parameters.yml"]
