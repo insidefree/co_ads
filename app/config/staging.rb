@@ -37,7 +37,7 @@ role :app,        domain, :primary => true       # This may be the same as your 
 
 set :use_composer,    true
 set :copy_vendors, true
-set :composer_options,      "--no-dev --verbose --prefer-dist --optimize-autoloader --no-progress --no-scripts"
+set :composer_options,      "--no-dev --verbose --prefer-dist --optimize-autoloader --no-progress"
 
 set  :keep_releases,  5
 
