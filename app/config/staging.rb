@@ -6,6 +6,9 @@ set :app_path,     "app"
 set :web_path,     "web"
 set :symfony_env_prod, "stg"
 
+# Symfony debug flag for console commands
+set :symfony_debug,         true
+
 # set permissions
 set :writable_dirs,       ["app/cache", "app/logs"]
 set :webserver_user,      "www-data"
@@ -29,6 +32,8 @@ set :clear_controllers,     false
 
 #Dump Assetic
 set :dump_assetic_assets,   true
+set :assets_install,        true
+set :assets_symlinks,       true
 
 set :model_manager, "doctrine"
 
@@ -53,16 +58,12 @@ end
 # Run compass
 task :compass_compile do
     run "cd #{release_path}/src/Wix/GoogleAdsenseBundle/Resources/public; compass compile"
-    run "cd #{release_path}; php app/console cache:clear --env=stg"
-    run "cd #{release_path}; php app/console assets:install --symlink web/"
-    run "cd #{release_path}; php app/console assetic:dump --env=stg"
-
     capifony_puts_ok
 end
 
 
 #after "provide_permissions", "restart_php"
-after "deploy", "compass_compile"
+before  "deploy:assets:precompile", "compass_compile"
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
