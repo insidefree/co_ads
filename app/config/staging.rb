@@ -49,7 +49,15 @@ task :restart_php do
   capifony_puts_ok
 end
 
-after "provide_permissions", "restart_php"
+# Run compass
+task :compass_compile do
+    run "cd #{release_path}/src/Wix/GoogleAdsenseBundle/Resources/public; compass compile"
+
+    capifony_puts_ok
+end
+
+#after "provide_permissions", "restart_php"
+after "deploy", "compass_compile"
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
