@@ -53,13 +53,14 @@ end
 # Run compass
 task :compass_compile do
     run "cd #{release_path}/src/Wix/GoogleAdsenseBundle/Resources/public; compass compile"
+    run "cd #{release_path}; php app/console assets:install --symlink web/"
 
     capifony_puts_ok
 end
 
 
 #after "provide_permissions", "restart_php"
-before "deploy", "compass_compile"
+after "deploy", "compass_compile"
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
