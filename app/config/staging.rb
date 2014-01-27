@@ -53,7 +53,9 @@ end
 # Run compass
 task :compass_compile do
     run "cd #{release_path}/src/Wix/GoogleAdsenseBundle/Resources/public; compass compile"
+    run "cd #{release_path}; php app/console cache:clear --env=stg"
     run "cd #{release_path}; php app/console assets:install --symlink web/"
+    run "cd #{release_path}; php app/console assetic:dump --env=stg"
 
     capifony_puts_ok
 end
