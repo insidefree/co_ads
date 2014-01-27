@@ -59,7 +59,7 @@ end
 
 
 #after "provide_permissions", "restart_php"
-after "deploy", "compass_compile"
+before "deploy", "compass_compile"
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
