@@ -4,6 +4,7 @@ set :user,            "deploy"
 set :deploy_to,    "/var/www/wix-adsense"
 set :app_path,     "app"
 set :web_path,     "web"
+set :symfony_env_prod, "stg"
 
 # set permissions
 set :writable_dirs,       ["app/cache", "app/logs"]
