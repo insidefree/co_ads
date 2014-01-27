@@ -37,6 +37,7 @@ role :app,        domain, :primary => true       # This may be the same as your 
 
 set :use_composer,    true
 set :copy_vendors, true
+set :composer_options,      "--no-dev --verbose --prefer-dist --optimize-autoloader --no-progress --no-scripts"
 
 set  :keep_releases,  5
 
@@ -55,6 +56,7 @@ task :compass_compile do
 
     capifony_puts_ok
 end
+
 
 #after "provide_permissions", "restart_php"
 after "deploy", "compass_compile"
