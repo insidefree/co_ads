@@ -6,6 +6,31 @@
     <meta>
 
     <style>
+        .overlay {
+            z-index: 1;
+            position: relative;
+            width: 80%;
+            height: 315px;
+            background: #f5f5f5;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .overlay-container {
+            padding: 13px;
+            position: relative;
+        }
+
+        .overlay-container span {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+        }
+
+        .icon-exclamation {
+            margin-top: 1em;
+        }
+
         .overlay-message {
             margin-top: 3.5em;
         }
@@ -40,21 +65,22 @@
             {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
         {% endif %}
     </div>
-    <div class="overlay" id="adblock-overlay">
+    <div class="overlay" id="adblock-overlay" style="display: none;">
         <div class="overlay-container">
             <div class="icon-exclamation">
-                <img src="{{ asset('bundles/wixadsense/images/settings/exclamationmark.png') }}">
+                <img src="{{ asset('bundles/wixgoogleadsense/images/settings/exclamationmark.png') }}">
             </div>
             <div class="overlay-message">
-                It seems that you are blocking ads on your browser.<br>
+                <p>It seems that you are blocking ads on your browser.<br>
 
-                Please turn off your ad blocker to display the content.
+                   Please turn off your ad blocker to display the content.</p>
             </div>
         </div>
     </div>
 
     <!-- wix sdk -->
     <script type="text/javascript" src="https://sslstatic.wix.com/services/js-sdk/1.24.0/js/Wix.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
 
     {% if code is not defined %}
         <!-- fos js routing bundle -->
@@ -68,7 +94,7 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
-        <script>
+        <script type="text/javascript">
             function blockAdblockUser() {
                 if ($('#adblock').height() == 0) {
                     $('#adblock-overlay').show();
