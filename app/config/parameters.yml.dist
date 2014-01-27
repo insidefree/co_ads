@@ -11,6 +11,9 @@ parameters:
     mailer_user:       ~
     mailer_password:   ~
 
+    mongodb_server: mongodb://localhost:27017
+    mongodb_name: wix_adsense
+
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
