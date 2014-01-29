@@ -57,7 +57,8 @@ task :compass_compile do
     capifony_puts_ok
 end
 
-after "provide_permissions", "restart_php"
+#after "provide_permissions", "restart_php"
+after "deploy", "compass_compile"
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
