@@ -4,6 +4,7 @@ set :user,            "deploy"
 set :deploy_to,    "/var/www/wix-adsense"
 set :app_path,     "app"
 set :web_path,     "web"
+set :symfony_env_prod, "prod"
 
 # set permissions
 set :writable_dirs,       ["app/cache", "app/logs"]
@@ -33,6 +34,7 @@ role :app,        domain, :primary => true       # This may be the same as your 
 
 set :use_composer,    true
 set :copy_vendors, true
+set :composer_options,      "--no-dev --verbose --prefer-dist --optimize-autoloader --no-progress"
 
 set  :keep_releases,  5
 
@@ -43,6 +45,16 @@ task :restart_php do
   run "cd #{release_path}; service php-fpm reload"
 
   capifony_puts_ok
+end
+
+# Run compass
+task :compass_compile do
+    run "cd #{release_path}/src/Wix/GoogleAdsenseBundle/Resources/public; compass compile"
+    run "cd #{release_path}; php app/console cache:clear --env=prod"
+    run "cd #{release_path}; php app/console assets:install --symlink web/"
+    run "cd #{release_path}; php app/console assetic:dump --env=prod"
+
+    capifony_puts_ok
 end
 
 after "provide_permissions", "restart_php"
