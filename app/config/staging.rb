@@ -44,8 +44,7 @@ set :use_composer,    true
 set :copy_vendors, true
 set :composer_options,      "--no-dev --verbose --prefer-dist --optimize-autoloader --no-progress"
 
-set  :keep_releases,  5
-
+set  :keep_releases, 3
 # Confirmations will not be requested from the command line.
 set :interactive_mode, false
 
