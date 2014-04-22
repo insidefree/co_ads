@@ -18,3 +18,5 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     ekino_new_relic_api_key: 123
+    wix_app_id: 12d5833e-f061-7cc8-5122-e1d404f6c8ae
+    wix_app_secret: d8f2bb9f-7ea1-4a15-b2af-acca6be60fe8

@@ -32,10 +32,8 @@ wix_api:
         instance: Wix\APIBundle\Base\Instance
 
     keys:
-        app_id: 1330f382-7b44-f3bb-86e8-48b76f901d91
-        app_secret: 2ba44c22-672b-41b2-858c-7eb1604b190f
-#        app_id: 12d5833e-f061-7cc8-5122-e1d404f6c8ae
-#        app_secret: d8f2bb9f-7ea1-4a15-b2af-acca6be60fe8
+        app_id: %wix_app_id%
+        app_secret: %wix_app_secret%
 
 # Google OAuth2 Configuration
 google_apio_auth2:
