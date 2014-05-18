@@ -46,7 +46,7 @@
             }
             $http.post(Router.path('updateAdUnit'), adUnit)
                 .success(function() {
-                    WixSDK.refreshAppByCompIds(QueryParams.origCompId);
+                    WixSDK.Settings.refreshAppByCompIds(QueryParams.origCompId);
                 });
         }, true);
 
@@ -107,7 +107,7 @@
                 });
 
             $q.all([adUnit, user]).then(function() {
-                WixSDK.refreshAppByCompIds(QueryParams.origCompId);
+                WixSDK.Settings.refreshAppByCompIds(QueryParams.origCompId);
                 defer.resolve();
             });
 
