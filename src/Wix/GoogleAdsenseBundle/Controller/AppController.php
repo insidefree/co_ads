@@ -178,7 +178,7 @@ class AppController extends Controller
             throw new MissingParametersException('Could not find a component id (originCompId or compId query string parameter).');
         }
 
-        if (preg_match("/^(TPWdgt|TPSttngs)/", $componentId) == false) {
+        if (false && preg_match("/^(TPWdgt|TPSttngs)/", $componentId) == false) {
             throw new MissingParametersException('Invalid component id. should be in the format of "TPWdgt" or "TPSttngs" with a digit appended to it.');
         }
 
