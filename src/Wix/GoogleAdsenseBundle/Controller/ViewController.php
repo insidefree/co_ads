@@ -17,23 +17,19 @@ class ViewController extends AppController
      */
     public function indexAction()
     {
+        $user = $this->getUserDocument();
+
+        $component = $this->getComponentDocument();
+
         $params = array(
-            'adUnit' => $this
-                ->getComponentDocument()
-                ->getAdUnit(),
-            'mobile' => array("width" => 320, "height" => 50)
+            'adUnit' => $component->getAdUnit(),
+            'mobile' => array("width" => 320, "height" => 50),
+            'domain' => $user->getDomain()
         );
-
-        $user = $this
-            ->getUserDocument();
-
-        $component = $this
-            ->getComponentDocument();
 
         if ($component->hasAdUnit()) {
             $params = array_merge($params, array(
-                'code' => $component->getAdCode(),
-                'domain' => $user->getDomain(),
+                'code' => $component->getAdCode()
             ));
         }
 
