@@ -23,9 +23,12 @@ class ViewController extends AppController
 
         $params = array(
             'adUnit' => $component->getAdUnit(),
-            'mobile' => array("width" => 320, "height" => 50),
-            'domain' => $user->getDomain()
+            'mobile' => array("width" => 320, "height" => 50)
         );
+
+        if ( $user->getDomain() ) {
+            $params['domain'] = $user->getDomain();
+        }
 
         if ($component->hasAdUnit()) {
             $params = array_merge($params, array(
