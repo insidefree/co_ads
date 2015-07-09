@@ -10,10 +10,14 @@
 
     <!-- adsense advertisement -->
     <div style="text-align: center">
-        {% if code is defined and app.request.get('viewMode') != 'editor' %}
-            {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
+        {% if app.request.get('viewMode') != 'editor' %}
+            {% if code is defined  %}
+                {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
+            {% else %}
+                {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
+            {% endif %}
         {% else %}
-            {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
+            {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
         {% endif %}
     </div>
 

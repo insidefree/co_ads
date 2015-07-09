@@ -1,0 +1,190 @@
+<style type="text/css">
+    body {
+        background: transparent;
+    }
+
+    .container {
+        background: #{{ adUnit.backgroundColor }};
+        width: {{ adUnit.width }}px;
+        height: {{ adUnit.height }}px;
+        margin: 0 auto;
+    }
+
+    .text_placeholder {
+        background: url('/bundles/wixgoogleadsense/images/widget/bg_diag_stripe_trans05.png');
+        border: 1px solid #{{adUnit.borderColor}};
+        width:100%;
+        height:100%;
+    }
+
+    .title_container {
+        margin-top: 8px;
+        {% if (adUnit.width == 468 or adUnit.width == 120) %}
+        text-align: left;
+        margin-top: 8px;
+        margin-left: 8px
+        {% elseif adUnit.width == 300 %}
+        text-align: center;
+        {% endif %}
+    }
+
+    .title {
+        {% if adUnit.width == 300 %}
+        font-size: 29px;
+        {% elseif adUnit.width == 120 %}
+        font-size: 22px;
+        text-align: left;
+        margin-top: 8px;
+        margin-left: 0;
+        {% endif %}
+        color: #{{ adUnit.titleColor }};
+        font-family: {{ adUnit.fontFamily }}, arial, sans-serif;
+    }
+
+    .description_container {
+        {% if adUnit.width == 300 %}
+        text-align: center;
+        {% elseif adUnit.width == 468 %}
+        text-align: left;
+        margin-left: 8px;
+        margin-top:0;
+        margin-bottom:0;
+        {% elseif adUnit.width == 120 %}
+        text-align: left;
+        margin-left: 8px;
+        margin-top:25px;
+        margin-bottom:25px;
+        {% endif %}
+    }
+
+    .description {
+        color: #{{ adUnit.textColor }};
+        font-family: {{ adUnit.fontFamily }}, arial, sans-serif;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        {% if adUnit.width == 300 %}
+        font-size: 20px;
+        max-width:270px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        {% elseif adUnit.width == 120 %}
+        font-size: 16px;
+        {% elseif adUnit.width == 468 %}
+        font-size: 12px;
+        max-width: 300px;
+        margin-top: 0;
+        {% endif %}
+
+    }
+
+    .bullets_container {
+        width: 30px;
+        margin: 0 auto;
+
+        {% if adUnit.width == 468 %}
+            display: none;
+        {% endif %}
+    }
+
+    .bullets_container .bullet {
+        width: 8px;
+        height: 8px;
+        border: 1px solid #808080;
+        display: inline-block;
+        border-radius: 50%;
+    }
+
+    .bullets_container .bullet:first-child {
+        background: #808080;
+    }
+
+    .button_container {
+
+        text-align: center;
+        margin: 0 auto;
+
+        {% if adUnit.width == 300 %}
+        width: 120px;
+        {% elseif adUnit.width == 120 %}
+        width: 120px;
+        margin-top: 20px;
+        {% else %}
+        display: inline-block;
+        width: 120px;
+        position: absolute;
+        right: 25px;
+        top: 25px;
+        height:20px;
+        {% endif %}
+
+    }
+
+    .button_container button {
+        border: none;
+        border-radius: 10px;
+        background: #{{ adUnit.urlColor }};
+        font-size: 27px;
+        {% if adUnit.width == 300 %}
+        width:117px;
+        height:45px;
+        margin-top: 10px;
+        {% elseif adUnit.width == 468 %}
+        width: 69px;
+        height: 30px;
+        border: none;
+        border-radius: 10px;
+        background: #0088CB;
+        font-size: 23px;
+        {% else %}
+        width:90px;
+        height:52px;
+        {% endif %}
+    }
+
+    .button_container button span {
+        color: #{{ adUnit.titleColor }};
+    }
+
+    .image_placeholder img {
+        width: {{ adUnit.width }}px;
+        height: {{ adUnit.height }}px;
+    }
+
+    {#{{ adUnit.urlColor }}#}
+</style>
+{% if adUnit.type == "TEXT" or adUnit.type == "TEXT_IMAGE" %}
+    <div class="container">
+        <div class="text_placeholder">
+            <div class="title_container">
+                <span class="title">
+                    Ad title text will be displayed here
+                </span>
+            </div>
+            <div class="description_container">
+                <p class="description">
+                    Ad description will be displayed here, just above the button.
+                </p>
+            </div>
+            <div class="bullets_container">
+                <span class="bullet"></span>
+                <span class="bullet"></span>
+            </div>
+            <div class="button_container">
+                <button>
+                    <span>&#x2192;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="image_placeholder">
+        {% if adUnit.width == 300 %}
+            <img src="/bundles/wixgoogleadsense/images/widget/WixAdsense-351x251.png"/>
+        {% elseif adUnit.width == 120 %}
+            <img src="/bundles/wixgoogleadsense/images/widget/WixAdsense-Tall120x600.png"/>
+        {% else %}
+            <img src="/bundles/wixgoogleadsense/images/widget/WixAdsenseWide468x60.png"/>
+        {% endif %}
+    </div>
+{% endif %}
