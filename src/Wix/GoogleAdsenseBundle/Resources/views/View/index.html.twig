@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-ng-app="adsenseWidget">
 <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
@@ -10,14 +10,38 @@
 
     <!-- adsense advertisement -->
     <div style="text-align: center">
-        {% if app.request.get('viewMode') != 'editor' %}
-            {% if code is defined  %}
-                {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
+        {% if component_deleted is not defined %}
+            {% if app.request.get('viewMode') != 'editor' %}
+                {% if reachedCompLimit == true %}
+                    <div class="empty"></div>
+                {% else %}
+                    {% if code is defined  %}
+                        {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
+                    {% else %}
+                        {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
+                    {% endif %}
+                {% endif %}
             {% else %}
-                {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
+                {% if reachedCompLimit %}
+                    <div style="
+                        position: absolute;
+                        background-color: rgba(0,0,0,0.85);
+                        width: 100%;
+                        height: 100%;
+                        z-index: 200000;
+                        text-align: left;
+                        color: #fff;
+                        font-size: 13px;
+                        display: table;
+">
+                        <div style="padding: 2em; display: table-cell;text-align: center;vertical-align: middle;text-align: center;font-size: 15px; font-family: Helvetica, arial, sans-serif;">
+                            Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br>
+                            Note: This message will not be visible in your site
+                        </div>
+                    </div>
+                {% endif %}
+                {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
             {% endif %}
-        {% else %}
-            {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
         {% endif %}
     </div>
 
@@ -54,5 +78,13 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endif %}
+
+    {% block javascripts %}
+        {% javascripts filter='?yui_js'
+        '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular.min.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/app.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endblock %}
 </body>
 </html>

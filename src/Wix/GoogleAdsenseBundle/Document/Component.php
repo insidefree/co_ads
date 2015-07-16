@@ -47,6 +47,16 @@ class Component
     protected $adUnit;
 
     /**
+     * @MongoDB\String
+     */
+    protected $pageId;
+
+    /**
+     * @MongoDB\Date
+     */
+    protected $deletedAt;
+
+    /**
      * @param $instanceId
      * @param $componentId
      */
@@ -199,4 +209,37 @@ class Component
     {
         return $this->adCode;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
+     * @param mixed $pageId
+     */
+    public function setPageId($pageId)
+    {
+        $this->pageId = $pageId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * @param mixed $deletedAt
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null)
+    {
+        $this->deletedAt = $deletedAt;
+    }
+
 }

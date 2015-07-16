@@ -2,6 +2,8 @@
 
 namespace Wix\GoogleAdsenseBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Wix\GoogleAdsenseBundle\Document\AdUnit;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,6 +13,7 @@ use Wix\GoogleAdsenseBundle\Configuration\Permission;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Wix\GoogleAdsenseBundle\Document\Component;
 use Wix\GoogleAdsenseBundle\Exceptions\MissingTokenException;
 use Wix\GoogleAdsenseBundle\Exceptions\MissingParametersException;
 use Wix\GoogleAdsenseBundle\Exceptions\AssociationRejectedException;
@@ -35,7 +38,16 @@ class SettingsController extends AppController
      */
     public function indexAction()
     {
-        return array();
+        $component = $this->getComponentDocument();
+
+        $pageComponents = $this->getPageComponents($component);
+
+        $params = array();
+        if ( array_search($component, $pageComponents) > 2 ) {
+            $params['reachedCompLimit'] = true;
+        }
+
+        return $params;
     }
 
     /**
@@ -104,7 +116,11 @@ class SettingsController extends AppController
             ->setAccountId(null)
             ->setClientId(null);
 
-        foreach($this->getAllComponents() as $component) {
+        foreach ($this->getAllSiteComponents() as $component) {
+            if ( !$component instanceof Component ) {
+                continue;
+            }
+
             $component
                 ->setAdUnitId(null)
                 ->setAdCode(null);
@@ -146,6 +162,69 @@ class SettingsController extends AppController
         $component = $this
             ->getComponentDocument()
             ->getAdUnit();
+
+        return $this->jsonResponse($component);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/component", name="getComponent", options={"expose"=true})
+     * @Method({"GET"})
+     * @Permission({"OWNER"})
+     */
+    public function getComponentAction()
+    {
+        $component = $this
+            ->getComponentDocument();
+
+        if (!$component instanceof Component) {
+            throw new NotFoundHttpException("Component not found");
+        }
+
+        return $this->jsonResponse($component);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/component", name="deleteComponent", options={"expose"=true})
+     * @Method({"DELETE"})
+     * @Permission({"OWNER"})
+     */
+    public function deleteComponentAction() {
+        $component = $this->getComponentDocument();
+        if (!$component instanceof Component) {
+            throw new NotFoundHttpException("Component not found");
+        }
+
+        $component->setDeletedAt(new \DateTime());
+        $this->getDocumentManager()->persist($component);
+        $this->getDocumentManager()->flush($component);
+
+        return new Response();
+    }
+
+    /**
+     * updates an ad unit in the database. if the user has an ad unit connected on google it will also get updated.
+     *
+     * @Route("/component/page_id", name="patchPageId", options={"expose"=true})
+     * @Method({"PATCH"})
+     * @Permission({"OWNER"})
+     */
+    public function patchPageId() {
+        $component = $this
+            ->getComponentDocument();
+
+        if (!$component instanceof Component) {
+            throw new NotFoundHttpException("Component not found");
+        }
+        $data = $this->getRequest()->getContent();
+        $data = (array) json_decode($data);
+
+        $component->setPageId($data['page_id']);
+
+        $documentManager = $this->getDocumentManager();
+        $documentManager->persist($component);
+        $documentManager->flush();
 
         return $this->jsonResponse($component);
     }
