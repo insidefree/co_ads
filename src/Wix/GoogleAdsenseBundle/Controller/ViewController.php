@@ -70,7 +70,7 @@ class ViewController extends AppController
         $instance = $request->get('instance');
 
         //Do not re-enable the component if the source of the request is not from the editor
-        if ( !in_array($request->get('viewMode'), ['editor', 'preview']) ) {
+        if ( !in_array($request->get('viewMode'), array('editor', 'preview')) ) {
             return;
         }
 
