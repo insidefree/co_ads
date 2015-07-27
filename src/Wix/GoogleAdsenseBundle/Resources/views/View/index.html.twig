@@ -41,7 +41,7 @@
     <!-- adsense advertisement -->
     <div style="text-align: center">
         {% if component_deleted is not defined %}
-            {% if app.request.get('viewMode') != 'editor' %}
+            {% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}
                 {% if reachedCompLimit == true %}
                     <div class="empty"></div>
                 {% else %}
