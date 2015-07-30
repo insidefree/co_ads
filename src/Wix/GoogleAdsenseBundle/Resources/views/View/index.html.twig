@@ -27,11 +27,14 @@
             display: table-cell;
             text-align: center;
             vertical-align: middle;
-            font-size: 18px;
-            font-family: Helvetica, arial,
-            sans-serif;
+            font-size: 16px;
+            font-family: Helvetica, arial, sans-serif;
             font-weight: normal;
             border:1px solid #ccc;
+        }
+
+        .comp_limit_text span {
+            font-size: 14px;
         }
     </style>
     {% endif %}
@@ -56,7 +59,7 @@
                     <div class="comp_limit_container">
                         <div class="comp_limit_text">
                             Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br>
-                            Note: This message will not be visible in your site
+                            <span>Note: This message will not be visible in your site</span>
                         </div>
                     </div>
                 {% endif %}
