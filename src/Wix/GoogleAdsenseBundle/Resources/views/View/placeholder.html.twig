@@ -21,7 +21,6 @@
         margin-top: 8px;
         {% if (adUnit.width == 468 or adUnit.width == 120) %}
         text-align: left;
-        margin-top: 8px;
         margin-left: 8px
         {% elseif adUnit.width == 300 %}
         text-align: center;
@@ -30,9 +29,9 @@
 
     .title {
         {% if adUnit.width == 300 %}
-        font-size: 29px;
+        font-size: 35px;
         {% elseif adUnit.width == 120 %}
-        font-size: 22px;
+        font-size: 23px;
         text-align: left;
         margin-top: 8px;
         margin-left: 0;
@@ -62,14 +61,16 @@
         font-family: {{ adUnit.fontFamily }}, arial, sans-serif;
         margin-top: 8px;
         margin-bottom: 8px;
+        font-size: 14px;
         {% if adUnit.width == 300 %}
-        font-size: 20px;
+        font-size: 22px;
         max-width:270px;
         text-align: center;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: 0;
         {% elseif adUnit.width == 120 %}
-        font-size: 16px;
+        font-size: 18px;
         {% elseif adUnit.width == 468 %}
         font-size: 12px;
         max-width: 300px;
@@ -106,6 +107,9 @@
 
         {% if adUnit.width == 300 %}
         width: 120px;
+        position: absolute;
+        bottom: 0.9em;
+        left: 100px;
         {% elseif adUnit.width == 120 %}
         width: 120px;
         margin-top: 20px;

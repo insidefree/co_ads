@@ -1,23 +1,71 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-ng-app="adsenseWidget">
 <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
     <meta>
     <title>Google AdSense Widget</title>
+    {% if reachedCompLimit %}
+    <style type="text/css">
+        body {
+            margin: 0 !important;
+        }
+
+        .comp_limit_container {
+            position: absolute;
+            background-color: rgba(255,255,255,0.92);
+            width: 100%;
+            height: 100%;
+            z-index: 200000;
+            text-align: left;
+            color: #000;
+            display: table;
+        }
+
+        .comp_limit_text {
+            padding: 1em;
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 16px;
+            font-family: Helvetica, arial, sans-serif;
+            font-weight: normal;
+            border:1px solid #ccc;
+            line-height: 22px;
+        }
+
+        .comp_limit_text span {
+            font-size: 13px;
+        }
+    </style>
+    {% endif %}
 </head>
 <body>
 
     <!-- adsense advertisement -->
     <div style="text-align: center">
-        {% if app.request.get('viewMode') != 'editor' %}
-            {% if code is defined  %}
-                {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
+        {% if component_deleted is not defined %}
+            {% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}
+                {% if reachedCompLimit == true %}
+                    <div class="empty"></div>
+                {% else %}
+                    {% if code is defined  %}
+                        {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
+                    {% else %}
+                        {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
+                    {% endif %}
+                {% endif %}
             {% else %}
-                {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
+                {% if reachedCompLimit %}
+                    <div class="comp_limit_container">
+                        <div class="comp_limit_text">
+                            Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br>
+                            <span>Note: This message will not be visible in your site</span>
+                        </div>
+                    </div>
+                {% endif %}
+                {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
             {% endif %}
-        {% else %}
-            {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
         {% endif %}
     </div>
 
@@ -54,5 +102,13 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endif %}
+
+    {% block javascripts %}
+        {% javascripts filter='?yui_js'
+        '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular.min.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/app.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endblock %}
 </body>
 </html>

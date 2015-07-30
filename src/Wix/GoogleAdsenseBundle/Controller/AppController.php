@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 use Wix\APIBundle\Base\Instance;
 
@@ -24,6 +23,7 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 
 class AppController extends Controller
 {
+
     /**
      * @var User
      */
@@ -227,6 +227,8 @@ class AppController extends Controller
 
         if (!$component) {
             $component = new Component($instanceId, $componentId);
+            $this->getDocumentManager()->persist($component);
+            $this->getDocumentManager()->flush();
         }
 
         $this->component = $component;
@@ -237,10 +239,9 @@ class AppController extends Controller
     /**
      * @return object
      */
-    protected function getAllComponents()
+    protected function getAllSiteComponents()
     {
         $instanceId = $this->getInstanceId();
-        $componentId = $this->getComponentId();
 
         return $this->getRepository('WixGoogleAdsenseBundle:Component')
             ->findBy(array('instanceId' => $instanceId));
@@ -256,5 +257,28 @@ class AppController extends Controller
             $this->getInstanceId(),
             $this->getComponentId()
         );
+    }
+
+    /**
+     * Get all components that belong to the same page as the given component
+     * @param Component $component
+     * @return array
+     */
+    protected function getPageComponents(Component $component) {
+        $components = array();
+
+        if ( $component->getPageId() != '' && $component->getPageId() !== null ) {
+            $components = $this->getRepository('WixGoogleAdsenseBundle:Component')
+                ->findBy(
+                    array(
+                        'instanceId' => $component->getInstanceId(),
+                        'deletedAt' => null,
+                        'pageId' => $component->getPageId()
+                    ),
+                    array('id', 'asc')
+                );
+        }
+
+        return $components;
     }
 }

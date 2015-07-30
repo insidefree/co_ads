@@ -17,10 +17,4 @@
 		width: $width; }
 	@if $line_height and $line_height != auto {
 		line-height: $line_height; }
-	@if $legacy-support-for-ie == "true" {
-		*vertical-align: auto;
-		zoom: 1;
-		*display: inline; }
-	@if $legacy-support-for-mozilla == "true" {
-		display: -moz-inline-stack; }
 }
