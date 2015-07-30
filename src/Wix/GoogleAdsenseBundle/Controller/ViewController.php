@@ -41,7 +41,7 @@ class ViewController extends AppController
         $pageComponents = $this->getPageComponents($component);
         if ( ($componentLocation = array_search($component, $pageComponents)) !== FALSE ) {
             if ( $componentLocation > 2 ) {
-                $params['reachedCompLimit'] = true;
+                throw new \Exception("Allowed only 3 components per page");
             }
         }
 
