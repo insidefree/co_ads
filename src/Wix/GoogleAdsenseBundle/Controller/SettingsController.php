@@ -170,7 +170,6 @@ class SettingsController extends AppController
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/component", name="getComponent", options={"expose"=true})
      * @Method({"GET"})
-     * @Permission({"OWNER"})
      */
     public function getComponentAction()
     {
@@ -208,7 +207,6 @@ class SettingsController extends AppController
      *
      * @Route("/component/page_id", name="patchPageId", options={"expose"=true})
      * @Method({"PATCH"})
-     * @Permission({"OWNER"})
      */
     public function patchPageId() {
         $component = $this
