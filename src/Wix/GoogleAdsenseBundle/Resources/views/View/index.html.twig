@@ -90,11 +90,11 @@
     </script>
     <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
 
-    {% if code is not defined %}
-        <!-- fos js routing bundle -->
-        <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <!-- fos js routing bundle -->
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
+    {% if code is not defined %}
         <!-- scripts -->
         {% javascripts
         '@WixGoogleAdsenseBundle/Resources/public/lib/jquery/jquery.js'
