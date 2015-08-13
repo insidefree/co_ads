@@ -1,176 +1,109 @@
-Symfony Standard Edition
-========================
+# Wix Adsense
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony2
-application that you can use as the skeleton for your new applications.
+TODO
 
-This document contains information on how to download, install, and start
-using Symfony. For a more detailed explanation, see the [Installation][1]
-chapter of the Symfony Documentation.
+### requirements
 
-1) Installing the Standard Edition
-----------------------------------
+### Composer
 
-When it comes to installing the Symfony Standard Edition, you have the
-following options.
+You need Composer installed globally:
 
-### Use Composer (*recommended*)
+```
+$ curl -sS https://getcomposer.org/installer | php
+```
 
-As Symfony uses [Composer][2] to manage its dependencies, the recommended way
-to create a new project is to use it.
+```
+$ sudo mv composer.phar /usr/local/bin/composer
+```
+### MongoDB
 
-If you don't have Composer yet, download it following the instructions on
-http://getcomposer.org/ or just run the following command:
+install mongoDB on your computer :
 
-    curl -s https://getcomposer.org/installer | php
+http://docs.mongodb.org/manual/administration/
 
-Then, use the `create-project` command to generate a new Symfony application:
+### PHP
 
-    php composer.phar create-project symfony/framework-standard-edition path/to/install 2.1.x-dev
+install php on your computer :
 
-For an exact version, replace 2.1.x-dev with the latest Symfony version (e.g. 2.1.1).
+```
+apt-get install php5-fpm
+```
 
-Composer will install Symfony and all its dependencies under the
-`path/to/install` directory.
+### Installation Wix-Adsense
 
-### Download an Archive File
+Navigate to your folder :
 
-To quickly test Symfony, you can also download an [archive][3] of the Standard
-Edition and unpack it somewhere under your web server root directory.
+```
+$ cd <your project folder>
+```
 
-If you downloaded an archive "without vendors", you also need to install all
-the necessary dependencies. Download composer (see above) and run the
-following command:
+Clone the project:
 
-    php composer.phar install
+```
+$ git clone git@git.codeoasis.com:wix/wix-adsense.git
+```
 
-2) Checking your System Configuration
--------------------------------------
+CD into your new project:
 
-Before starting coding, make sure that your local system is properly
-configured for Symfony.
+```
+$ cd wix-adsense
+```
 
-Execute the `check.php` script from the command line:
+Checkout to desired branch
 
-    php app/check.php
+```
+$ git checkout <branch>
+```
 
-Access the `config.php` script from a browser:
+Install this file to complete:
 
-    http://localhost/path/to/symfony/app/web/config.php
+```
+./setup.sh
+```
 
-If you get any warnings or recommendations, fix them before moving on.
+Copy parameters file to your project:
 
-3) Browsing the Demo Application
---------------------------------
+```
+$ cp app/config/parameters.yml.dist app/config/parameters.yml
+```
 
-Congratulations! You're now ready to use Symfony.
+Change the mongodb_name .
 
-From the `config.php` page, click the "Bypass configuration and go to the
-Welcome page" link to load up your first Symfony page.
+Login to dev.wix.com/my-apps with user : codeoasisapps@gmail.com
 
-You can also use a web-based configurator by clicking on the "Configure your
-Symfony Application online" link of the `config.php` page.
+and update in your project the right wix_app_id and wix_app_secret.
 
-To see a real-live Symfony page in action, access the following page:
+### Nginx
 
-    web/app_dev.php/demo/hello/Fabien
+copy nginx file  to /etc/nginx/sites-enabled/ directory on your computer.
 
-4) Getting started with Symfony
--------------------------------
+make sure the root attribute point to where your project lives;
 
-This distribution is meant to be the starting point for your Symfony
-applications, but it also contains some sample code that you can learn from
-and play with.
+make sure your server runs on port 9000;
 
-A great way to start learning Symfony is via the [Quick Tour][4], which will
-take you through all the basic features of Symfony2.
+Restart your nginx :
 
-Once you're feeling good, you can move onto reading the official
-[Symfony2 book][5].
+```bash
+sudo service nginx restart
+```
 
-A default bundle, `AcmeDemoBundle`, shows you Symfony2 in action. After
-playing with it, you can remove it by following these steps:
+copy this line to your /etc/hosts file :
 
-  * delete the `src/Acme` directory;
+127.0.0.1       adsense.apps.wix.dev
 
-  * remove the routing entries referencing AcmeBundle in
-    `app/config/routing_dev.yml`;
+open the project within your browser at adsense.apps.wix.dev
 
-  * remove the AcmeBundle from the registered bundles in `app/AppKernel.php`;
+### Project hierarchy
+    - wix-adsense
+        - src
+            - Wix
+                - GoogleAdsenseBundle
+                    - Resources
+                        - public
 
-  * remove the `web/bundles/acmedemo` directory;
 
-  * remove the `security.providers`, `security.firewalls.login` and
-    `security.firewalls.secured_area` entries in the `security.yml` file or
-    tweak the security configuration to fit your needs.
 
-What's inside?
----------------
 
-The Symfony Standard Edition is configured with the following defaults:
 
-  * Twig is the only configured template engine;
 
-  * Doctrine ORM/DBAL is configured;
 
-  * Swiftmailer is configured;
-
-  * Annotations for everything are enabled.
-
-It comes pre-configured with the following bundles:
-
-  * **FrameworkBundle** - The core Symfony framework bundle
-
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * [**AsseticBundle**][12] - Adds support for Assetic, an asset processing
-    library
-
-  * [**JMSSecurityExtraBundle**][13] - Allows security to be added via
-    annotations
-
-  * [**JMSDiExtraBundle**][14] - Adds more powerful dependency injection
-    features
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][15] (in dev/test env) - Adds code generation
-    capabilities
-
-  * **AcmeDemoBundle** (in dev/test env) - A demo bundle with some example
-    code
-
-Enjoy!
-
-[1]:  http://symfony.com/doc/2.1/book/installation.html
-[2]:  http://getcomposer.org/
-[3]:  http://symfony.com/download
-[4]:  http://symfony.com/doc/2.1/quick_tour/the_big_picture.html
-[5]:  http://symfony.com/doc/2.1/index.html
-[6]:  http://symfony.com/doc/2.1/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  http://symfony.com/doc/2.1/book/doctrine.html
-[8]:  http://symfony.com/doc/2.1/book/templating.html
-[9]:  http://symfony.com/doc/2.1/book/security.html
-[10]: http://symfony.com/doc/2.1/cookbook/email.html
-[11]: http://symfony.com/doc/2.1/cookbook/logging/monolog.html
-[12]: http://symfony.com/doc/2.1/cookbook/assetic/asset_management.html
-[13]: http://jmsyst.com/bundles/JMSSecurityExtraBundle/master
-[14]: http://jmsyst.com/bundles/JMSDiExtraBundle/master
-[15]: http://symfony.com/doc/2.1/bundles/SensioGeneratorBundle/index.html
