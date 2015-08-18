@@ -52,6 +52,7 @@ doctrine_mongodb:
     connections:
         default:
             server: %mongodb_server%
+            #options: {replicaSet: %mongodb_replica_name%}
             options: {}
     default_database: %mongodb_name%
     document_managers:
