@@ -2,10 +2,10 @@
 
 echo "setting write permissions"
 
-sudo setfacl -R -m u:hagit:rwx -m u:www-data:rwx ./app/logs
-sudo setfacl -dR -m u:hagit:rwx -m u:www-data:rwx ./app/logs
-sudo setfacl -R -m u:hagit:rwx -m u:www-data:rwx ./app/cache
-sudo setfacl -dR -m u:hagit:rwx -m u:www-data:rwx ./app/cache
+setfacl -R -m u:hagit:rwx -m u:www-data:rwx ./app/logs
+setfacl -dR -m u:hagit:rwx -m u:www-data:rwx ./app/logs
+setfacl -R -m u:hagit:rwx -m u:www-data:rwx ./app/cache
+setfacl -dR -m u:hagit:rwx -m u:www-data:rwx ./app/cache
 
 
 composer install
