@@ -56,15 +56,13 @@
                                 $window.location.reload();
                             }, 4000);
 
-                        }).error(function(){
-
                         });
                     });
                 }
 
                 return {
                     patch: patch
-                }
+                };
             }])
 
         .factory("patchUpdatedDate", ['$http', 'Router',
@@ -75,12 +73,12 @@
                         method: 'PATCH',
                         url: Router.path('patchUpdatedDate'),
                         data : angular.toJson({updated_date: new Date()})
-                    })
+                    });
                 }
 
                 return {
                     patch: patch
-                }
+                };
         }])
         .run(['$http', '$q', 'Router', 'patchUpdatedDate', 'patchPageId', function ($http, $q, Router, patchUpdatedDate, patchPageId) {
 
