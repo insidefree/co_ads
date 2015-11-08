@@ -21,9 +21,9 @@
             }
             return query_string;
         })
-    /**
-     * serves as a router to generate routes to a symfony2 backend. appends the instance for every request if it's available.
-     */
+       /**
+        * serves as a router to generate routes to a symfony2 backend. appends the instance for every request if it's available.
+        */
         .factory('Router', ['$window', 'QueryParams', function ($window, QueryParams) {
             return {
                 path: function (name, params, absolute) {
@@ -40,13 +40,13 @@
                 }
             };
         }])
-        .run(['$http', '$q', 'Router', '$timeout', '$window', function ($http, $q, Router, $timeout, $window) {
 
-            $http.get(Router.path('getComponent')).then(function (response) {
-                response = response.data || {};
-                if ( !response.hasOwnProperty('page_id') ) {
+        .factory("patchPageId", ['$http', 'Router', '$timeout', '$window',
+            function($http, Router, $timeout, $window){
+
+                function patch() {
                     Wix.getCurrentPageId(function(pageId) {
-                        $http({
+                        return $http({
                             method: 'PATCH',
                             url: Router.path('patchPageId'),
                             data: angular.toJson({page_id: pageId})
@@ -60,7 +60,38 @@
 
                         });
                     });
+                }
 
+                return {
+                    patch: patch
+                }
+            }])
+
+        .factory("patchUpdatedDate", ['$http', 'Router',
+            function($http, Router){
+
+                function patch () {
+                    return $http({
+                        method: 'PATCH',
+                        url: Router.path('patchUpdatedDate'),
+                        data : angular.toJson({updated_date: new Date()})
+                    })
+                }
+
+                return {
+                    patch: patch
+                }
+        }])
+        .run(['$http', '$q', 'Router', 'patchUpdatedDate', 'patchPageId', function ($http, $q, Router, patchUpdatedDate, patchPageId) {
+
+            $http.get(Router.path('getComponent')).then(function (response) {
+                response = response.data || {};
+                if ( !response.hasOwnProperty('page_id') ) {
+                    patchPageId.patch();
+                }
+
+                if( !response.hasOwnProperty('updated_date') ){
+                    patchUpdatedDate.patch();
                 }
             });
 
@@ -70,7 +101,7 @@
                     url: Router.path('deleteComponent')
                 });
             });
-
+            
         }])
 
 

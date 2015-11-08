@@ -230,6 +230,29 @@ class SettingsController extends AppController
     /**
      * updates an ad unit in the database. if the user has an ad unit connected on google it will also get updated.
      *
+     * @Route("/component/updated_date", name="patchUpdatedDate", options={"expose"=true})
+     * @Method({"PATCH"})
+     */
+    public function patchUpdatedDate() {
+        $component = $this
+            ->getComponentDocument();
+
+        if (!$component instanceof Component) {
+            throw new NotFoundHttpException("Component not found");
+        }
+
+        $component->setUpdateDate(new \DateTime());
+
+        $documentManager = $this->getDocumentManager();
+        $documentManager->persist($component);
+        $documentManager->flush();
+
+        return $this->jsonResponse($component);
+    }
+
+    /**
+     * updates an ad unit in the database. if the user has an ad unit connected on google it will also get updated.
+     *
      * @Route("/adunit", name="updateAdUnit", options={"expose"=true})
      * @Method({"POST"})
      * @Permission({"OWNER"})

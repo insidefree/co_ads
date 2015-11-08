@@ -57,6 +57,12 @@ class Component
     protected $deletedAt;
 
     /**
+     * @MongoDB\Date
+     */
+    protected $updatedDate;
+
+
+    /**
      * @param $instanceId
      * @param $componentId
      */
@@ -240,6 +246,22 @@ class Component
     public function setDeletedAt(\DateTime $deletedAt = null)
     {
         $this->deletedAt = $deletedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * @param mixed $updatedDate
+     */
+    public function setUpdateDate(\DateTime $updatedDate = null)
+    {
+        $this->updatedDate = $updatedDate;
     }
 
 }
