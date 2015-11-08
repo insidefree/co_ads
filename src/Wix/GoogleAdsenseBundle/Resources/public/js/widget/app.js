@@ -101,7 +101,7 @@
                     url: Router.path('deleteComponent')
                 });
             });
-            
+
         }])
 
 
