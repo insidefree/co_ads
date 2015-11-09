@@ -1,6 +1,7 @@
+//remove all components without pageId and adCode
 db.components.remove({ "pageId": { $exists: false}, "adCode": { $exists: false}});
 
-
+//remove duplicates and save only one
 var result = db.components.aggregate([{ $group: { _id :{ compId : "$componentId", instanceId: "$instanceId", adCode: "$adCode", deleted: "$deletedAt"}, count: {$sum: 1}}  },{ $match: { count: { $gt: 1}}}]);
 
 for each(var row in result){
@@ -9,4 +10,13 @@ for each(var row in result){
 	}
 }
 
+//remove all components that not deleted but without pageId
 db.components.remove({"deletedAt": {$exists: false}, "pageId": { $exists: false}})
+
+
+//remove components that not relevant - not updatedDate
+var result = db.components.find({"updatedDate": { $exists: true}, "deletedAt": {$exists: false}}, { "instanceId": 1, "pageId": 1});
+
+for each(var row in result){
+    db.components.remove({"instanceId": row.instanceId, "pageId": row.pageId, "updatedDate": { $exists: false}, "deletedAt": { $exists: false}});
+}
