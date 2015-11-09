@@ -9,3 +9,4 @@ for each(var row in result){
 	}
 }
 
+db.components.remove({"deletedAt": {$exists: false}, "pageId": { $exists: false}})
