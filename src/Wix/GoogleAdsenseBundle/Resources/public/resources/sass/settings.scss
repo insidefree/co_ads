@@ -84,10 +84,29 @@ ul { list-style: none; padding: 0; margin: 0; }
 		position: absolute;
 		right: 0;
 		bottom: 0; }
-	.create_account {
-		color: $color_lightGrey;
-		font-size: 12px;
-		width: auto; }
+   .disconnect[disabled="disabled"]{
+    &:hover {
+      box-shadow: none;
+    }
+    cursor: default;
+    opacity: 0.5;
+    a{
+      cursor: default;
+      text-decoration: none;
+    }
+  }
+  .connect_button[disabled="disabled"]{
+    &:hover {
+      box-shadow: none;
+    }
+    cursor: default;
+    opacity: 0.5;
+    text-decoration: none;
+  }
+  .create_account {
+      color: $color_lightGrey;
+      font-size: 12px;
+      width: auto; }
 }
 
 /* ************** */
@@ -357,4 +376,41 @@ ul { list-style: none; padding: 0; margin: 0; }
 			color: $color_wixBlue !important;
 			background: #fff;
 			@include background(linear-gradient(#fff 50%,#eee 50%)); } }
+}
+
+/* ************** */
+/* Style contributors section */
+/* ************** */
+
+.contributer_section {
+  padding: 12px;
+  background-color: #F0F3F5;
+  position: relative;
+  .contributer_content {
+    display: table;
+    width: 100%;
+    > div.close_btn {
+      position: absolute;
+      right: 11px;
+      top: calc(50% - 14px);
+      cursor: pointer;
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+    .contributer_img {
+      display: table-cell;
+      width: 71px;
+      max-width: 71px;
+      margin: 0 0 0 0;
+    }
+    .contributer_message {
+      display: table-cell;
+      vertical-align: middle;
+      width: 100%;
+      padding: 5px 30px 0px 24px;
+      color: #3a3a3a;
+    }
+
+  }
 }

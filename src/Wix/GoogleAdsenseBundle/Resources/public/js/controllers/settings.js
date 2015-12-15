@@ -38,6 +38,36 @@
         };
 
         /**
+         * set wix site owner id
+         */
+        $scope.siteOwnerId = WixSDK.Utils.getSiteOwnerId();
+
+        /**
+         * ser wix user id
+         */
+        $scope.userId = WixSDK.Utils.getUid();
+
+        /**
+         * show contributor section only on contributor site
+         */
+        $scope.contributorSection = ($scope.siteOwnerId !== $scope.userId);
+
+        /**
+         * close contributor section
+         */
+        $scope.closeContributor = function() {
+            $scope.contributorSection = false;
+        };
+
+        /**
+         * disable connect / disconnect button on contributor site
+         * @returns {boolean}
+         */
+        $scope.disableBtnConnect = function() {
+            return $scope.userId !== $scope.siteOwnerId;
+        };
+
+        /**
          * listens to changes on the ad unit model and sends a request to save it on the server
          */
         $scope.$watch('adUnit', function(adUnit, oldAdUnit) {
@@ -54,18 +84,32 @@
          * opens an authentication window
          */
         $scope.authenticate = function() {
+
+            // check if contributor not allow to connect account
+            if( $scope.userId !== $scope.siteOwnerId ) {
+                return;
+            }
+
             if (!$scope.websiteUrl) {
                 uiDialog.alert('/bundles/wixgoogleadsense/partials/publish.html');
                 return;
             }
 
-            $window.open(Router.path('authenticate', { websiteUrl: $scope.websiteUrl }), 'authenticate', 'height=615, width=1000');
+            $window.open(Router.path('authenticate',
+                { websiteUrl: $scope.websiteUrl }),
+                'authenticate', 'height=615, width=1000');
         };
 
         /**
          * disconnects the user's account
          */
         $scope.disconnect = function() {
+
+            // check if contributor not allow to disconnect account
+            if( $scope.userId !== $scope.siteOwnerId ) {
+                return;
+            }
+
             $http.post(Router.path('disconnect')).success(function() {
                 reload();
             });
