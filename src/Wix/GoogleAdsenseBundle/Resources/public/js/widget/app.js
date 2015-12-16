@@ -44,19 +44,17 @@
         .factory("patchPageId", ['$http', 'Router', '$timeout', '$window',
             function($http, Router, $timeout, $window){
 
-                function patch() {
-                    Wix.getCurrentPageId(function(pageId) {
-                        return $http({
-                            method: 'PATCH',
-                            url: Router.path('patchPageId'),
-                            data: angular.toJson({page_id: pageId})
-                        }).success(function(){
+                function patch(pageId) {
+                    return $http({
+                        method: 'PATCH',
+                        url: Router.path('patchPageId'),
+                        data: angular.toJson({page_id: pageId})
+                    }).success(function(){
 
-                            $timeout(function(){
-                                $window.location.reload();
-                            }, 4000);
+                        $timeout(function(){
+                            $window.location.reload();
+                        }, 3000);
 
-                        });
                     });
                 }
 
@@ -84,9 +82,12 @@
 
             $http.get(Router.path('getComponent')).then(function (response) {
                 response = response.data || {};
-                if ( !response.hasOwnProperty('page_id') ) {
-                    patchPageId.patch();
-                }
+
+                Wix.Utils.getCurrentPageId(function(currentPageid){
+                    if ( !response.hasOwnProperty('page_id') || response.page_id != currentPageid ) {
+                        patchPageId.patch(currentPageid);
+                    }
+                });
 
                 if( !response.hasOwnProperty('updated_date') ){
                     patchUpdatedDate.patch();
