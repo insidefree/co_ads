@@ -2,7 +2,7 @@
     'use strict';
 
     /* Settings Controller */
-    window.SettingsCtrl = function($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, uiDialog) {
+    window.SettingsCtrl = function($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, uiDialog, $timeout) {
         /**
          * represents the ad unit model
          */
@@ -43,14 +43,15 @@
         $scope.siteOwnerId = WixSDK.Utils.getSiteOwnerId();
 
         /**
-         * ser wix user id
+         * set wix user id
          */
         $scope.userId = WixSDK.Utils.getUid();
 
+        $scope.diffUserIDOwnerId = ($scope.siteOwnerId !== $scope.userId);
         /**
-         * show contributor section only on contributor site
+         * show contributor section only on contributor site and when user click on btn
          */
-        $scope.contributorSection = ($scope.siteOwnerId !== $scope.userId);
+        $scope.contributorSection = false;
 
         /**
          * close contributor section
@@ -60,12 +61,22 @@
         };
 
         /**
-         * disable connect / disconnect button on contributor site
-         * @returns {boolean}
+         * listens to contributor section, show only 8 sec.
          */
-        $scope.disableBtnConnect = function() {
-            return $scope.userId !== $scope.siteOwnerId;
-        };
+        $scope.$watch(function(){ return $scope.contributorSection}, function(newVal, oldVal) {
+
+            if (newVal === oldVal) {
+                return;
+            }
+
+            if(newVal) {
+                $timeout(function () {
+                    $scope.contributorSection = false;
+                }, 8000);
+            }
+
+        }, true);
+
 
         /**
          * listens to changes on the ad unit model and sends a request to save it on the server
@@ -167,7 +178,7 @@
     /**
      * specifying concrete injections
      */
-    window.SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user', 'uiDialog'];
+    window.SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user', 'uiDialog', '$timeout'];
 
     /**
      * resolving promises

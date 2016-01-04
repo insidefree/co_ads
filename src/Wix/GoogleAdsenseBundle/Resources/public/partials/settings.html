@@ -8,9 +8,8 @@
         <div data-ng-hide="connected()" class="connect">
             <p class="description">You can earn revenue by showing relevant and engaging ads along-side your online content. Just connect
                                    your Google AdSense account.</p>
-            <a data-ng-click="authenticate()"
-               class="connect_button action_links"
-               data-ng-disabled="disableBtnConnect()">Connect Account</a>
+            <a data-ng-click="authenticate();contributorSection=true;"
+               class="connect_button action_links">Connect Account</a>
 
             <p class="create_account">Don't have a Google account? <a target="_blank" href="https://www.google.com/adsense">Create one</a>
         </div>
@@ -21,14 +20,14 @@
 
             <p>You are now connected to your AdSense account.</p>
 
-            <p class="disconnect" data-ng-disabled="disableBtnConnect()">
-                <a href="" data-ng-click="disconnect()">Disconnect Account</a>
+            <p class="disconnect">
+                <a href="" data-ng-click="disconnect();contributorSection=true;">Disconnect Account</a>
             </p>
         </div>
     </div>
 
     <!-- contributor -->
-    <div class="box_style contributer_section" data-ng-show="contributorSection">
+    <div class="box_style contributer_section" data-ng-show="contributorSection && diffUserIDOwnerId">
 
         <div class="contributer_content">
 
