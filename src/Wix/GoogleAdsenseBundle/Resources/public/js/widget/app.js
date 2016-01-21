@@ -52,9 +52,9 @@
                             data: angular.toJson({page_id: pageId})
                         }).success(function(){
 
-                            $timeout(function(){
-                                $window.location.reload();
-                            }, 4000);
+                            //$timeout(function(){
+                            //    $window.location.reload();
+                            //}, 4000);
 
                         }).error(function(){
 
@@ -82,7 +82,7 @@
                     patch: patch
                 }
         }])
-        .run(['$http', '$q', 'Router', 'patchUpdatedDate', 'patchPageId', function ($http, $q, Router, patchUpdatedDate, patchPageId) {
+        .run(['$rootScope', '$http', '$q', 'Router', 'patchUpdatedDate', 'patchPageId', function ($rootScope, $http, $q, Router, patchUpdatedDate, patchPageId) {
 
             $http.get(Router.path('getComponent')).then(function (response) {
                 response = response.data || {};
@@ -95,14 +95,110 @@
                 }
             });
 
+            var myCompId = Wix.Utils.getCompId();
+            console.log("WIDGET: now run publish");
+            Wix.PubSub.publish("WIDGET_LOAD", {value: "this is my message"}, true);
+
+            Wix.PubSub.subscribe("ALLOW_WIDGET", function(event){
+                if(event.data.origin == myCompId){
+                    console.log("WIDGET: ", myCompId, event);
+                    $rootScope.messageWorker    = event.data.data;
+                    $rootScope.countWorker      = event.data.count;
+                    $rootScope.liveSiteEmpty    = false;
+
+                    if(!window.component_deleted){
+                        if(Wix.Utils.getViewMode() !== 'editor' && Wix.Utils.getViewMode() !== 'preview'){
+                            if(event.data.count > 3){
+                                $rootScope.liveSiteEmpty = true;
+                                console.log("here: liveSiteEmpty");
+                            }
+                            else if(window.code){
+                                console.log("here: liveSiteCode");
+                                $http.get(Router.url('ad')).success(function(data) {
+                                    $('#liveSiteCode').append(data);
+                                });
+                            }
+                            else{
+                                console.log("here: liveSiteDemo");
+                                $http.get(Router.url('demo')).success(function(data) {
+                                    // client configuration
+                                    window.google_ad_client = 'ca-pub-8026931107919042';
+                                    window.google_ad_slot = '';
+                                    window.google_alternate_ad_url = 'http://www.wix.com/alternate/page/when/the/ad/cannot/be/displayed';
+                                    window.google_page_url = data.domain ? data.domain : 'http://wix.com/';
+                                    // width and height
+                                    window.google_ad_width = data.adUnit.width;
+                                    window.google_ad_height = data.adUnit.height;
+                                    window.google_ad_format = (data.adUnit.width?data.adUnit.width:'350')
+                                    +'x'+(data.adUnit.height?data.adUnit.height:'250')+'_as';
+                                    // type of ad
+                                    if(data.adUnit.type != 'IMAGE'){
+                                        window.google_ad_type = 'text';
+                                    }
+                                    else{
+                                        window.google_ad_type = 'image';
+                                    }
+                                    //// font style
+                                    window.google_font_face = data.adUnit.fontFamily;
+                                    window.google_font_size = 'medium';
+                                    //// colors
+                                    window.google_color_border = data.adUnit.borderColor;
+                                    window.google_color_bg = data.adUnit.backgroundColor;
+                                    window.google_color_link = data.adUnit.titleColor;
+                                    window.google_color_url = data.adUnit.urlColor;
+                                    window.google_color_text = data.adUnit.textColor;
+                                    //// corners
+                                    if(data.adUnit.cornerStyle == 'SQUARE'){
+                                        window.google_ui_features = 'rc:4';
+                                    }
+                                    else if(data.adUnit.cornerStyle == 'SLIGHTLY_ROUNDED'){
+                                        window.google_ui_features = 'rc:6';
+                                    }
+                                    else if(data.adUnit.cornerStyle == 'VERY_ROUNDED'){
+                                        window.google_ui_features = 'rc:10';
+                                    }
+                                    window.google_ad_client = "pub-1786553880586297";
+                                    window.google_ad_width = 300;
+                                    window.google_ad_height = 250;
+
+                                    var container = document.getElementById('container');
+                                    var w = document.write;
+                                    document.write = function (content) {
+                                        container.innerHTML = content;
+                                        document.write = w;
+                                    };
+
+                                    var script = document.createElement('script');
+                                    script.type = 'text/javascript';
+                                    script.src = 'http://pagead2.googlesyndication.com/pagead/show_ads.js';
+                                    $('#container').append(script);
+                                });
+                            }
+                        }
+                        else{
+                            if(event.data.count > 3){
+                                console.log("here: editorBlocked");
+                                var data = '<div class="comp_limit_container"><div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br><span>Note: This message will not be visible in your site</span></div></div>';
+                                $('#editorBlocked').append(data);
+                            }
+                            else{
+                                console.log("here: editorDemo");
+                                $http.get(Router.url('placeholder')).success(function(data) {
+                                    $('#editorDemo').append(data);
+                                });
+                            }
+                        }
+                    }
+                }
+            }, true);
+
+
             Wix.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
                 return $http({
                     method: 'DELETE',
                     url: Router.path('deleteComponent')
                 });
             });
-
         }])
-
 
 }(window));

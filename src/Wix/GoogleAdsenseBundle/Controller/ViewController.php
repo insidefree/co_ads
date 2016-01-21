@@ -2,9 +2,11 @@
 
 namespace Wix\GoogleAdsenseBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Wix\GoogleAdsenseBundle\Document\Component;
 use Wix\GoogleAdsenseBundle\Document\User;
 
@@ -19,44 +21,103 @@ class ViewController extends AppController
      */
     public function indexAction()
     {
-        $user = $this->getUserDocument();
-
-        $component = $this->getComponentDocument();
-
-        if ( $component->getDeletedAt() ) {
-            $this->checkIfNeedToReprovision($component);
+        $componentLocal = $this->getComponentDocument();
+        $userLocal      = $this->getUserDocument();
+        if ( $componentLocal->getDeletedAt() ) {
+            $this->checkIfNeedToReprovision($componentLocal);
         }
 
         $params = array(
-            'adUnit' => $component->getAdUnit(),
-            'mobile' => array("width" => 320, "height" => 50),
-            'reachedCompLimit' => false
+            'adUnit' => $componentLocal->getAdUnit(),
+            'mobile' => array("width" => 320, "height" => 50)
         );
 
-        if ( $component->getDeletedAt() ) {
+        if ( $componentLocal->getDeletedAt() ) {
             $params['component_deleted'] = true;
         }
 
-        //Get all components that belong to the same page as the current component
-        $pageComponents = $this->getPageComponents($component);
-        if ( ($componentLocation = array_search($component, $pageComponents)) !== FALSE ) {
-            if ( $componentLocation > 2 ) {
-                $params['reachedCompLimit'] = true;
-            }
+        if ( $userLocal->getDomain() ) {
+            $params['domain'] = $userLocal->getDomain();
         }
 
-        if ( $user->getDomain() ) {
-            $params['domain'] = $user->getDomain();
-        }
-
-        if ($component->hasAdUnit()) {
+        if ($componentLocal->hasAdUnit()) {
             $params = array_merge($params, array(
-                'code' => $component->getAdCode()
+                'code' => $componentLocal->getAdCode()
             ));
         }
 
         return $params;
     }
+
+    /**
+     * @Route("/ad", name="ad", options={"expose"=true})
+     * @Method({"GET"})
+     * @Template("WixGoogleAdsenseBundle:View:ad.html.twig")
+     */
+    public function getAdAction()
+    {
+        $componentLocal = $this->getComponentDocument();
+        $userLocal      = $this->getUserDocument();
+        $params = array(
+            'adUnit' => $componentLocal->getAdUnit(),
+            'mobile' => array("width" => 320, "height" => 50)
+        );
+
+        if ( $userLocal->getDomain() ) {
+            $params['domain'] = $userLocal->getDomain();
+        }
+
+        if ($componentLocal->hasAdUnit()) {
+            $params = array_merge($params, array(
+                'code' => $componentLocal->getAdCode()
+            ));
+        }
+
+        return $params;
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/demo", name="demo", options={"expose"=true})
+     * @Method({"GET"})
+     */
+    public function getDemoAction()
+    {
+        $componentLocal = $this->getComponentDocument();
+        $userLocal      = $this->getUserDocument();
+        $params = array(
+            'adUnit' => $componentLocal->getAdUnit(),
+            'mobile' => array("width" => 320, "height" => 50)
+        );
+
+        if ( $userLocal->getDomain() ) {
+            $params['domain'] = $userLocal->getDomain();
+        }
+
+        return $this->jsonResponse($params);
+    }
+
+    /**
+     * @Route("/placeholder", name="placeholder", options={"expose"=true})
+     * @Method({"GET"})
+     * @Template("WixGoogleAdsenseBundle:View:placeholder.html.twig")
+     */
+    public function getPlaceholderAction()
+    {
+        $componentLocal = $this->getComponentDocument();
+        $userLocal      = $this->getUserDocument();
+        $params = array(
+            'adUnit' => $componentLocal->getAdUnit(),
+            'mobile' => array("width" => 320, "height" => 50)
+        );
+
+        if ( $userLocal->getDomain() ) {
+            $params['domain'] = $userLocal->getDomain();
+        }
+
+        return $params;
+    }
+
 
     /**
      * When user deletes his app from the editor we mark the component as soft-deleted
