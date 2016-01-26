@@ -105,21 +105,30 @@
                     $rootScope.messageWorker    = event.data.data;
                     $rootScope.countWorker      = event.data.count;
                     $rootScope.liveSiteEmpty    = false;
+                    $rootScope.widget_status    = '';
+                    var statusEnum      = {
+                        'VISIBLE'  : 'visible',
+                        'DELETED'  : 'deleted',
+                        'BLOCKED'  : 'blocked'
+                    };
 
                     if(!window.component_deleted){
                         if(Wix.Utils.getViewMode() !== 'editor' && Wix.Utils.getViewMode() !== 'preview'){
-                            if(event.data.count > 3){
+                            if(event.data.status == statusEnum.BLOCKED){
                                 $rootScope.liveSiteEmpty = true;
+                                $rootScope.widget_status = statusEnum.BLOCKED;
                                 console.log("here: liveSiteEmpty");
                             }
                             else if(window.code){
                                 console.log("here: liveSiteCode");
+                                $rootScope.widget_status = statusEnum.VISIBLE;
                                 $http.get(Router.url('ad')).success(function(data) {
                                     $('#liveSiteCode').append(data);
                                 });
                             }
                             else{
                                 console.log("here: liveSiteDemo");
+                                $rootScope.widget_status = statusEnum.VISIBLE;
                                 $http.get(Router.url('demo')).success(function(data) {
                                     // client configuration
                                     window.google_ad_client = 'ca-pub-8026931107919042';
@@ -138,16 +147,16 @@
                                     else{
                                         window.google_ad_type = 'image';
                                     }
-                                    //// font style
+                                    // font style
                                     window.google_font_face = data.adUnit.fontFamily;
                                     window.google_font_size = 'medium';
-                                    //// colors
+                                    // colors
                                     window.google_color_border = data.adUnit.borderColor;
                                     window.google_color_bg = data.adUnit.backgroundColor;
                                     window.google_color_link = data.adUnit.titleColor;
                                     window.google_color_url = data.adUnit.urlColor;
                                     window.google_color_text = data.adUnit.textColor;
-                                    //// corners
+                                    // corners
                                     if(data.adUnit.cornerStyle == 'SQUARE'){
                                         window.google_ui_features = 'rc:4';
                                     }
@@ -176,29 +185,53 @@
                             }
                         }
                         else{
-                            if(event.data.count > 3){
+                            if(event.data.status == statusEnum.BLOCKED){
                                 console.log("here: editorBlocked");
                                 var data = '<div class="comp_limit_container"><div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br><span>Note: This message will not be visible in your site</span></div></div>';
                                 $('#editorBlocked').append(data);
+                                $rootScope.widget_status = statusEnum.BLOCKED;
                             }
                             else{
                                 console.log("here: editorDemo");
+                                $rootScope.widget_status = statusEnum.VISIBLE;
                                 $http.get(Router.url('placeholder')).success(function(data) {
-                                    $('#editorDemo').append(data);
+                                    $( "#editorBlocked" ).remove( "div" );
+                                    $('#editorDemo').append($(data));
                                 });
+                                console.log("after");
                             }
                         }
                     }
                 }
             }, true);
 
-
             Wix.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
-                return $http({
+                var deleteComponent =  $http({
                     method: 'DELETE',
                     url: Router.path('deleteComponent')
                 });
+
+                Wix.PubSub.publish("DELETED_WIDGET", {compId: Wix.Utils.getCompId()}, true);
+
+                return deleteComponent;
             });
+
+            Wix.addEventListener(Wix.Events.PAGE_NAVIGATION, function(data){
+                Wix.PubSub.publish("PAGE_NAVIGATION", {compId: Wix.Utils.getCompId(), eventData: data}, true);
+            });
+
+            //Wix.addEventListener(Wix.Events.SETTINGS_UPDATED, function(data){
+            //
+            //window.postMessage("hello", "http://adsense.apps.wix.com");
+            ////{widget_status: $rootScope.widget_status, origin: myCompId}
+            //
+            //
+            //});
+
+            //console.log("WIDGET: now subscribe SETTINGS_LOAD");
+            //Wix.PubSub.subscribe("SETTINGS_LOAD", function(event){
+            //    console.log(event);
+            //});
         }])
 
 }(window));
