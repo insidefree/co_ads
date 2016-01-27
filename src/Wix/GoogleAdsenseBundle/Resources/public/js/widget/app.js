@@ -136,10 +136,12 @@
                                     window.google_alternate_ad_url = 'http://www.wix.com/alternate/page/when/the/ad/cannot/be/displayed';
                                     window.google_page_url = data.domain ? data.domain : 'http://wix.com/';
                                     // width and height
-                                    window.google_ad_width = data.adUnit.width;
-                                    window.google_ad_height = data.adUnit.height;
-                                    window.google_ad_format = (data.adUnit.width?data.adUnit.width:'350')
-                                    +'x'+(data.adUnit.height?data.adUnit.height:'250')+'_as';
+                                    //window.google_ad_width = data.adUnit.width;
+                                    //window.google_ad_height = data.adUnit.height;
+                                    window.google_ad_format = data.adUnit.width+'x'+data.adUnit.height+'_as';
+                                    window.google_ad_client = "pub-1786553880586297";
+                                    window.google_ad_width  = data.adUnit.width ? data.adUnit.width : 300;
+                                    window.google_ad_height = data.adUnit.height ? data.adUnit.height : 250;
                                     // type of ad
                                     if(data.adUnit.type != 'IMAGE'){
                                         window.google_ad_type = 'text';
@@ -166,9 +168,7 @@
                                     else if(data.adUnit.cornerStyle == 'VERY_ROUNDED'){
                                         window.google_ui_features = 'rc:10';
                                     }
-                                    window.google_ad_client = "pub-1786553880586297";
-                                    window.google_ad_width = 300;
-                                    window.google_ad_height = 250;
+
 
                                     var container = document.getElementById('container');
                                     var w = document.write;
