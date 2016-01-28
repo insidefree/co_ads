@@ -14,51 +14,61 @@
         'BLOCKED'  : 'blocked'
     };
 
+
+    /**
+     * when widget loaded check the status of the comp and load the view respectively
+     */
     Wix.Worker.PubSub.subscribe('WIDGET_LOAD', function(event)
     {
-        console.log("WORKER: data event: ", event);
+        // get comp details : pageId, allPages indication and ...
         getSiteInfo(event.origin)
             .then(function(page){
-                if(page){
-                    if(page.appPageId && !comps[page.appPageId]){
-                        comps[page.appPageId] = [];
+                // get page details failed
+                if(!page){
+                    return;
+                }
+                // if not exist appPageId in comps array
+                if(page.appPageId && !comps[page.appPageId]){
+                    comps[page.appPageId] = [];
+                }
+                var compId          = event.origin;
+                var statusExists    = isExists(compId, page.appPageId, page.showOnAllPages);
+                var statusComp      = checkCompStatus(page.appPageId);
+                // comp exists in comps array
+                if(statusExists){
+                    // if visible status load widget else update the new status
+                    if(statusExists == statusEnum.VISIBLE){
+                        console.log("WORKER: exists comp visible");
+                        return sendAllowWidget(compId, statusEnum.VISIBLE, page.appPageId, page.showOnAllPages);
                     }
-                    var compId          = event.origin;
-                    var statusExists    = isExists(compId, page.appPageId, page.showOnAllPages);
-                    var statusComp      = checkCompStatus(page.appPageId);
-                    if(statusExists){
-                        // if exists update status of comp
-                        if(statusExists == statusEnum.VISIBLE){
-                            console.log("WORKER: exists comp visible");
-                            return sendAllowWidget(compId, statusEnum.VISIBLE, page.appPageId, page.showOnAllPages);
-                        }
-                        console.log("WORKER: exists with "+ statusExists+"update to "+ statusComp);
-                        updateCompId(compId, statusComp, page.appPageId);
+                    console.log("WORKER: exists with "+ statusExists+"update to "+ statusComp);
+                    updateCompId(compId, statusComp, page.appPageId);
+                }
+                else{
+                    // if not exists insert comp
+                    if(page.showOnAllPages){
+                        comps["allPages"].push({
+                            'pageId' : page.appPageId,
+                            'compId' : compId,
+                            'status' : statusComp
+                        });
                     }
                     else{
-                        // if not exists insert comp
-                        if(page.showOnAllPages){
-                            comps["allPages"].push({
-                                'pageId' : page.appPageId,
-                                'compId' : compId,
-                                'status' : statusComp
-                            });
-                        }
-                        else{
-                            comps[page.appPageId].push({
-                                'pageId' : page.appPageId,
-                                'compId' : compId,
-                                'status' : statusComp
-                            });
-                        }
+                        comps[page.appPageId].push({
+                            'pageId' : page.appPageId,
+                            'compId' : compId,
+                            'status' : statusComp
+                        });
                     }
-                    sendAllowWidget(compId, statusComp, page.appPageId, page.showOnAllPages);
-                    console.log("WORKER: comps: ",comps);
                 }
-                ////if reject get site info
+                sendAllowWidget(compId, statusComp, page.appPageId, page.showOnAllPages);
+                console.log("WORKER: comps: ",comps);
             });
     }, true);
 
+    /**
+     * when comp delete update status in comps array and try to release blocked component
+     */
     Wix.Worker.PubSub.subscribe('DELETED_WIDGET', function(event) {
         getSiteInfo(event.data.compId)
             .then(function(page){
@@ -93,28 +103,31 @@
 
     function getSiteInfo(compId){
         //getComponentInfo
-        return new Promise(function(resolve, reject){
+        return new Promise(function(resolve, reject) {
             //Wix.Worker.getSiteInfo(function(data){
-            Wix.getComponentInfo(
-                function(data){
-                if(!data){
-                    reject(data);
-                }
-                resolve(data);
-                }, compId);
-            })
-            .then(function(data) {
-                return new Promise(function (resolve, reject) {
-                    Wix.Worker.getSiteInfo(function (page) {
-                        if (!page) {
-                            reject(page);
+            setTimeout(function () {
+                Wix.getComponentInfo(
+                    function (data) {
+                        if (!data) {
+                            reject(data);
                         }
-                        console.log('WORKER: getSiteInfo=>', page);
-                        data.appPageId = page.pageTitle;
                         resolve(data);
-                    });
+                    }, compId)
+            }, 1000);
+        })
+        .then(function (data) {
+            return new Promise(function (resolve, reject) {
+                Wix.Worker.getSiteInfo(function (page) {
+                    if (!page) {
+                        reject(page);
+                    }
+                    console.log('WORKER: getSiteInfo=>', page);
+                    data.appPageId = page.pageTitle;
+                    resolve(data);
                 });
             });
+        });
+
     }
 
     function checkCompStatus(page){

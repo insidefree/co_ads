@@ -96,52 +96,77 @@
             });
 
             var myCompId = Wix.Utils.getCompId();
-            console.log("WIDGET: now run publish");
+            /**
+             * when widget load trigger the worker to register comp
+             */
             Wix.PubSub.publish("WIDGET_LOAD", {value: "this is my message"}, true);
 
+            /**
+             * after register to worker, listen to answer from worker which status this comp
+             */
             Wix.PubSub.subscribe("ALLOW_WIDGET", function(event){
+                var is_mobile = false;
+                // handle only my responses
                 if(event.data.origin == myCompId){
+                    // set if mobile
+                    if(Wix.Utils.getDeviceType() == 'mobile' ||
+                        screen.width < 500 ||
+                        navigator.userAgent.match(/Android/i) ||
+                        navigator.userAgent.match(/webOS/i) ||
+                        navigator.userAgent.match(/iPhone/i) ||
+                        navigator.userAgent.match(/iPod/i))  {
+                        is_mobile = true;
+                    }
                     console.log("WIDGET: ", myCompId, event);
-                    $rootScope.messageWorker    = event.data.data;
-                    $rootScope.countWorker      = event.data.count;
                     $rootScope.liveSiteEmpty    = false;
-                    $rootScope.widget_status    = '';
+                    // status options
                     var statusEnum      = {
                         'VISIBLE'  : 'visible',
                         'DELETED'  : 'deleted',
                         'BLOCKED'  : 'blocked'
                     };
-
+                    // handle only components that not deleted
                     if(!window.component_deleted){
+                        // case live site
                         if(Wix.Utils.getViewMode() !== 'editor' && Wix.Utils.getViewMode() !== 'preview'){
+                            // status blocked - when there are more than 3 comp
                             if(event.data.status == statusEnum.BLOCKED){
                                 $rootScope.liveSiteEmpty = true;
-                                $rootScope.widget_status = statusEnum.BLOCKED;
                                 console.log("here: liveSiteEmpty");
                             }
+                            // status visible and user connected adsense account
                             else if(window.code){
                                 console.log("here: liveSiteCode");
-                                $rootScope.widget_status = statusEnum.VISIBLE;
                                 $http.get(Router.url('ad')).success(function(data) {
                                     $('#liveSiteCode').append(data);
                                 });
                             }
+                            // status visible and account of google demo
                             else{
                                 console.log("here: liveSiteDemo");
-                                $rootScope.widget_status = statusEnum.VISIBLE;
+                                $('body').addClass('live_site_demo');
                                 $http.get(Router.url('demo')).success(function(data) {
+                                    var width;
+                                    var height;
+                                    if (is_mobile) {
+                                        width  = data.mobile.regular.width;
+                                        height = data.mobile.regular.height;
+                                        $('body').addClass('mobile');
+                                    }
+                                    else{
+                                        height  = data.adUnit.height ? data.adUnit.height : 250;
+                                        width = data.adUnit.width ? data.adUnit.width : 300;
+                                    }
                                     // client configuration
-                                    window.google_ad_client = 'ca-pub-8026931107919042';
+                                    //window.google_ad_client = 'ca-pub-8026931107919042';
                                     window.google_ad_slot = '';
                                     window.google_alternate_ad_url = 'http://www.wix.com/alternate/page/when/the/ad/cannot/be/displayed';
                                     window.google_page_url = data.domain ? data.domain : 'http://wix.com/';
                                     // width and height
-                                    //window.google_ad_width = data.adUnit.width;
-                                    //window.google_ad_height = data.adUnit.height;
-                                    window.google_ad_format = data.adUnit.width+'x'+data.adUnit.height+'_as';
+                                    window.google_ad_height = height;
+                                    window.google_ad_width  = width;
                                     window.google_ad_client = "pub-1786553880586297";
-                                    window.google_ad_width  = data.adUnit.width ? data.adUnit.width : 300;
-                                    window.google_ad_height = data.adUnit.height ? data.adUnit.height : 250;
+                                    window.google_ad_format = width+'x'+height+'_as';
                                     // type of ad
                                     if(data.adUnit.type != 'IMAGE'){
                                         window.google_ad_type = 'text';
@@ -153,11 +178,11 @@
                                     window.google_font_face = data.adUnit.fontFamily;
                                     window.google_font_size = 'medium';
                                     // colors
-                                    window.google_color_border = data.adUnit.borderColor;
-                                    window.google_color_bg = data.adUnit.backgroundColor;
-                                    window.google_color_link = data.adUnit.titleColor;
-                                    window.google_color_url = data.adUnit.urlColor;
-                                    window.google_color_text = data.adUnit.textColor;
+                                    window.google_color_border  = data.adUnit.borderColor;
+                                    window.google_color_bg      = data.adUnit.backgroundColor;
+                                    window.google_color_link    = data.adUnit.titleColor;
+                                    window.google_color_url     = data.adUnit.urlColor;
+                                    window.google_color_text    = data.adUnit.textColor;
                                     // corners
                                     if(data.adUnit.cornerStyle == 'SQUARE'){
                                         window.google_ui_features = 'rc:4';
@@ -169,69 +194,69 @@
                                         window.google_ui_features = 'rc:10';
                                     }
 
-
-                                    var container = document.getElementById('container');
+                                    var container = document.getElementById('adsense_container');
                                     var w = document.write;
                                     document.write = function (content) {
                                         container.innerHTML = content;
                                         document.write = w;
                                     };
-
                                     var script = document.createElement('script');
                                     script.type = 'text/javascript';
                                     script.src = 'http://pagead2.googlesyndication.com/pagead/show_ads.js';
-                                    $('#container').append(script);
+                                    $('#adsense_container').append(script);
                                 });
                             }
                         }
+                        // case editor / preview
                         else{
+                            if(is_mobile){
+                                $('#editorDemo').addClass('mobile');
+                                $('#editorBlocked').addClass('mobile');
+                            }
+                            else{
+                                $('#editorDemo').removeClass('mobile');
+                                $('#editorBlocked').removeClass('mobile');
+                            }
                             if(event.data.status == statusEnum.BLOCKED){
                                 console.log("here: editorBlocked");
                                 var data = '<div class="comp_limit_container"><div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br><span>Note: This message will not be visible in your site</span></div></div>';
-                                $('#editorBlocked').append(data);
-                                $rootScope.widget_status = statusEnum.BLOCKED;
+                                $("#editorBlocked:not(:has(>div))").append(data);
+                                $('body').addClass('blocked');
                             }
-                            else{
+                            else if(event.data.status == statusEnum.VISIBLE){
                                 console.log("here: editorDemo");
-                                $rootScope.widget_status = statusEnum.VISIBLE;
-                                $http.get(Router.url('placeholder')).success(function(data) {
-                                    $( "#editorBlocked" ).remove( "div" );
-                                    $('#editorDemo').append($(data));
-                                });
-                                console.log("after");
+                                $( "#editorBlocked div" ).remove();
+                                $('body').removeClass('blocked');
                             }
                         }
                     }
                 }
             }, true);
 
+            /**
+             * handle components deleted
+             */
             Wix.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
+                console.log("WIDGET: component deleted ");
                 var deleteComponent =  $http({
                     method: 'DELETE',
                     url: Router.path('deleteComponent')
                 });
 
+                // call worker to update that this component deleted
                 Wix.PubSub.publish("DELETED_WIDGET", {compId: Wix.Utils.getCompId()}, true);
 
                 return deleteComponent;
             });
 
+            /**
+             * handle user pagination
+             */
             Wix.addEventListener(Wix.Events.PAGE_NAVIGATION, function(data){
+                // call worker to release comps, prefer all pages
                 Wix.PubSub.publish("PAGE_NAVIGATION", {compId: Wix.Utils.getCompId(), eventData: data}, true);
             });
 
-            //Wix.addEventListener(Wix.Events.SETTINGS_UPDATED, function(data){
-            //
-            //window.postMessage("hello", "http://adsense.apps.wix.com");
-            ////{widget_status: $rootScope.widget_status, origin: myCompId}
-            //
-            //
-            //});
-
-            //console.log("WIDGET: now subscribe SETTINGS_LOAD");
-            //Wix.PubSub.subscribe("SETTINGS_LOAD", function(event){
-            //    console.log(event);
-            //});
         }])
 
 }(window));

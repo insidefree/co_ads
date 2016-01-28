@@ -5,11 +5,22 @@
     <meta name="robots" content="noindex, nofollow">
     <meta>
     <title>Google AdSense Widget</title>
-    {% if reachedCompLimit %}
     <style type="text/css">
-        body {
+
+        body.blocked {
             margin: 0 !important;
         }
+        {% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}
+        body{
+            width: {{ adUnit.width ? adUnit.width : 300 }}px;
+            height: {{ adUnit.height ? adUnit.height : 250 }}px;
+        }
+        body.mobile {
+            width: {{ mobile.regular.width ? mobile.regular.width : 200 }}px;
+            height: {{ mobile.regular.width ? mobile.regular.width : 200 }}px;
+        }
+        {% endif %}
+
 
         .comp_limit_container {
             position: absolute;
@@ -37,13 +48,26 @@
         .comp_limit_text span {
             font-size: 13px;
         }
+
+        .mobile .comp_limit_container {
+            width: {{ mobile.regular.width }}px;
+            height: {{ mobile.regular.height }}px;
+            left: 41px;
+        }
+
+
+        .mobile .comp_limit_text {
+            padding: 8px;
+            padding-bottom: 13px;
+        }
+
     </style>
-    {% endif %}
 </head>
 <body>
 
     <!-- adsense advertisement -->
-    <div style="text-align: center" id="container">
+    <div style="text-align: center" id="adsense_container">
+
         {#{% if component_deleted is not defined %}#}
             {#{% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}#}
                 {#{% if reachedCompLimit == true %}#}
@@ -66,14 +90,16 @@
                 {#{% endif %}#}
                 {#{% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}#}
             {#{% endif %}#}
-<div> {{ '{{ countWorker }}' }}</div>
-
         {#{% endif %}#}
         <div data-ng-show="$root.liveSiteEmpty"><div class="empty"></div></div>
         <div id="liveSiteCode"></div>
         <div id="liveSiteDemo"></div>
         <div id="editorBlocked"></div>
-        <div id="editorDemo"></div>
+        <div id="editorDemo">
+            {% if app.request.get('viewMode') == 'editor' or app.request.get('viewMode') == 'preview' %}
+                {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
+            {% endif %}
+        </div>
   </div>
 
     <!-- wix sdk -->
