@@ -52,13 +52,17 @@
         .mobile .comp_limit_container {
             width: {{ mobile.regular.width }}px;
             height: {{ mobile.regular.height }}px;
-            left: 41px;
+            left: 39px;
         }
 
 
         .mobile .comp_limit_text {
             padding: 8px;
             padding-bottom: 13px;
+        }
+
+        .showDemo {
+            visibility: visible !important;
         }
 
     </style>
@@ -95,7 +99,7 @@
         <div id="liveSiteCode"></div>
         <div id="liveSiteDemo"></div>
         <div id="editorBlocked"></div>
-        <div id="editorDemo">
+        <div id="editorDemo" style="visibility: hidden">
             {% if app.request.get('viewMode') == 'editor' or app.request.get('viewMode') == 'preview' %}
                 {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
             {% endif %}
@@ -151,7 +155,6 @@
             window.component_deleted     = component_deleted ? true : false;
             var code                     = '{{ code }}';
             window.code                  = code ? true : false;
-
         </script>
     {% endblock %}
 

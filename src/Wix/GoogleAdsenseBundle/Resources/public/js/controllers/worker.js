@@ -14,7 +14,6 @@
         'BLOCKED'  : 'blocked'
     };
 
-
     /**
      * when widget loaded check the status of the comp and load the view respectively
      */
@@ -38,6 +37,7 @@
                 if(statusExists){
                     // if visible status load widget else update the new status
                     if(statusExists == statusEnum.VISIBLE){
+                        console.log("WORKER: comps: ",comps);
                         console.log("WORKER: exists comp visible");
                         return sendAllowWidget(compId, statusEnum.VISIBLE, page.appPageId, page.showOnAllPages);
                     }
@@ -77,6 +77,7 @@
                 var dataRelease = releaseBlockedComp(page.appPageId);
                 if(dataRelease.length > 0 ){
                     for(var i = 0; i < dataRelease.length; i++){
+                        console.log("WORKER: sendAllowWidget from delete widget");
                         sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, page.appPageId, dataRelease[i].allPages);
                     }
                 }
@@ -95,6 +96,7 @@
             var dataRelease = releaseBlockedComp(event.data.toPage);
             if(dataRelease.length > 0 ) {
                 for (var i = 0; i < dataRelease.length; i++) {
+                    console.log("WORKER: sendAllowWidget from page navigation");
                     sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, event.data.toPage, dataRelease[i].allPages);
                 }
             }
@@ -121,7 +123,6 @@
                     if (!page) {
                         reject(page);
                     }
-                    console.log('WORKER: getSiteInfo=>', page);
                     data.appPageId = page.pageTitle;
                     resolve(data);
                 });
@@ -134,6 +135,7 @@
         var dataRelease = releaseBlockedComp(page);
         if(dataRelease.length > 0 ){
             for(var i = 0; i < dataRelease.length; i++){
+                console.log("WORKER: sendAllowWidget from releaseBlockedComp");
                 sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, page.appPageId, dataRelease[i].allPages);
             }
         }
@@ -175,7 +177,6 @@
             'status' : status,
             'allPages' : showOnAllPages
         };
-        console.log(data);
         Wix.Worker.PubSub.publish('ALLOW_WIDGET', data, true);
     }
 

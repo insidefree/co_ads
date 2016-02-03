@@ -154,9 +154,10 @@
                                         $('body').addClass('mobile');
                                     }
                                     else{
-                                        height  = data.adUnit.height ? data.adUnit.height : 250;
-                                        width = data.adUnit.width ? data.adUnit.width : 300;
+                                        height  = data.height ? data.height : 250;
+                                        width = data.width ? data.width : 300;
                                     }
+                                    console.log('live site size=>',width,height);
                                     // client configuration
                                     //window.google_ad_client = 'ca-pub-8026931107919042';
                                     window.google_ad_slot = '';
@@ -217,6 +218,7 @@
                                 $('#editorDemo').removeClass('mobile');
                                 $('#editorBlocked').removeClass('mobile');
                             }
+                            $('#editorDemo').addClass('showDemo');
                             if(event.data.status == statusEnum.BLOCKED){
                                 console.log("here: editorBlocked");
                                 var data = '<div class="comp_limit_container"><div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br><span>Note: This message will not be visible in your site</span></div></div>';
@@ -253,6 +255,7 @@
              * handle user pagination
              */
             Wix.addEventListener(Wix.Events.PAGE_NAVIGATION, function(data){
+                console.log("WIDGET: PAGE_NAVIGATION  ");
                 // call worker to release comps, prefer all pages
                 Wix.PubSub.publish("PAGE_NAVIGATION", {compId: Wix.Utils.getCompId(), eventData: data}, true);
             });

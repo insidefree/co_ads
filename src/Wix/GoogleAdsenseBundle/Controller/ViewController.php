@@ -29,7 +29,7 @@ class ViewController extends AppController
 
         $params = array(
             'adUnit' => $componentLocal->getAdUnit(),
-            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 200, "height" => 200))
+            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 202, "height" => 202))
         );
 
         if ( $componentLocal->getDeletedAt() ) {
@@ -60,7 +60,9 @@ class ViewController extends AppController
         $userLocal      = $this->getUserDocument();
         $params = array(
             'adUnit' => $componentLocal->getAdUnit(),
-            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 200, "height" => 200))
+            'width'  =>$componentLocal->getAdUnit()->getWidth(),
+            'height' =>$componentLocal->getAdUnit()->getHeight(),
+            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 202, "height" => 202))
         );
 
         if ( $userLocal->getDomain() ) {
@@ -87,7 +89,9 @@ class ViewController extends AppController
         $userLocal      = $this->getUserDocument();
         $params = array(
             'adUnit' => $componentLocal->getAdUnit(),
-            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 200, "height" => 200))
+            'width'  =>$componentLocal->getAdUnit()->getWidth(),
+            'height' =>$componentLocal->getAdUnit()->getHeight(),
+            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 202, "height" => 202))
         );
 
         if ( $userLocal->getDomain() ) {
@@ -108,7 +112,7 @@ class ViewController extends AppController
         $userLocal      = $this->getUserDocument();
         $params = array(
             'adUnit' => $componentLocal->getAdUnit(),
-            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 200, "height" => 200))
+            'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 202, "height" => 202))
         );
 
         if ( $userLocal->getDomain() ) {
