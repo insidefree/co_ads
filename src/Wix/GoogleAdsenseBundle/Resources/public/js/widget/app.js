@@ -105,6 +105,8 @@
              * after register to worker, listen to answer from worker which status this comp
              */
             Wix.PubSub.subscribe("ALLOW_WIDGET", function(event){
+
+
                 var is_mobile = false;
                 // handle only my responses
                 if(event.data.origin == myCompId){
@@ -125,6 +127,15 @@
                         'DELETED'  : 'deleted',
                         'BLOCKED'  : 'blocked'
                     };
+                    Wix.Data.Public.set("statusComp"+myCompId,
+                        event.data.status,
+                        { scope: 'COMPONENT' },
+                        function(d) {
+                            console.log(d);
+                        },
+                        function(f) {
+                            console.log(f);
+                        });
                     // handle only components that not deleted
                     if(!window.component_deleted){
                         // case live site
