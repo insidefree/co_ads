@@ -19,8 +19,9 @@
      */
     Wix.Worker.PubSub.subscribe('WIDGET_LOAD', function(event)
     {
+        console.log('WORKER: widget load');
         // get comp details : pageId, allPages indication and ...
-        getSiteInfo(event.origin)
+        getSiteInfo()
             .then(function(page){
                 // get page details failed
                 if(!page){
@@ -70,7 +71,7 @@
      * when comp delete update status in comps array and try to release blocked component
      */
     Wix.Worker.PubSub.subscribe('DELETED_WIDGET', function(event) {
-        getSiteInfo(event.data.compId)
+        getSiteInfo()
             .then(function(page){
                 updateCompId(event.data.compId, statusEnum.DELETED, page.appPageId);
                 console.log('WORKER: deleted widget',event);
@@ -103,29 +104,16 @@
         }
     }, true);
 
-    function getSiteInfo(compId){
+    function getSiteInfo(){
         //getComponentInfo
-        return new Promise(function(resolve, reject) {
-            //Wix.Worker.getSiteInfo(function(data){
-            setTimeout(function () {
-                Wix.getComponentInfo(
-                    function (data) {
-                        if (!data) {
-                            reject(data);
-                        }
-                        resolve(data);
-                    }, compId)
-            }, 1000);
-        })
-        .then(function (data) {
-            return new Promise(function (resolve, reject) {
-                Wix.Worker.getSiteInfo(function (page) {
-                    if (!page) {
-                        reject(page);
-                    }
-                    data.appPageId = page.pageTitle;
-                    resolve(data);
-                });
+       return new Promise(function (resolve, reject) {
+           console.log('WORKER: before getComponentInfo');
+            Wix.getSiteInfo(function (page) {
+                console.log('page worker ',page);
+                if (!page) {
+                    reject(page);
+                }
+                resolve(page);
             });
         });
 

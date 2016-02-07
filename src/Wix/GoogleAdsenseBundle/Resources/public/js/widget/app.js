@@ -96,6 +96,7 @@
             });
 
             var myCompId = Wix.Utils.getCompId();
+            console.log('WIDGET: before publish worker');
             /**
              * when widget load trigger the worker to register comp
              */
