@@ -21,69 +21,64 @@
     {
         console.log('WORKER: widget load');
         // get comp details : pageId, allPages indication and ...
-        getSiteInfo()
-            .then(function(page){
-                // get page details failed
-                if(!page){
-                    return;
-                }
-                // if not exist appPageId in comps array
-                if(page.appPageId && !comps[page.appPageId]){
-                    comps[page.appPageId] = [];
-                }
-                var compId          = event.origin;
-                var statusExists    = isExists(compId, page.appPageId, page.showOnAllPages);
-                var statusComp      = checkCompStatus(page.appPageId);
-                // comp exists in comps array
-                if(statusExists){
-                    // if visible status load widget else update the new status
-                    if(statusExists == statusEnum.VISIBLE){
-                        console.log("WORKER: comps: ",comps);
-                        console.log("WORKER: exists comp visible");
-                        return sendAllowWidget(compId, statusEnum.VISIBLE, page.appPageId, page.showOnAllPages);
-                    }
-                    console.log("WORKER: exists with "+ statusExists+"update to "+ statusComp);
-                    updateCompId(compId, statusComp, page.appPageId);
-                }
-                else{
-                    // if not exists insert comp
-                    if(page.showOnAllPages){
-                        comps["allPages"].push({
-                            'pageId' : page.appPageId,
-                            'compId' : compId,
-                            'status' : statusComp
-                        });
-                    }
-                    else{
-                        comps[page.appPageId].push({
-                            'pageId' : page.appPageId,
-                            'compId' : compId,
-                            'status' : statusComp
-                        });
-                    }
-                }
-                sendAllowWidget(compId, statusComp, page.appPageId, page.showOnAllPages);
+        var page = event.data.page;
+        // get page details failed
+        if(!page){
+            return;
+        }
+        // if not exist appPageId in comps array
+        if(page.appPageId && !comps[page.appPageId]){
+            comps[page.appPageId] = [];
+        }
+        var compId          = event.origin;
+        var statusExists    = isExists(compId, page.appPageId, page.showOnAllPages);
+        var statusComp      = checkCompStatus(page.appPageId);
+        // comp exists in comps array
+        if(statusExists){
+            // if visible status load widget else update the new status
+            if(statusExists == statusEnum.VISIBLE){
                 console.log("WORKER: comps: ",comps);
-            });
+                console.log("WORKER: exists comp visible");
+                return sendAllowWidget(compId, statusEnum.VISIBLE, page.appPageId, page.showOnAllPages);
+            }
+            console.log("WORKER: exists with "+ statusExists+"update to "+ statusComp);
+            updateCompId(compId, statusComp, page.appPageId);
+        }
+        else{
+            // if not exists insert comp
+            if(page.showOnAllPages){
+                comps["allPages"].push({
+                    'pageId' : page.appPageId,
+                    'compId' : compId,
+                    'status' : statusComp
+                });
+            }
+            else{
+                comps[page.appPageId].push({
+                    'pageId' : page.appPageId,
+                    'compId' : compId,
+                    'status' : statusComp
+                });
+            }
+        }
+        sendAllowWidget(compId, statusComp, page.appPageId, page.showOnAllPages);
+        console.log("WORKER: comps: ",comps);
     }, true);
 
     /**
      * when comp delete update status in comps array and try to release blocked component
      */
     Wix.Worker.PubSub.subscribe('DELETED_WIDGET', function(event) {
-        getSiteInfo()
-            .then(function(page){
-                updateCompId(event.data.compId, statusEnum.DELETED, page.appPageId);
-                console.log('WORKER: deleted widget',event);
-                var dataRelease = releaseBlockedComp(page.appPageId);
-                if(dataRelease.length > 0 ){
-                    for(var i = 0; i < dataRelease.length; i++){
-                        console.log("WORKER: sendAllowWidget from delete widget");
-                        sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, page.appPageId, dataRelease[i].allPages);
-                    }
-                }
-            });
-
+        var page = event.data.page;
+        updateCompId(event.data.compId, statusEnum.DELETED, page.appPageId);
+        console.log('WORKER: deleted widget',event);
+        var dataRelease = releaseBlockedComp(page.appPageId);
+        if(dataRelease.length > 0 ){
+            for(var i = 0; i < dataRelease.length; i++){
+                console.log("WORKER: sendAllowWidget from delete widget");
+                sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, page.appPageId, dataRelease[i].allPages);
+            }
+        }
     }, true);
 
     var oldToPage   = "";
@@ -103,21 +98,6 @@
             }
         }
     }, true);
-
-    function getSiteInfo(){
-        //getComponentInfo
-       return new Promise(function (resolve, reject) {
-           console.log('WORKER: before getComponentInfo');
-            Wix.getSiteInfo(function (page) {
-                console.log('page worker ',page);
-                if (!page) {
-                    reject(page);
-                }
-                resolve(page);
-            });
-        });
-
-    }
 
     function checkCompStatus(page){
         var dataRelease = releaseBlockedComp(page);

@@ -96,11 +96,16 @@
             });
 
             var myCompId = Wix.Utils.getCompId();
-            console.log('WIDGET: before publish worker');
-            /**
-             * when widget load trigger the worker to register comp
-             */
-            Wix.PubSub.publish("WIDGET_LOAD", {value: "this is my message"}, true);
+
+            console.log('WIDGET:getComponentInfo');
+            Wix.getComponentInfo(function(page){
+                console.log('WIDGET: before publish worker=>',page);
+                /**
+                 * when widget load trigger the worker to register comp
+                 */
+                Wix.PubSub.publish("WIDGET_LOAD", {page: page}, true);
+            });
+
 
             /**
              * after register to worker, listen to answer from worker which status this comp
@@ -257,8 +262,10 @@
                     url: Router.path('deleteComponent')
                 });
 
-                // call worker to update that this component deleted
-                Wix.PubSub.publish("DELETED_WIDGET", {compId: Wix.Utils.getCompId()}, true);
+                Wix.getComponentInfo(function(page){
+                    // call worker to update that this component deleted
+                    Wix.PubSub.publish("DELETED_WIDGET", {compId: Wix.Utils.getCompId(), page: page}, true);
+                });
 
                 return deleteComponent;
             });
