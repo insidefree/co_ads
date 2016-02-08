@@ -10,9 +10,5 @@
         Wix.setHeight(
             jQuery('body').height() + 15
         );
-        Wix.Settings.resizeComponent({
-            width: jQuery('body').width() + 15,
-            height: jQuery('body').height() + 15
-        });
     });
 }(window, window.Wix, window.jQuery));

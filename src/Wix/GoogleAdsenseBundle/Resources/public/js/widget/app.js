@@ -96,16 +96,10 @@
             });
 
             var myCompId = Wix.Utils.getCompId();
-
-            console.log('WIDGET:getComponentInfo');
-            Wix.getComponentInfo(function(page){
-                console.log('WIDGET: before publish worker=>',page);
-                /**
-                 * when widget load trigger the worker to register comp
-                 */
-                Wix.PubSub.publish("WIDGET_LOAD", {page: page}, true);
-            });
-
+            /**
+             * when widget load trigger the worker to register comp
+             */
+            Wix.PubSub.publish("WIDGET_LOAD", {value: "this is my message"}, true);
 
             /**
              * after register to worker, listen to answer from worker which status this comp
@@ -137,7 +131,7 @@
                         event.data.status,
                         { scope: 'COMPONENT' },
                         function(d) {
-                            console.log(d);
+                            console.log('widget', d, event.data.status);
                         },
                         function(f) {
                             console.log(f);
@@ -230,6 +224,11 @@
                             if(is_mobile){
                                 $('#editorDemo').addClass('mobile');
                                 $('#editorBlocked').addClass('mobile');
+                                jQuery(function() {
+                                    Wix.setHeight(
+                                        jQuery('body').height() + 15
+                                    );
+                                });
                             }
                             else{
                                 $('#editorDemo').removeClass('mobile');
@@ -262,10 +261,8 @@
                     url: Router.path('deleteComponent')
                 });
 
-                Wix.getComponentInfo(function(page){
-                    // call worker to update that this component deleted
-                    Wix.PubSub.publish("DELETED_WIDGET", {compId: Wix.Utils.getCompId(), page: page}, true);
-                });
+                // call worker to update that this component deleted
+                Wix.PubSub.publish("DELETED_WIDGET", {compId: Wix.Utils.getCompId()}, true);
 
                 return deleteComponent;
             });

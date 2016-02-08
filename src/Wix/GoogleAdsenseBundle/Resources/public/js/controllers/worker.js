@@ -19,66 +19,70 @@
      */
     Wix.Worker.PubSub.subscribe('WIDGET_LOAD', function(event)
     {
-        console.log('WORKER: widget load');
         // get comp details : pageId, allPages indication and ...
-        var page = event.data.page;
-        // get page details failed
-        if(!page){
-            return;
-        }
-        // if not exist appPageId in comps array
-        if(page.appPageId && !comps[page.appPageId]){
-            comps[page.appPageId] = [];
-        }
-        var compId          = event.origin;
-        var statusExists    = isExists(compId, page.appPageId, page.showOnAllPages);
-        var statusComp      = checkCompStatus(page.appPageId);
-        // comp exists in comps array
-        if(statusExists){
-            // if visible status load widget else update the new status
-            if(statusExists == statusEnum.VISIBLE){
+        getSiteInfo(event.origin)
+            .then(function(page){
+                // get page details failed
+                if(!page){
+                    return;
+                }
+                // if not exist appPageId in comps array
+                if(page.appPageId && !comps[page.appPageId]){
+                    comps[page.appPageId] = [];
+                }
+                var compId          = event.origin;
+                var statusExists    = isExists(compId, page.appPageId, page.showOnAllPages);
+                var statusComp      = checkCompStatus(page.appPageId);
+                // comp exists in comps array
+                if(statusExists){
+                    // if visible status load widget else update the new status
+                    if(statusExists == statusEnum.VISIBLE){
+                        console.log("WORKER: comps: ",comps);
+                        console.log("WORKER: exists comp visible");
+                        return sendAllowWidget(compId, statusEnum.VISIBLE, page.appPageId, page.showOnAllPages);
+                    }
+                    console.log("WORKER: exists with "+ statusExists+"update to "+ statusComp);
+                    updateCompId(compId, statusComp, page.appPageId);
+                }
+                else{
+                    // if not exists insert comp
+                    if(page.showOnAllPages){
+                        comps["allPages"].push({
+                            'pageId' : page.appPageId,
+                            'compId' : compId,
+                            'status' : statusComp
+                        });
+                    }
+                    else{
+                        comps[page.appPageId].push({
+                            'pageId' : page.appPageId,
+                            'compId' : compId,
+                            'status' : statusComp
+                        });
+                    }
+                }
+                sendAllowWidget(compId, statusComp, page.appPageId, page.showOnAllPages);
                 console.log("WORKER: comps: ",comps);
-                console.log("WORKER: exists comp visible");
-                return sendAllowWidget(compId, statusEnum.VISIBLE, page.appPageId, page.showOnAllPages);
-            }
-            console.log("WORKER: exists with "+ statusExists+"update to "+ statusComp);
-            updateCompId(compId, statusComp, page.appPageId);
-        }
-        else{
-            // if not exists insert comp
-            if(page.showOnAllPages){
-                comps["allPages"].push({
-                    'pageId' : page.appPageId,
-                    'compId' : compId,
-                    'status' : statusComp
-                });
-            }
-            else{
-                comps[page.appPageId].push({
-                    'pageId' : page.appPageId,
-                    'compId' : compId,
-                    'status' : statusComp
-                });
-            }
-        }
-        sendAllowWidget(compId, statusComp, page.appPageId, page.showOnAllPages);
-        console.log("WORKER: comps: ",comps);
+            });
     }, true);
 
     /**
      * when comp delete update status in comps array and try to release blocked component
      */
     Wix.Worker.PubSub.subscribe('DELETED_WIDGET', function(event) {
-        var page = event.data.page;
-        updateCompId(event.data.compId, statusEnum.DELETED, page.appPageId);
-        console.log('WORKER: deleted widget',event);
-        var dataRelease = releaseBlockedComp(page.appPageId);
-        if(dataRelease.length > 0 ){
-            for(var i = 0; i < dataRelease.length; i++){
-                console.log("WORKER: sendAllowWidget from delete widget");
-                sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, page.appPageId, dataRelease[i].allPages);
-            }
-        }
+        getSiteInfo(event.data.compId)
+            .then(function(page){
+                updateCompId(event.data.compId, statusEnum.DELETED, page.appPageId);
+                console.log('WORKER: deleted widget',event);
+                var dataRelease = releaseBlockedComp(page.appPageId);
+                if(dataRelease.length > 0 ){
+                    for(var i = 0; i < dataRelease.length; i++){
+                        console.log("WORKER: sendAllowWidget from delete widget");
+                        sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, page.appPageId, dataRelease[i].allPages);
+                    }
+                }
+            });
+
     }, true);
 
     var oldToPage   = "";
@@ -98,6 +102,34 @@
             }
         }
     }, true);
+
+    function getSiteInfo(compId){
+        //getComponentInfo
+        return new Promise(function(resolve, reject) {
+            //Wix.Worker.getSiteInfo(function(data){
+            setTimeout(function () {
+                Wix.getComponentInfo(
+                    function (data) {
+                        if (!data) {
+                            reject(data);
+                        }
+                        resolve(data);
+                    }, compId)
+            }, 1000);
+        })
+        .then(function (data) {
+            return new Promise(function (resolve, reject) {
+                Wix.Worker.getSiteInfo(function (page) {
+                    if (!page) {
+                        reject(page);
+                    }
+                    data.appPageId = page.pageTitle;
+                    resolve(data);
+                });
+            });
+        });
+
+    }
 
     function checkCompStatus(page){
         var dataRelease = releaseBlockedComp(page);
