@@ -47,18 +47,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-# MongoDB ODM Configuration
-doctrine_mongodb:
-    connections:
-        default:
-            server: %mongodb_server%
-            #options: {replicaSet: %mongodb_replica_name%}
-            options: {}
-    default_database: %mongodb_name%
-    document_managers:
-        default:
-            auto_mapping: true
-
 mobile_detect:
     redirect:
         mobile: ~
