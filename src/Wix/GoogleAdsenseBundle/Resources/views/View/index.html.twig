@@ -156,13 +156,17 @@
 
         <script type="text/javascript">
             {% if component_deleted is not defined %}
-            window.component_deleted = false;
+                window.component_deleted = false;
             {% else %}
-            window.component_deleted = true;
+                window.component_deleted = true;
             {% endif %}
-            
-            var code                     = '{{ code }}';
-            window.code                  = code ? true : false;
+
+            {% if code is not defined %}
+                window.code = false;
+            {% else %}
+                window.code = true;
+            {% endif %}
+
         </script>
     {% endblock %}
 
