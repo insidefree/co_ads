@@ -50,8 +50,8 @@
         }
 
         .mobile .comp_limit_container {
-            width: {{ mobile.regular.width }}px;
-            height: {{ mobile.regular.height }}px;
+            width: {{ mobile.regular.width + 2}}px;
+            height: {{ mobile.regular.height + 2 }}px;
             left: 39px;
         }
 
@@ -155,8 +155,12 @@
         {% endjavascripts %}
 
         <script type="text/javascript">
-            var component_deleted        = '{{ component_deleted }}';
-            window.component_deleted     = component_deleted ? true : false;
+            {% if component_deleted is not defined %}
+            window.component_deleted = false;
+            {% else %}
+            window.component_deleted = true;
+            {% endif %}
+            
             var code                     = '{{ code }}';
             window.code                  = code ? true : false;
         </script>

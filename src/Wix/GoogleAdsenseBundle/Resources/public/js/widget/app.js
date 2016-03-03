@@ -127,15 +127,17 @@
                         'DELETED'  : 'deleted',
                         'BLOCKED'  : 'blocked'
                     };
-                    Wix.Data.Public.set("statusComp"+myCompId,
-                        event.data.status,
-                        { scope: 'COMPONENT' },
-                        function(d) {
-                            console.log('widget', d, event.data.status);
-                        },
-                        function(f) {
-                            console.log(f);
-                        });
+                    if(Wix.Utils.getViewMode() === 'editor' ) {
+                        Wix.Data.Public.set("statusComp" + myCompId,
+                            event.data.status,
+                            {scope: 'COMPONENT'},
+                            function (d) {
+                                console.log('widget', d, event.data.status);
+                            },
+                            function (f) {
+                                console.log(f);
+                            });
+                    }
                     // handle only components that not deleted
                     if(!window.component_deleted){
                         // case live site
