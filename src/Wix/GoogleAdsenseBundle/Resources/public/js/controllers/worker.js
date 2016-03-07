@@ -98,15 +98,16 @@
     var oldFromPage = "";
 
     Wix.Worker.PubSub.subscribe('PAGE_NAVIGATION', function(event) {
-        if(oldToPage !== event.data.toPage && oldFromPage !== event.data.fromPage){
-            oldToPage   = event.data.toPage;
-            oldFromPage = event.data.fromPage;
+        var eventData = event.data.eventData;
+        if(oldToPage !== eventData.toPage && oldFromPage !== eventData.fromPage){
+            oldToPage   = eventData.toPage;
+            oldFromPage = eventData.fromPage;
             console.log('WORKER: page navigation',event);
-            var dataRelease = releaseBlockedComp(event.data.toPage);
+            var dataRelease = releaseBlockedComp(eventData.toPage);
             if(dataRelease && dataRelease.length) {
                 for (var i = 0; i < dataRelease.length; i++) {
                     console.log("WORKER: sendAllowWidget from page navigation");
-                    sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, event.data.toPage, dataRelease[i].allPages);
+                    sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, eventData.toPage, dataRelease[i].allPages);
                 }
             }
         }
@@ -225,6 +226,11 @@
 
     }
 
+    /**
+     * release blocked components to be visible and visible component to be blocked when give priority to all pages
+     * @param page
+     * @returns {Array}
+     */
     function releaseBlockedComp(page){
         var countComp = getCountVisible(page);
         var dataRelease = [];
@@ -240,8 +246,13 @@
         if(comps[page] && comps[page].length){
             // check if exists blocked in current page
             var pageIdLen   = comps[page].length;
-            for(var i = 0; countComp < 3 && i < pageIdLen; i++){
-                if(comps[page][i].status == statusEnum.BLOCKED){
+            for(var i = 0; i < pageIdLen; i++){
+                console.log("===================release",dataRelease,countComp);
+                if(countComp > 3 && comps[page][i].status == statusEnum.VISIBLE){
+                    comps[page][i].status = statusEnum.BLOCKED;
+                    dataRelease.push(comps[page][i]);
+                }
+                if(countComp < 3 && comps[page][i].status == statusEnum.BLOCKED){
                     comps[page][i].status = statusEnum.VISIBLE;
                     dataRelease.push(comps[page][i]);
                     countComp++;
