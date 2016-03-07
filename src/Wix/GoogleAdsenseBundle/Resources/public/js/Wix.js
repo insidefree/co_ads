@@ -454,7 +454,14 @@
 	     *   deviceType: 'desktop'
 	     * }
 	     */
-	    DEVICE_TYPE_CHANGED: 'DEVICE_TYPE_CHANGED'
+	    DEVICE_TYPE_CHANGED: 'DEVICE_TYPE_CHANGED',
+
+	    /**
+	     * Issued when the site is saved.
+	     * @memberof Wix.Events
+	     * @since 1.62.0
+	     */
+	    SITE_SAVED: 'SITE_SAVED'
 	  };
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -578,7 +585,9 @@
 	    OPEN_FONT_PICKER: 'openFontPicker',
 	    GET_CURRENT_PAGE_ANCHORS: 'getCurrentPageAnchors',
 	    NAVIGATE_TO_ANCHOR: 'navigateToAnchor',
-	    GET_COMPONENT_INFO: 'getComponentInfo'
+	    GET_COMPONENT_INFO: 'getComponentInfo',
+	    SHOW_DASHBOARD_HEADER: 'showHeader',
+	    HIDE_DASHBOARD_HEADER: 'hideHeader'
 	};
 
 	var callId = 1;
@@ -2536,38 +2545,37 @@
 	        return getWixStatic() + 'media/' + relativeUrl;
 	    };
 
-	    var getResizedImageUrl = function getResizedImageUrl(relativeUrl, width, height, sharpParams) {
+	    var getResizedImageUrl = function getResizedImageUrl(imageURI, width, height, params) {
 	        // assign sharp default parameters
-	        sharpParams = sharpParams || {};
-	        sharpParams.quality = sharpParams.quality || 75;
-	        sharpParams.resizaFilter = sharpParams.resizaFilter || 22;
-	        sharpParams.usm_r = sharpParams.usm_r || 0.50;
-	        sharpParams.usm_a = sharpParams.usm_a || 1.20;
-	        sharpParams.usm_t = sharpParams.usm_t || 0.00;
-
-	        var urlArr = [];
-	        var splitUrl = /[.]([^.]+)$/.exec(relativeUrl);
-	        var ext = splitUrl && /[.]([^.]+)$/.exec(relativeUrl)[1] || "";
+	        params = params || {};
+	        params.quality = params.quality || 85;
+	        params.usm_r = (params.usm_r || 0.66).toFixed(2);
+	        params.usm_a = (params.usm_a || 1.00).toFixed(2);
+	        params.usm_t = (params.usm_t || 0.01).toFixed(2);
 
 	        // build the image url
-	        relativeUrl = getWixStatic() + 'media/' + relativeUrl;
-	        urlArr.push(relativeUrl);
-	        urlArr.push("srz");
-	        urlArr.push("p");
-	        urlArr.push(width);
-	        urlArr.push(height);
+	        // e.g. http://static.wixstatic.com/media/12-345.jpg/v1/fill/w_1280,h_720,q_85,usm_0.66_1.00_0.01/12-345.jpg
+	        var tramsformStr = '';
+	        // domain
+	        tramsformStr += getWixStatic() + 'media/';
+	        // image uri
+	        tramsformStr += imageURI + '/';
+	        // api version
+	        tramsformStr += 'v1/';
+	        // image transform type - fill
+	        tramsformStr += 'fill/';
+	        // target width
+	        tramsformStr += 'w_' + Math.round(width) + ',';
+	        // target height
+	        tramsformStr += 'h_' + Math.round(height) + ',';
+	        // quality - applicable for jpeg only (no effect otherwise)
+	        tramsformStr += 'q_' + params.quality + ',';
+	        // un-sharp mask
+	        tramsformStr += 'usm_' + params.usm_r + '_' + params.usm_a + '_' + params.usm_t + '/';
+	        // image uri
+	        tramsformStr += imageURI;
 
-	        // sharpening parameters
-	        urlArr.push(sharpParams.quality);
-	        urlArr.push(sharpParams.resizaFilter);
-	        urlArr.push(sharpParams.usm_r);
-	        urlArr.push(sharpParams.usm_a);
-	        urlArr.push(sharpParams.usm_t);
-
-	        urlArr.push(ext); // get file extension
-	        urlArr.push("srz");
-
-	        return urlArr.join('_');
+	        return tramsformStr;
 	    };
 
 	    var getAudioUrl = function getAudioUrl(relativeUrl, audioType) {
@@ -3925,6 +3933,10 @@
 	    };
 
 	    var getComponentInfo = function getComponentInfo(callback) {
+	        if (!callback || !utils.isFunction(callback)) {
+	            reporter.reportSdkError('Missing mandatory argument - callback - should be of type Function');
+	            return;
+	        }
 	        postMessage.sendMessage(postMessage.MessageTypes.GET_COMPONENT_INFO, null, callback);
 	    };
 
@@ -4570,7 +4582,7 @@
 	        revalidateSession: revalidateSession,
 
 	        /**
-	         * The getAnchors method is used to retrieve the anchors found on the current page in the editor/preview/site view modes.
+	         * The getCurrentPageAnchors method is used to retrieve the anchors found on the current page in the editor/preview/site view modes.
 	         * By default the method will return the top page anchor on the current page.
 	         * @function
 	         * @memberof Wix
@@ -4592,10 +4604,7 @@
 	         * @memberof Wix
 	         * @since 1.62.0
 	         * @param {String} anchorId of the anchor to navigate to
-	         * @param {Function} [onFailure] the function will return an object that specifies the error which occurred, it will be invoked in the following scenarios:
-	         *        1. Current page does not contain the given anchor (and pageId was not provided).
-	         *        2. Provided pageId is not valid.
-	         *        3. PageId is given but the page does not contain an anchor with the provided id. Note: The method will first navigate to a page with the provided pageId as an effect of this API call.
+	         * @param {Function} [onFailure] the function will return an object that specifies the error which occurred, it will be invoked when the current page does not contain the given anchor.
 	         * @example
 	         *
 	         * // The following call will navigate to anchor with id = anchor1
@@ -4606,27 +4615,31 @@
 
 	        /**
 	         *
-	         * Retrieve information about the current component.
+	         * Retrieves information about the current component. For example, you’ll be able to know if a widget is shown on all pages.
 	         *
-	         * Available from Editor, Preview and Viewer, only in components (not is settings, modal, popups and etc..)
+	         * Available from Editor, Preview and Viewer, only in components and settings (not is modal, popups and etc..)
 	         *
 	         * @function
 	         * @memberof Wix
-	         * @since 1.62.0
-	         * @param {Function} callback A callback function to receive the component info.
-	         * @return {Object} data JSON containing the component info. It's properties are:
+	         * @since 1.63.0
+	         * @param {Function} A callback function to get information about the component.
+	         * @return {Object} A JSON object containing the component info:
 	         *
 	         *  Name           | Type      | Description
 	         * ----------------|-----------|------------
-	         * compId          | `String`  | The comp id in the site
-	         * pageId          | `String`  | The page id containing the component (will be empty in case component is marked as show on all pages)
-	         * showOnAllPages  | `Boolean` | Indicates if the component is marked as show on all pages
-	         * tpaWidgetId     | `String`  | The component id of the widget in the cms (will be empty in case page app)
-	         * appPageId       | `String`  | The component id of the app page in the cms (will be empty in case widget app)
+	         * compId          | `String`  | The unique ID of this component in the Wix site
+	         * pageId          | `String`  | ID of the page that contains the component.
+	         *                 |           | Returns null if the component is a widget that’s set to show on all pages.
+	         * showOnAllPages  | `Boolean` | True if the user set the widget to show on all pages.
+	         *                 |           | False if the component is a page, or if the widget is not set to show on all pages.
+	         * tpaWidgetId     | `String`  | ID of the widget component, as specified in the Dev Center.
+	         *                 |           | Returns null if the component is a page, or if you’re using this method in the live site.
+	         * appPageId       | `String`  | ID of the page component, as specified in the Dev Center.
+	         *                 |           | Returns null if the component is a widget, or if you’re using this method in the live site.
 	         *
 	         * @example
-	         * Wix.getSiteInfo( function(siteInfo) {
-	         *      // do something with the siteInfo
+	         * Wix.getComponentInfo( function(componentInfo) {
+	         *      // do something with the componentInfo
 	         * });
 	         */
 	        getComponentInfo: getComponentInfo
@@ -5117,11 +5130,11 @@
 	    };
 
 	    var getValue = function getValue(key, onSuccess, onFailure) {
-	        Data.Public.get(key, onSuccess, onFailure);
+	        Data.Public.get(key, { scope: Data.SCOPE.APP }, onSuccess, onFailure);
 	    };
 
 	    var getValues = function getValues(keys, onSuccess, onFailure) {
-	        Data.Public.getMulti(keys, onSuccess, onFailure);
+	        Data.Public.getMulti(keys, { scope: Data.SCOPE.APP }, onSuccess, onFailure);
 	    };
 
 	    return {
@@ -5241,7 +5254,9 @@
 	        Data: {
 	            Public: {
 	                /**
-	                 * @since 1.61.0
+	                 * Get value only from APP Scope
+	                 *
+	                 * @since 1.62.0
 	                 * @memberof Wix.Worker.Data.Public
 	                 * @author mayah@wix.com
 	                 * @see Wix.Data.Public.get
@@ -5249,7 +5264,9 @@
 	                get: getValue,
 
 	                /**
-	                 * @since 1.61.0
+	                 * Get values only from APP Scope
+	                 *
+	                 * @since 1.62.0
 	                 * @memberof Wix.Worker.Data.Public
 	                 * @author mayah@wix.com
 	                 * @see Wix.Data.Public.getMulti
@@ -5358,10 +5375,10 @@
 	         * @function
 	         * @param {String} eventName The name of the event to publish.
 	         * @param {Object} data Data the object to send to subscribers for this event type.
-	         * @param {Boolean} isPersistent Indicates whether this event is persisted for event subscribers who have not yet subscribed.
+	         * @param {Boolean} [isPersistent] Indicates whether this event is persisted for event subscribers who have not yet subscribed.
 	         * @example
-	         * // The following call will publish an app event that can be consumed by all the app parts and persist => even of those parts are not rendered yet.
-	         * Wix.PubSub.publish("my_event_name", {value:"this is my message"}, true);
+	         * // The following call will publish an app event that can be consumed by all app parts.
+	         * Wix.PubSub.publish("my_event_name", {value:"this is my message"});
 	         */
 	        publish: publish
 	    };

@@ -8,29 +8,6 @@
 {# scritps #}
 {% block javascripts %}
     <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.61.0/js/wix.min.js"></script>
-
-    <script type="text/javascript">
-        setTimeout(function(){
-            var appCompsId = {};
-            Wix.getComponentInfo = function(cb, compId){
-                //var compId = Wix.Utils.getCompId();
-                console.log('WORKER: compId=>',compId);
-                var random = Math.floor(Math.random()) == 1;
-                var data = {};
-                if(!appCompsId[compId]){
-                    data ={ 'compId': compId,
-                        'pageId': '' ,
-                        'showOnAllPages': random,
-                        'widgetId': 'dasfw' ,
-                        'appPageId': 'HOME'
-                    };
-                    appCompsId[compId] = data;
-                }
-                return cb(appCompsId[compId]);
-            }
-        },1000);
-
-    </script>
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 

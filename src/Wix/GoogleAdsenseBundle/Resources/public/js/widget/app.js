@@ -96,10 +96,49 @@
             });
 
             var myCompId = Wix.Utils.getCompId();
-            /**
-             * when widget load trigger the worker to register comp
-             */
-            Wix.PubSub.publish("WIDGET_LOAD", {value: "this is my message"}, true);
+
+            function getComponentInfo(){
+                return new Promise(function(resolve, reject) {
+                    Wix.getComponentInfo(
+                        function (data) {
+                            if (!data) {
+                                reject(data);
+                            }
+                            resolve(data);
+                        });
+                });
+
+            }
+            function getCurrentPageId(){
+                return new Promise(function(resolve, reject) {
+                    Wix.getCurrentPageId(function(pageId) {
+                        if (!pageId) {
+                            reject(pageId);
+                        }
+                        resolve(pageId);
+                    });
+                });
+
+            }
+
+            getComponentInfo()
+                .then(function(componentInfo){
+                    if (!componentInfo) {
+                        return Promise.reject();
+                    }
+                    return Promise.all([getCurrentPageId(), componentInfo]);
+                })
+                .then(function(values){
+                    var pageId = values[0];
+                    var componentInfo = values[1];
+                    componentInfo.appPageId = pageId;
+                    console.log('getComponentInfo=>',componentInfo);
+                    /**
+                     * when widget load trigger the worker to register comp
+                     */
+                    Wix.PubSub.publish("WIDGET_LOAD", {componentInfo: componentInfo}, true);
+                });
+
 
             /**
              * after register to worker, listen to answer from worker which status this comp
@@ -263,8 +302,21 @@
                     url: Router.path('deleteComponent')
                 });
 
-                // call worker to update that this component deleted
-                Wix.PubSub.publish("DELETED_WIDGET", {compId: Wix.Utils.getCompId()}, true);
+                getComponentInfo()
+                    .then(function(componentInfo){
+                        if (!componentInfo) {
+                            return Promise.reject();
+                        }
+                        return Promise.all([getCurrentPageId(), componentInfo]);
+                    })
+                    .then(function(values){
+                        var pageId = values[0];
+                        var componentInfo = values[1];
+                        componentInfo.appPageId = pageId;
+                        console.log('getComponentInfo=>',componentInfo);
+                        // call worker to update that this component deleted
+                        Wix.PubSub.publish("DELETED_WIDGET", {componentInfo: componentInfo}, true);
+                    });
 
                 return deleteComponent;
             });
