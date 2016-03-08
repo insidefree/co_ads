@@ -71,30 +71,6 @@
 
     <!-- adsense advertisement -->
     <div style="text-align: center" id="adsense_container">
-
-        {#{% if component_deleted is not defined %}#}
-            {#{% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}#}
-                {#{% if reachedCompLimit == true %}#}
-                    {#<div class="empty"></div>#}
-                {#{% else %}#}
-                    {#{% if code is defined  %}#}
-                        {#{% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}#}
-                    {#{% else %}#}
-                        {#{% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}#}
-                    {#{% endif %}#}
-                {#{% endif %}#}
-            {#{% else %}#}
-                {#{% if reachedCompLimit %}#}
-                    {#<div class="comp_limit_container">#}
-                        {#<div class="comp_limit_text">#}
-                            {#Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br>#}
-                            {#<span>Note: This message will not be visible in your site</span>#}
-                        {#</div>#}
-                    {#</div>#}
-                {#{% endif %}#}
-                {#{% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}#}
-            {#{% endif %}#}
-        {#{% endif %}#}
         <div data-ng-show="$root.liveSiteEmpty"><div class="empty"></div></div>
         <div id="liveSiteCode"></div>
         <div id="liveSiteDemo"></div>
@@ -107,10 +83,7 @@
   </div>
 
     <!-- wix sdk -->
-    {#{% javascripts#}
-    {#'@WixGoogleAdsenseBundle/Resources/public/js/Wix.js'%}#}
-    {#{% endjavascripts %}#}
-    {#<script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.61.0/js/wix.min.js"></script>#}
+    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.63.0/js/wix.min.js"></script>
     <script>
         (function(i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;
@@ -138,7 +111,6 @@
         <!-- scripts -->
         {% javascripts
         '@WixGoogleAdsenseBundle/Resources/public/lib/jquery/jquery.js'
-        '@WixGoogleAdsenseBundle/Resources/public/js/Wix.js'
         '@WixGoogleAdsenseBundle/Resources/public/js/responsive.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
