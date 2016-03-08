@@ -248,7 +248,7 @@
             var pageIdLen   = comps[page].length;
             for(var i = 0; i < pageIdLen; i++){
                 console.log("===================release",dataRelease,countComp);
-                if(countComp > 3 && comps[page][i].status == statusEnum.VISIBLE){
+                if(countComp >= 3 && comps[page][i].status == statusEnum.VISIBLE){
                     comps[page][i].status = statusEnum.BLOCKED;
                     dataRelease.push(comps[page][i]);
                 }
