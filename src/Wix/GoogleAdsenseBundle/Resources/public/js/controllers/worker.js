@@ -110,6 +110,7 @@
                     sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, eventData.toPage, dataRelease[i].allPages);
                 }
             }
+            console.log("===================release",comps);
         }
     }, true);
 
@@ -232,26 +233,43 @@
      * @returns {Array}
      */
     function releaseBlockedComp(page){
-        var countComp = getCountVisible(page);
-        var dataRelease = [];
+        var countComp     = 0;
+        var countAllPages = 0;
+        var dataRelease   = [];
         // check if exists blocked in all pages
         var allPagesLen   = comps["allPages"] ? comps["allPages"].length : 0;
-        for(var j = 0; countComp < 3 && j < allPagesLen; j++){
-            if(comps["allPages"][j].status == statusEnum.BLOCKED){
+        for(var j = 0; j < allPagesLen; j++){
+            // when exists on page 3 ad, blocked other visible components
+            if(countAllPages >= 3 && comps[page][j].status == statusEnum.VISIBLE){
+                comps[page][j].status = statusEnum.BLOCKED;
+                dataRelease.push(comps[page][j]);
+            }
+            // count all pages visible
+            if(countAllPages < 3 && comps["allPages"][j].status == statusEnum.VISIBLE){
+                countAllPages++;
+            }
+            // release all pages from blocked when count < 3
+            if(countAllPages < 3 && comps["allPages"][j].status == statusEnum.BLOCKED){
                 comps["allPages"][j].status = statusEnum.VISIBLE;
                 dataRelease.push(comps["allPages"][j]);
-                countComp++;
+                countAllPages++;
             }
         }
+        countComp = countAllPages;
         if(comps[page] && comps[page].length){
-            // check if exists blocked in current page
             var pageIdLen   = comps[page].length;
             for(var i = 0; i < pageIdLen; i++){
                 console.log("===================release",dataRelease,countComp);
+                // when exists on page 3 ad, blocked other visible components
                 if(countComp >= 3 && comps[page][i].status == statusEnum.VISIBLE){
                     comps[page][i].status = statusEnum.BLOCKED;
                     dataRelease.push(comps[page][i]);
                 }
+                // count specific page visible
+                if(countComp < 3 && comps[page][i].status == statusEnum.VISIBLE){
+                    countComp++;
+                }
+                // release specific page from blocked when count < 3
                 if(countComp < 3 && comps[page][i].status == statusEnum.BLOCKED){
                     comps[page][i].status = statusEnum.VISIBLE;
                     dataRelease.push(comps[page][i]);
