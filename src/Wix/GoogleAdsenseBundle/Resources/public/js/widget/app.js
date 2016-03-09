@@ -98,7 +98,7 @@
             var myCompId = Wix.Utils.getCompId();
 
             function getComponentInfo(){
-                return new Promise(function(resolve, reject) {
+                return $q(function(resolve, reject) {
                     Wix.getComponentInfo(
                         function (data) {
                             if (!data) {
@@ -107,10 +107,10 @@
                             resolve(data);
                         });
                 });
-
             }
+
             function getCurrentPageId(){
-                return new Promise(function(resolve, reject) {
+                return $q(function(resolve, reject) {
                     Wix.getCurrentPageId(function(pageId) {
                         if (!pageId) {
                             reject(pageId);
@@ -118,15 +118,14 @@
                         resolve(pageId);
                     });
                 });
-
             }
 
             getComponentInfo()
                 .then(function(componentInfo){
                     if (!componentInfo) {
-                        return Promise.reject();
+                        throw new Error();
                     }
-                    return Promise.all([getCurrentPageId(), componentInfo]);
+                    return $q.all([getCurrentPageId(), componentInfo]);
                 })
                 .then(function(values){
                     var pageId = values[0];
@@ -305,9 +304,9 @@
                 getComponentInfo()
                     .then(function(componentInfo){
                         if (!componentInfo) {
-                            return Promise.reject();
+                            throw new Error();
                         }
-                        return Promise.all([getCurrentPageId(), componentInfo]);
+                        return $q.all([getCurrentPageId(), componentInfo]);
                     })
                     .then(function(values){
                         var pageId = values[0];
@@ -322,7 +321,7 @@
             });
 
             /**
-             * handle user pagination
+             * handle user navigate pages
              */
             Wix.addEventListener(Wix.Events.PAGE_NAVIGATION, function(data){
                 console.log("WIDGET: PAGE_NAVIGATION  ");
