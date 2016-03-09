@@ -194,14 +194,14 @@
                             // status visible and account of google demo
                             else{
                                 console.log("here: liveSiteDemo");
-                                $('body').addClass('live_site_demo');
+                                $('body').attr('class','live_site_demo');
                                 $http.get(Router.url('demo')).success(function(data) {
                                     var width;
                                     var height;
                                     if (is_mobile) {
                                         width  = data.mobile.regular.width;
                                         height = data.mobile.regular.height;
-                                        $('body').addClass('mobile');
+                                        $('body').attr('class','mobile');
                                     }
                                     else{
                                         height  = data.height ? data.height : 250;
@@ -261,8 +261,8 @@
                         // case editor / preview
                         else{
                             if(is_mobile){
-                                $('#editorDemo').addClass('mobile');
-                                $('#editorBlocked').addClass('mobile');
+                                $('#editorDemo').attr('class','mobile');
+                                $('#editorBlocked').attr('class','mobile');
                                 jQuery(function() {
                                     Wix.setHeight(
                                         jQuery('body').height() + 15
@@ -273,12 +273,13 @@
                                 $('#editorDemo').removeClass('mobile');
                                 $('#editorBlocked').removeClass('mobile');
                             }
-                            $('#editorDemo').addClass('showDemo');
+                            console.log("********************WIDGET: before add class show demo");
+                            $('#editorDemo').attr('class','showDemo');
                             if(event.data.status == statusEnum.BLOCKED){
                                 console.log("here: editorBlocked");
                                 var data = '<div class="comp_limit_container"><div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br><span>Note: This message will not be visible in your site</span></div></div>';
                                 $("#editorBlocked:not(:has(>div))").append(data);
-                                $('body').addClass('blocked');
+                                $('body').attr('class','blocked');
                             }
                             else if(event.data.status == statusEnum.VISIBLE){
                                 console.log("here: editorDemo");
