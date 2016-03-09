@@ -98,26 +98,25 @@
             var myCompId = Wix.Utils.getCompId();
 
             function getComponentInfo(){
-                return $q(function(resolve, reject) {
-                    Wix.getComponentInfo(
-                        function (data) {
-                            if (!data) {
-                                reject(data);
-                            }
-                            resolve(data);
-                        });
-                });
+                var deferred = $q.defer();
+                Wix.getComponentInfo(function (data) {
+                        if (!data) {
+                            deferred.reject(data);
+                        }
+                        deferred.resolve(data);
+                    });
+                return deferred.promise;
             }
 
             function getCurrentPageId(){
-                return $q(function(resolve, reject) {
-                    Wix.getCurrentPageId(function(pageId) {
-                        if (!pageId) {
-                            reject(pageId);
-                        }
-                        resolve(pageId);
-                    });
+                var deferred = $q.defer();
+                Wix.getCurrentPageId(function(pageId) {
+                    if (!pageId) {
+                        deferred.reject(pageId);
+                    }
+                    deferred.resolve(pageId);
                 });
+                return deferred.promise;
             }
 
             getComponentInfo()
