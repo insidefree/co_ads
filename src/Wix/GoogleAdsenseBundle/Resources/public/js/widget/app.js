@@ -188,6 +188,8 @@
                             if(event.data.status == statusEnum.BLOCKED){
                                 $rootScope.liveSiteEmpty = true;
                                 console.log("here: liveSiteEmpty");
+                                //$( "#liveSiteCode div" ).remove();
+                                $( "#adsense_container ins" ).remove();
                             }
                             // status visible and user connected adsense account
                             else if(window.code){
