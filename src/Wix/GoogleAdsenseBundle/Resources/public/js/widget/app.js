@@ -189,18 +189,21 @@
                                 $rootScope.liveSiteEmpty = true;
                                 console.log("here: liveSiteEmpty");
                                 //$( "#liveSiteCode div" ).remove();
-                                $( "#adsense_container ins" ).remove();
+                                $('body').removeClass('live_site_demo');
+                                $('body').addClass('live_site_empty');
                             }
                             // status visible and user connected adsense account
                             else if(window.code){
                                 console.log("here: liveSiteCode");
                                 $http.get(Router.url('ad')).success(function(data) {
+                                    $('body').removeClass('live_site_empty');
                                     $('#liveSiteCode').append(data);
                                 });
                             }
                             // status visible and account of google demo
                             else{
                                 console.log("here: liveSiteDemo");
+                                $('body').removeClass('live_site_empty');
                                 $('body').addClass('live_site_demo');
                                 $http.get(Router.url('demo')).success(function(data) {
                                     var width;
