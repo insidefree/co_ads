@@ -325,7 +325,7 @@
             });
 
             /**
-             * handle user pagination
+             * handle user navigate pages
              */
             Wix.addEventListener(Wix.Events.PAGE_NAVIGATION, function(data){
                 console.log("WIDGET: PAGE_NAVIGATION  ");

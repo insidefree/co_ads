@@ -192,6 +192,7 @@
 
         for(var i = 0; i <  comps[pageExists.pageId].length; i++){
             if(comps[pageExists.pageId][i].compId == compId){
+                console.log("update page:",pageExists.pageId,componentInfo.pageId);
                 pageToMove = comps[pageExists.pageId][i];
                 comps[pageExists.pageId].splice(i, 1);
                 comps[componentInfo.pageId].push({
