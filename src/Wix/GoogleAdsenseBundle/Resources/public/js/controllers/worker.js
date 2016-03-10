@@ -44,8 +44,7 @@
             }
             else if(pageExists.showOnAllPages !== componentInfo.showOnAllPages){
                 updatePage(compId, pageExists.page, componentInfo);
-                // keep same status
-                statusComp = pageExists.page.status;
+                return;
             }
             else{
                 console.log("WORKER: exists with "+ pageExists.page.status+"update to "+ statusComp);
@@ -200,7 +199,14 @@
                     'compId' : compId,
                     'status' : pageToMove.status
                 });
-                return;
+            }
+        }
+        // because we update page and status was changed
+        var dataRelease = releaseBlockedComp(componentInfo.appPageId);
+        if(dataRelease && dataRelease.length) {
+            for (var i = 0; i < dataRelease.length; i++) {
+                console.log("WORKER: sendAllowWidget from page navigation");
+                sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, componentInfo.pageId, dataRelease[i].allPages);
             }
         }
     }
@@ -241,9 +247,9 @@
         var allPagesLen   = comps["allPages"] ? comps["allPages"].length : 0;
         for(var j = 0; j < allPagesLen; j++){
             // when exists on page 3 ad, blocked other visible components
-            if(countAllPages >= 3 && comps[page][j].status == statusEnum.VISIBLE){
-                comps[page][j].status = statusEnum.BLOCKED;
-                dataRelease.push(comps[page][j]);
+            if(countAllPages >= 3 && comps["allPages"][j].status == statusEnum.VISIBLE){
+                comps["allPages"][j].status = statusEnum.BLOCKED;
+                dataRelease.push(comps["allPages"][j]);
             }
             // count all pages visible
             if(countAllPages < 3 && comps["allPages"][j].status == statusEnum.VISIBLE){
