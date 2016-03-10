@@ -98,39 +98,42 @@
             var myCompId = Wix.Utils.getCompId();
 
             function getComponentInfo(){
-                return new Promise(function(resolve, reject) {
-                    Wix.getComponentInfo(
-                        function (data) {
+                var deferred = $q.defer();
+                Wix.getComponentInfo(
+                    function (data) {
+                        $rootScope.$apply(function() {
                             if (!data) {
-                                reject(data);
+                                deferred.reject(data);
                             }
-                            resolve(data);
+                            deferred.resolve(data);
                         });
-                });
-
+                    });
+                return deferred.promise;
             }
+
             function getCurrentPageId(){
-                return new Promise(function(resolve, reject) {
-                    Wix.getCurrentPageId(function(pageId) {
+                var deferred = $q.defer();
+                Wix.getCurrentPageId(function(pageId) {
+                    $rootScope.$apply(function() {
                         if (!pageId) {
-                            reject(pageId);
+                            deferred.reject(pageId);
                         }
-                        resolve(pageId);
+                        deferred.resolve(pageId);
                     });
                 });
-
+                return deferred.promise;
             }
 
             getComponentInfo()
                 .then(function(componentInfo){
                     if (!componentInfo) {
-                        return Promise.reject();
+                        return $q.reject();
                     }
-                    return Promise.all([getCurrentPageId(), componentInfo]);
+                    return $q.all([getCurrentPageId(), componentInfo]);
                 })
                 .then(function(values){
-                    var pageId = values[0];
-                    var componentInfo = values[1];
+                    var pageId              = values[0];
+                    var componentInfo       = values[1];
                     componentInfo.appPageId = pageId;
                     console.log('getComponentInfo=>',componentInfo);
                     /**
@@ -305,9 +308,9 @@
                 getComponentInfo()
                     .then(function(componentInfo){
                         if (!componentInfo) {
-                            return Promise.reject();
+                            return $q.reject();
                         }
-                        return Promise.all([getCurrentPageId(), componentInfo]);
+                        return $q.all([getCurrentPageId(), componentInfo]);
                     })
                     .then(function(values){
                         var pageId = values[0];
