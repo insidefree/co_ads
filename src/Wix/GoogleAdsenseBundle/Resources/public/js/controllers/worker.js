@@ -139,6 +139,9 @@
     function isExists(compId){
         var showOnAllPages;
         for(var page in comps){
+            if ( !comps.hasOwnProperty(page) ) {
+                continue;
+            }
             var pageLen = comps[page] ? comps[page].length : 0;
             for(var j = 0; j < pageLen; j++) {
                 if (comps[page][j].compId == compId) {
@@ -204,9 +207,9 @@
         // because we update page and status was changed
         var dataRelease = releaseBlockedComp(componentInfo.appPageId);
         if(dataRelease && dataRelease.length) {
-            for (var i = 0; i < dataRelease.length; i++) {
+            for (var j = 0; j < dataRelease.length; j++) {
                 console.log("WORKER: sendAllowWidget from page navigation");
-                sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, componentInfo.pageId, dataRelease[i].allPages);
+                sendAllowWidget(dataRelease[j].compId, dataRelease[j].status, componentInfo.pageId, dataRelease[j].allPages);
             }
         }
     }
@@ -240,7 +243,7 @@
      * @returns {Array}
      */
     function releaseBlockedComp(page){
-        var countComp     = 0;
+        var countComp;
         var countAllPages = 0;
         var dataRelease   = [];
         // check if exists blocked in all pages

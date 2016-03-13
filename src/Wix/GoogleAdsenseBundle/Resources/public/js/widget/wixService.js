@@ -49,6 +49,33 @@
         }
 
         /**
+         * Return obj with all component info attributes + appPageId
+         * @returns Promise
+         */
+        function getComponentInfoWithAppPageId() {
+            var deferred = $q.defer();
+            getComponentInfo()
+                .then(function (componentInfo) {
+                    if (!componentInfo) {
+                        return $q.reject();
+                    }
+                    return $q.all([wixService.getCurrentPageId(), componentInfo]);
+                })
+                .then(function (values) {
+                    var pageId = values[0];
+                    var componentInfo = values[1];
+                    componentInfo.appPageId = pageId;
+                    $rootScope.$apply(function() {
+                        if (!componentInfo) {
+                            deferred.reject(componentInfo);
+                        }
+                        deferred.resolve(componentInfo);
+                    });
+                });
+            return deferred.promise;
+        }
+
+        /**
          *
          * @returns String
          */
@@ -122,16 +149,17 @@
         //==============================
 
         return {
-            init                        : init,
-            getComponentInfo            : getComponentInfo,
-            getCurrentPageId            : getCurrentPageId,
-            getDeviceType               : getDeviceType,
-            getCompId                   : getCompId,
-            getOrigCompId               : getOrigCompId,
-            getInstanceId               : getInstanceId,
-            setHeight                   : setHeight,
-            getViewMode                 : getViewMode,
-            addEventListener            : addEventListener
+            init                            : init,
+            getComponentInfo                : getComponentInfo,
+            getCurrentPageId                : getCurrentPageId,
+            getComponentInfoWithAppPageId   : getComponentInfoWithAppPageId,
+            getDeviceType                   : getDeviceType,
+            getCompId                       : getCompId,
+            getOrigCompId                   : getOrigCompId,
+            getInstanceId                   : getInstanceId,
+            setHeight                       : setHeight,
+            getViewMode                     : getViewMode,
+            addEventListener                : addEventListener
         };
     }
   ]);
