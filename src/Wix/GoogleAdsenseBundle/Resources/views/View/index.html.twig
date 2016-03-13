@@ -73,11 +73,10 @@
         }
     </style>
 </head>
-<body>
+<body data-ng-controller="layoutCtrl">
 
     <!-- adsense advertisement -->
     <div style="text-align: center" id="adsense_container">
-        <div data-ng-show="$root.liveSiteEmpty"><div class="empty"></div></div>
         <div id="liveSiteCode"></div>
         <div id="liveSiteDemo"></div>
         <div id="editorBlocked"></div>
@@ -107,8 +106,6 @@
         ga('send', 'pageview');
 
     </script>
-    {#<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>#}
-    {#<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>#}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <!-- fos js routing bundle -->
@@ -128,7 +125,9 @@
         {% javascripts filter='?yui_js'
         '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular.min.js'
         '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular-sanitize.min.js'
-        '@WixGoogleAdsenseBundle/Resources/public/js/widget/app.js' %}
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/app.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/wixService.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/layoutCtrl.js'%}
         <script type="text/javascript" src="{{ asset_url }}"></script>
 
 
