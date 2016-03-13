@@ -80,7 +80,7 @@
         var compId = componentInfo.compId;
 
         updateCompId(compId, statusEnum.DELETED, componentInfo.pageId);
-        console.log('WORKER: deleted widget',event);
+        console.log('################################################WORKER: deleted widget',event);
         var currentPage = componentInfo.pageId ? componentInfo.pageId : componentInfo.appPageId;
         var dataRelease = releaseBlockedComp(currentPage);
         if(dataRelease && dataRelease.length > 0 ){
