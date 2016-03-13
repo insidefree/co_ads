@@ -1,9 +1,14 @@
 
-(function (window) {
+(function (angular) {
     angular.module('adsenseWidget')
-        .controller('layoutCtrl', '$scope', 'wixService', '$q', '$http', 'Router', function($scope, wixService, $q, $http, Router){
+        .controller('layoutCtrl', ['$scope', 'wixService', '$q', '$http', 'Router', function($scope, wixService, $q, $http, Router){
 
             var myCompId = wixService.getCompId();
+            var constants      = {
+                'EDITOR'   : 'editor',
+                'PREVIEW'  : 'preview',
+                'MOBILE'   : 'mobile'
+            };
 
             wixService.getComponentInfo()
                 .then(function(componentInfo){
@@ -29,12 +34,11 @@
              */
             Wix.PubSub.subscribe("ALLOW_WIDGET", function(event){
 
-
                 var is_mobile = false;
                 // handle only my responses
                 if(event.data.origin == myCompId){
                     // set if mobile
-                    if(wixService.getDeviceType() == 'mobile' ||
+                    if(wixService.getDeviceType() == constants.MOBILE ||
                         screen.width < 500 ||
                         navigator.userAgent.match(/Android/i) ||
                         navigator.userAgent.match(/webOS/i) ||
@@ -49,7 +53,7 @@
                         'DELETED'  : 'deleted',
                         'BLOCKED'  : 'blocked'
                     };
-                    if(wixService.getViewMode() === 'editor' ) {
+                    if(wixService.getViewMode() === constants.EDITOR ) {
                         Wix.Data.Public.set("statusComp" + myCompId,
                             event.data.status,
                             {scope: 'COMPONENT'},
@@ -61,7 +65,7 @@
                             });
                     }
                     // case live site
-                    if(wixService.getViewMode() !== 'editor' && wixService.getViewMode() !== 'preview'){
+                    if(wixService.getViewMode() !== constants.EDITOR && wixService.getViewMode() !== constants.PREVIEW){
                         // status blocked - when there are more than 3 comp
                         if(event.data.status == statusEnum.BLOCKED){
                             console.log("here: liveSiteEmpty");
@@ -212,5 +216,5 @@
                 Wix.PubSub.publish("PAGE_NAVIGATION", {compId: wixService.getCompId(), eventData: data}, true);
             });
 
-        });
-})();
+        }]);
+})(angular);

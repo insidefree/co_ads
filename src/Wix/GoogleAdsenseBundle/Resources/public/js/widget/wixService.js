@@ -3,7 +3,7 @@
 (function () {
 
     angular.module('adsenseWidget')
-        .factory('WixService', ['$q', function ($q) {
+        .service('wixService', ['$q', '$rootScope', function ($q, $rootScope) {
 
         //==============================
         //   FUNCTION DECLARATIONS     =
