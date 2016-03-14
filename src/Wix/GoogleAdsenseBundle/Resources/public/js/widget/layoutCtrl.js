@@ -1,123 +1,117 @@
+'use strict';
 
 (function (angular) {
     angular.module('adsenseWidget')
         .controller('layoutCtrl', ['$scope', 'wixService', '$q', '$http', 'Router', function($scope, wixService, $q, $http, Router){
 
-            var myCompId  = wixService.getCompId();
-            var constants = {
-                'EDITOR'   : 'editor',
-                'PREVIEW'  : 'preview',
-                'MOBILE'   : 'mobile'
-            };
-            // status options
-            var statusEnum = {
-                'VISIBLE'  : 'visible',
-                'DELETED'  : 'deleted',
-                'BLOCKED'  : 'blocked'
-            };
+            var myCompId         = wixService.getCompId();
+            var is_mobile        = false;
             var $body            = $('body');
             var $container       = $('#adsense_container');
             var $editorDemo      = $('#editorDemo');
             var $editorBlocked   = $('#editorBlocked');
-            var is_mobile        = false;
+            // view mode options
+            var viewModeEnum = {
+                EDITOR   : 'editor',
+                PREVIEW  : 'preview',
+                MOBILE   : 'mobile'
+            };
+            // status options
+            var statusEnum = {
+                VISIBLE  : 'visible',
+                DELETED  : 'deleted',
+                BLOCKED  : 'blocked'
+            };
 
+            /**
+             * When widget load trigger the Worker to register comp
+             */
             wixService.getComponentInfoWithAppPageId()
                 .then(function(componentInfo){
                     console.log('getComponentInfo=>',componentInfo);
                     if(!componentInfo){
                         return;
                     }
-                    /*
-                        when widget load trigger the worker to register comp
-                     */
+                    // trigger worker
                     Wix.PubSub.publish("WIDGET_LOAD", {componentInfo: componentInfo}, true);
                 });
 
-
             /**
-             * after register to worker, listen to answer from worker which status this comp
+             * After register comp, listen to answer from Worker with status of comp
              */
             Wix.PubSub.subscribe("ALLOW_WIDGET", function(event){
                 // handle only my responses
-                if(event.data.origin == myCompId){
-                    // set if mobile
-                    if(wixService.getDeviceType() == constants.MOBILE ||
-                        screen.width < 500 ||
-                        navigator.userAgent.match(/Android/i) ||
-                        navigator.userAgent.match(/webOS/i) ||
-                        navigator.userAgent.match(/iPhone/i) ||
-                        navigator.userAgent.match(/iPod/i))  {
-                        is_mobile = true;
+                if(event.data.origin !== myCompId) {
+                    return;
+                }
+                is_mobile = isMobile();
+                console.log("WIDGET: ", myCompId, event);
+                // In editor view mode, set status of comp in wix data for using the settings
+                if(wixService.getViewMode() === viewModeEnum.EDITOR ) {
+                    wixService.setPublicData("statusComp" + myCompId,
+                        event.data.status,
+                        {scope: 'COMPONENT'},
+                        function (d) {
+                            console.log('widget', d, event.data.status);
+                        },
+                        function (f) {
+                            console.log(f);
+                        });
+                }
+                // case live site
+                if(wixService.getViewMode() !== viewModeEnum.EDITOR && wixService.getViewMode() !== viewModeEnum.PREVIEW){
+                    // status blocked - when there are more than 3 comp on page
+                    if(event.data.status == statusEnum.BLOCKED){
+                        console.log("here: liveSiteEmpty");
+                        $body.removeClass('live_site_demo')
+                             .addClass('live_site_empty');
                     }
-                    console.log("WIDGET: ", myCompId, event);
-                    if(wixService.getViewMode() === constants.EDITOR ) {
-                        Wix.Data.Public.set("statusComp" + myCompId,
-                            event.data.status,
-                            {scope: 'COMPONENT'},
-                            function (d) {
-                                console.log('widget', d, event.data.status);
-                            },
-                            function (f) {
-                                console.log(f);
-                            });
+                    // status visible and user connected adsense account
+                    else if(window.code){
+                        console.log("here: liveSiteCode");
+                        $http.get(Router.url('ad')).success(function(data) {
+                            $body.removeClass('live_site_empty');
+                            $('#liveSiteCode').append(data);
+                        });
                     }
-                    // case live site
-                    if(wixService.getViewMode() !== constants.EDITOR && wixService.getViewMode() !== constants.PREVIEW){
-                        // status blocked - when there are more than 3 comp
-                        if(event.data.status == statusEnum.BLOCKED){
-                            console.log("here: liveSiteEmpty");
-                            $body.removeClass('live_site_demo')
-                                 .addClass('live_site_empty');
-                        }
-                        // status visible and user connected adsense account
-                        else if(window.code){
-                            console.log("here: liveSiteCode");
-                            $http.get(Router.url('ad')).success(function(data) {
-                                $body.removeClass('live_site_empty');
-                                $('#liveSiteCode').append(data);
-                            });
-                        }
-                        // status visible and account of google demo
-                        else{
-                            console.log("here: liveSiteDemo");
-                            $body.removeClass('live_site_empty')
-                                 .addClass('live_site_demo');
-                            $http.get(Router.url('demo')).success(function(data) {
-                                loadLiveSiteDemo(data);
-                            });
-                        }
-                    }
-                    // case editor / preview
+                    // status visible and user is not connected, connected to Wix account
                     else{
-                        if(is_mobile){
-                            $editorDemo.addClass('mobile');
-                            $editorBlocked.addClass('mobile');
-                            jQuery(function() {
-                                wixService.setHeight( jQuery('body').height() + 15 );
-                            });
-                        }
-                        else{
-                            $editorDemo.removeClass('mobile');
-                            $editorBlocked.removeClass('mobile');
-                        }
-                        $editorDemo.addClass('showDemo');
-                        if(event.data.status == statusEnum.BLOCKED){
-                            console.log("here: editorBlocked");
-                            var data = '<div class="comp_limit_container"><div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br><span>Note: This message will not be visible in your site</span></div></div>';
-                            $("#editorBlocked:not(:has(>div))").append(data);
-                            $body.addClass('blocked');
-                        }
-                        else if(event.data.status == statusEnum.VISIBLE){
-                            console.log("here: editorDemo");
-                            $( "#editorBlocked div" ).remove();
-                            $body.removeClass('blocked');
-                        }
+                        console.log("here: liveSiteDemo");
+                        $body.removeClass('live_site_empty')
+                             .addClass('live_site_demo');
+                        $http.get(Router.url('demo')).success(function(data) {
+                            loadLiveSiteDemo(data, $container);
+                        });
                     }
                 }
+                // case editor/preview mode
+                else{
+                    if(is_mobile){
+                        $editorDemo.addClass('mobile');
+                        $editorBlocked.addClass('mobile');
+                        jQuery(function() {
+                            wixService.setHeight( jQuery('body').height() + 15 );
+                        });
+                    }
+                    else{
+                        $editorDemo.removeClass('mobile');
+                        $editorBlocked.removeClass('mobile');
+                    }
+                    $editorDemo.addClass('showDemo');
+                    if(event.data.status == statusEnum.BLOCKED){
+                        console.log("here: editorBlocked");
+                        $body.addClass('blocked');
+                    }
+                    else if(event.data.status == statusEnum.VISIBLE){
+                        console.log("here: editorDemo");
+                        $body.removeClass('blocked');
+                    }
+                }
+
             }, true);
 
             /**
-             * handle components deleted
+             * Handle component deleted
              */
             wixService.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
                 console.log("=============================================WIDGET: component deleted ");
@@ -126,36 +120,33 @@
                     url: Router.path('deleteComponent')
                 });
 
+                // When component deleted, trigger the Worker to update status of comp.
                 wixService.getComponentInfoWithAppPageId()
                     .then(function(componentInfo){
                         console.log('getComponentInfo=>',componentInfo);
                         if(!componentInfo){
                             return;
                         }
-                        /*
-                          call worker to update that this component deleted
-                         */
                         Wix.PubSub.publish("DELETED_WIDGET", {componentInfo: componentInfo}, true);
                     });
                 return deleteComponent;
             });
 
             /**
-             * handle user navigate pages
+             * Handle user navigate pages
              */
             wixService.addEventListener(Wix.Events.PAGE_NAVIGATION, function(data){
                 console.log("WIDGET: PAGE_NAVIGATION  ");
-                /*
-                 call worker to release comps, prefer all pages
-                 */
+                // When user navigate pages, trigger the Worker to release comps, prefer comps all pages.
                 Wix.PubSub.publish("PAGE_NAVIGATION", {compId: wixService.getCompId(), eventData: data}, true);
             });
 
             /**
-             * load google ads demo
+             * Load google ads connected to wix account demo
              * @param data
+             * @param container
              */
-            function loadLiveSiteDemo(data){
+            function loadLiveSiteDemo(data, container){
                 var width;
                 var height;
                 if (is_mobile) {
@@ -206,14 +197,26 @@
 
                 var w = document.write;
                 document.write = function (content) {
-                    $container.innerHTML = content;
+                    container.innerHTML = content;
                     document.write = w;
                 };
                 var script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.src = 'http://pagead2.googlesyndication.com/pagead/show_ads.js';
-                $container.append(script);
+                container.append(script);
             }
 
+            /**
+             * Check is mobile
+             * @returns {boolean}
+             */
+            function isMobile(){
+                return wixService.getDeviceType() == viewModeEnum.MOBILE ||
+                        screen.width < 500 ||
+                        navigator.userAgent.match(/Android/i) ||
+                        navigator.userAgent.match(/webOS/i) ||
+                        navigator.userAgent.match(/iPhone/i) ||
+                        navigator.userAgent.match(/iPod/i)
+            }
         }]);
 })(angular);

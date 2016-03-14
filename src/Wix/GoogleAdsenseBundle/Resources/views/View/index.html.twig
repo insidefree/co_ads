@@ -71,6 +71,9 @@
         .live_site_empty iframe{
             visibility: hidden;
         }
+        .blocked #editorBlocked{
+            visibility: visible !important;
+        }
     </style>
 </head>
 <body data-ng-controller="layoutCtrl">
@@ -79,7 +82,14 @@
     <div style="text-align: center" id="adsense_container">
         <div id="liveSiteCode"></div>
         <div id="liveSiteDemo"></div>
-        <div id="editorBlocked"></div>
+        <div id="editorBlocked" style="visibility: hidden">
+            <div class="comp_limit_container">
+                <div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.
+                    <br><br>
+                    <span>Note: This message will not be visible in your site</span>
+                </div>
+            </div>
+        </div>
         <div id="editorDemo" style="visibility: hidden">
             {% if app.request.get('viewMode') == 'editor' or app.request.get('viewMode') == 'preview' %}
                 {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}

@@ -6,21 +6,22 @@
 
     /* Worker Controller */
 
-    var comps           = {};
-    comps["allPages"]   = [];
+    var comps           = {
+        allPages: []
+    };
     var statusEnum      = {
-        'VISIBLE'  : 'visible',
-        'DELETED'  : 'deleted',
-        'BLOCKED'  : 'blocked'
+        VISIBLE  : 'visible',
+        DELETED  : 'deleted',
+        BLOCKED  : 'blocked'
     };
 
     /**
-     * when widget loaded check the status of the comp and load the view respectively
+     * When widget loaded check status of the comp and send to widget
      */
     Wix.Worker.PubSub.subscribe('WIDGET_LOAD', function(event)
     {
         // get comp details : pageId, allPages indication and ...
-       var componentInfo = event.data.componentInfo;
+        var componentInfo = event.data.componentInfo;
         // get page details failed
         if(!componentInfo){
             return;
@@ -32,23 +33,24 @@
             comps[pageId] = [];
         }
 
-        var pageExists      = isExists(compId);
-        var statusComp      = checkCompStatus(componentInfo);
-        // comp exists in comps array
-        if(pageExists){
-            // if visible status load widget else update the new status
-            if(pageExists.page.status === statusEnum.VISIBLE && pageExists.showOnAllPages === componentInfo.showOnAllPages){
-                console.log("WORKER: comps: ",comps);
-                console.log("WORKER: exists comp visible");
-                return sendAllowWidget(compId, statusEnum.VISIBLE, pageId, componentInfo.showOnAllPages);
+        var compExists      = isExists(compId);
+        var statusComp      = getCompStatus(componentInfo);
+        // when comp exists in comps array
+        if(compExists){
+            // if visible status load widget
+            if(compExists.comp.status === statusEnum.VISIBLE && compExists.showOnAllPages === componentInfo.showOnAllPages){
+                console.log("WORKER: exists comp visible comps: ",comps);
+                return sendAllowWidget(compId, statusEnum.VISIBLE, componentInfo.showOnAllPages);
             }
-            else if(pageExists.showOnAllPages !== componentInfo.showOnAllPages){
-                updatePage(compId, pageExists.page, componentInfo);
+            else if(compExists.showOnAllPages !== componentInfo.showOnAllPages){
+                // when user change from all pages to specific page and from specific page to all pages, update the comp page
+                updateCompPage(compId, compExists.comp, componentInfo);
                 return;
             }
             else{
-                console.log("WORKER: exists with "+ pageExists.page.status+"update to "+ statusComp);
-                updateCompId(compId, statusComp, pageId);
+                console.log("WORKER: exists with "+ compExists.comp.status+"update to "+ statusComp);
+                // update status of comp
+                updateCompStatus(compId, statusComp, pageId);
             }
         }
         else{
@@ -68,74 +70,45 @@
                 });
             }
         }
-        sendAllowWidget(compId, statusComp, pageId, componentInfo.showOnAllPages);
+        // trigger widget with status of comp
+        sendAllowWidget(compId, statusComp, componentInfo.showOnAllPages);
         console.log("WORKER: comps: ",comps);
     }, true);
 
     /**
-     * when comp delete update status in comps array and try to release blocked component
+     * When comp deleted update status in comps array and try to release blocked component
      */
     Wix.Worker.PubSub.subscribe('DELETED_WIDGET', function(event) {
-        var componentInfo = event.data.componentInfo;
-        var compId = componentInfo.compId;
+        var componentInfo   = event.data.componentInfo;
+        var compId          = componentInfo.compId;
+        var currentPage     = componentInfo.pageId ? componentInfo.pageId : componentInfo.appPageId;
 
-        updateCompId(compId, statusEnum.DELETED, componentInfo.pageId);
-        console.log('################################################WORKER: deleted widget',event);
-        var currentPage = componentInfo.pageId ? componentInfo.pageId : componentInfo.appPageId;
-        var dataRelease = releaseBlockedComp(currentPage);
-        if(dataRelease && dataRelease.length > 0 ){
-            for(var i = 0; i < dataRelease.length; i++){
-                console.log("WORKER: sendAllowWidget from delete widget");
-                sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, componentInfo.pageId, dataRelease[i].allPages);
-            }
-        }
-
-
+        updateCompStatus(compId, statusEnum.DELETED, componentInfo.pageId);
+        releaseBlockedComp(currentPage);
     }, true);
 
     var oldToPage   = "";
     var oldFromPage = "";
-
+    /**
+     * When user navigate between pages, try to release blocked all pages
+     */
     Wix.Worker.PubSub.subscribe('PAGE_NAVIGATION', function(event) {
         var eventData = event.data.eventData;
         if(oldToPage !== eventData.toPage && oldFromPage !== eventData.fromPage){
             oldToPage   = eventData.toPage;
             oldFromPage = eventData.fromPage;
-            console.log('WORKER: page navigation',event);
-            var dataRelease = releaseBlockedComp(eventData.toPage);
-            if(dataRelease && dataRelease.length) {
-                for (var i = 0; i < dataRelease.length; i++) {
-                    console.log("WORKER: sendAllowWidget from page navigation");
-                    sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, eventData.toPage, dataRelease[i].allPages);
-                }
-            }
+            releaseBlockedComp(eventData.toPage);
+            blockedVisibleComp(eventData.toPage);
             console.log("===================release",comps);
         }
     }, true);
 
-    function checkCompStatus(componentInfo){
-        var currentPage = componentInfo.pageId ? componentInfo.pageId : componentInfo.appPageId;
-        var dataRelease = releaseBlockedComp(currentPage);
-        if(dataRelease && dataRelease.length){
-            for(var i = 0; i < dataRelease.length; i++){
-                console.log("WORKER: sendAllowWidget from releaseBlockedComp");
-                sendAllowWidget(dataRelease[i].compId, dataRelease[i].status, currentPage, dataRelease[i].allPages);
-            }
-        }
-
-        var countComp = getCountVisible(currentPage);
-        // Because we now add another one
-        if( countComp > 2){
-            return statusEnum.BLOCKED;
-        }
-        return statusEnum.VISIBLE;
-
-    }
-
     /**
-     check if comp exists and return false or page details
-     runs on all array comps for component that copy/paste/cut/changed to all pages
-      */
+     * Check if comp exists (when user cut/copy/paste/changed to all_pages)
+     * and return page details or false when not exists
+     * @param compId
+     * @returns {*}
+     */
     function isExists(compId){
         var showOnAllPages;
         for(var page in comps){
@@ -145,27 +118,36 @@
             var pageLen = comps[page] ? comps[page].length : 0;
             for(var j = 0; j < pageLen; j++) {
                 if (comps[page][j].compId == compId) {
-                    console.log("===========================isExists: found ", comps[page][j]);
                     showOnAllPages = !comps[page][j].pageId;
-                    return {page: comps[page][j], showOnAllPages: showOnAllPages};
+                    return {comp: comps[page][j], showOnAllPages: showOnAllPages};
                 }
             }
         }
         return false;
     }
 
-    function sendAllowWidget(compId, status, page, showOnAllPages){
+    /**
+     * Trigger widget with comp details (compId, status, allPages)
+     * @param compId
+     * @param status
+     * @param showOnAllPages
+     */
+    function sendAllowWidget(compId, status, showOnAllPages){
         var data    =  {
-            'data' : "WORKER: there is " ,
-            'origin' : compId,
-            'status' : status,
+            'origin'   : compId,
+            'status'   : status,
             'allPages' : showOnAllPages
         };
         Wix.Worker.PubSub.publish('ALLOW_WIDGET', data, true);
     }
 
-    function updateCompId(compId, status, page){
-
+    /**
+     * When status of comp changed, update the new status
+     * @param compId
+     * @param status
+     * @param page
+     */
+    function updateCompStatus(compId, status, page){
         // check if exists in all pages
         var allPagesLen   = comps["allPages"] ? comps["allPages"].length : 0;
         for(var j = 0; j < allPagesLen; j++){
@@ -174,7 +156,6 @@
                 return;
             }
         }
-
         // check if exists in current page
         var pageLen       = comps[page] ? comps[page].length : 0;
         for(var i = 0; i < pageLen; i++){
@@ -183,11 +164,15 @@
                 return;
             }
         }
-
     }
 
-    // update widget allPages <==> pageId
-    function updatePage(compId, pageExists, componentInfo){
+    /**
+     * When user change from all pages to specific page and from specific page to all pages, update the comp page
+     * @param compId
+     * @param pageExists
+     * @param componentInfo
+     */
+    function updateCompPage(compId, pageExists, componentInfo){
         pageExists.pageId    = !pageExists.pageId ? "allPages" : pageExists.pageId;
         componentInfo.pageId = !componentInfo.pageId ? "allPages" : componentInfo.pageId;
         var pageToMove;
@@ -204,89 +189,147 @@
                 });
             }
         }
-        // because we update page and status was changed
-        var dataRelease = releaseBlockedComp(componentInfo.appPageId);
-        if(dataRelease && dataRelease.length) {
-            for (var j = 0; j < dataRelease.length; j++) {
-                console.log("WORKER: sendAllowWidget from page navigation");
-                sendAllowWidget(dataRelease[j].compId, dataRelease[j].status, componentInfo.pageId, dataRelease[j].allPages);
-            }
+        // only when user change from specific page to all page, give priority to all pages and blocked specific page comp
+        if(componentInfo.showOnAllPages){
+            blockedVisibleComp(componentInfo.appPageId);
         }
     }
 
+    /**
+     * Get count of visible comps on current page
+     * @param currentPage
+     * @returns {number}
+     */
     function getCountVisible(currentPage){
-        var pageLen       = comps[currentPage] ? comps[currentPage].length : 0;
-        var allPagesLen   = comps["allPages"] ? comps["allPages"].length : 0;
-        var pageCount     = 0;
-        var allPagesCount = 0;
+        var pageCount     = getCountCurrentPageVisible(currentPage);
+        var allPagesCount = getCountAllPagesVisible();
 
+        return allPagesCount + pageCount;
+    }
+
+    /**
+     * Get count of visible comps, only comp all pages
+     * @returns {number}
+     */
+    function getCountAllPagesVisible(){
+        var allPagesLen   = comps["allPages"] ? comps["allPages"].length : 0;
+        var allPagesCount = 0;
+        // check count of all pages
+        for(var j = 0; j < allPagesLen; j++){
+            if(comps["allPages"][j].status == statusEnum.VISIBLE){
+                allPagesCount++;
+            }
+        }
+        return allPagesCount;
+    }
+
+    /**
+     * Get count of visible comps, only comp of current page
+     * @param currentPage
+     */
+    function getCountCurrentPageVisible(currentPage){
+        var pageLen       = comps[currentPage] ? comps[currentPage].length : 0;
+        var pageCount     = 0;
         // check count of current page
         for(var i = 0; i < pageLen; i++){
             if(comps[currentPage][i].status == statusEnum.VISIBLE){
                 pageCount++;
             }
         }
-
-        // check count of array all pages
-        for(var j = 0; j < allPagesLen; j++){
-            if(comps["allPages"][j].status == statusEnum.VISIBLE){
-                allPagesCount++;
-            }
-        }
-        return allPagesCount+pageCount;
-
+        return pageCount;
     }
 
     /**
-     * release blocked components to be visible and visible component to be blocked when give priority to all pages
-     * @param page
-     * @returns {Array}
+     * Get comp status, blocked comp when there are more than 3 ads on page
+     * @param componentInfo
+     * @returns {string}
      */
-    function releaseBlockedComp(page){
-        var countComp;
-        var countAllPages = 0;
-        var dataRelease   = [];
+    function getCompStatus(componentInfo){
+        var currentPage = componentInfo.pageId ? componentInfo.pageId : componentInfo.appPageId;
+        releaseBlockedComp(currentPage);
+
+        var countComp = getCountVisible(currentPage);
+        // Because we now add another one
+        if( countComp > 2){
+            return statusEnum.BLOCKED;
+        }
+        return statusEnum.VISIBLE;
+    }
+
+    /**
+     * Release blocked components to be visible give priority to all pages
+     * @param page
+     */
+    function releaseBlockedComp(page) {
+        var countComp   = getCountVisible(page);
+        var dataRelease = [];
         // check if exists blocked in all pages
-        var allPagesLen   = comps["allPages"] ? comps["allPages"].length : 0;
-        for(var j = 0; j < allPagesLen; j++){
-            // when exists on page 3 ad, blocked other visible components
-            if(countAllPages >= 3 && comps["allPages"][j].status == statusEnum.VISIBLE){
-                comps["allPages"][j].status = statusEnum.BLOCKED;
-                dataRelease.push(comps["allPages"][j]);
-            }
-            // count all pages visible
-            if(countAllPages < 3 && comps["allPages"][j].status == statusEnum.VISIBLE){
-                countAllPages++;
-            }
-            // release all pages from blocked when count < 3
-            if(countAllPages < 3 && comps["allPages"][j].status == statusEnum.BLOCKED){
+        var allPagesLen = comps["allPages"] ? comps["allPages"].length : 0;
+        for (var j = 0; countComp < 3 && j < allPagesLen; j++) {
+            if (comps["allPages"][j].status === statusEnum.BLOCKED) {
                 comps["allPages"][j].status = statusEnum.VISIBLE;
                 dataRelease.push(comps["allPages"][j]);
-                countAllPages++;
+                countComp++;
             }
         }
-        countComp = countAllPages;
         if(comps[page] && comps[page].length){
+            // check if exists blocked in current page
             var pageIdLen   = comps[page].length;
-            for(var i = 0; i < pageIdLen; i++){
-                console.log("===================release",dataRelease,countComp);
-                // when exists on page 3 ad, blocked other visible components
-                if(countComp >= 3 && comps[page][i].status == statusEnum.VISIBLE){
-                    comps[page][i].status = statusEnum.BLOCKED;
-                    dataRelease.push(comps[page][i]);
-                }
-                // count specific page visible
-                if(countComp < 3 && comps[page][i].status == statusEnum.VISIBLE){
-                    countComp++;
-                }
-                // release specific page from blocked when count < 3
-                if(countComp < 3 && comps[page][i].status == statusEnum.BLOCKED){
+            for(var i = 0; countComp < 3 && i < pageIdLen; i++){
+                if(comps[page][i].status == statusEnum.BLOCKED){
                     comps[page][i].status = statusEnum.VISIBLE;
                     dataRelease.push(comps[page][i]);
                     countComp++;
                 }
             }
         }
-        return dataRelease;
+        // trigger widget with the new status of comps
+        if(dataRelease && dataRelease.length){
+            for(var z = 0; z < dataRelease.length; z++){
+                sendAllowWidget(dataRelease[z].compId, dataRelease[z].status, dataRelease[z].allPages);
+            }
+        }
     }
+
+    /**
+     * Release all pages comp, when all pages visible < 3, and blocked visible comps of current page
+     * @param currentPage
+     */
+    function blockedVisibleComp(currentPage){
+        var countAllPages    = getCountAllPagesVisible();
+        var countCurrentPage = getCountCurrentPageVisible(currentPage);
+        var dataRelease      = [];
+
+        // check if exists blocked in all pages
+        var allPagesLen = comps["allPages"] ? comps["allPages"].length : 0;
+        for (var j = 0; countAllPages < 3 && j < allPagesLen; j++) {
+            if (comps["allPages"][j].status === statusEnum.BLOCKED) {
+                comps["allPages"][j].status = statusEnum.VISIBLE;
+                dataRelease.push(comps["allPages"][j]);
+                countAllPages++;
+            }
+        }
+
+        // blocked visible comp - current page
+        if(comps[currentPage] && comps[currentPage].length){
+            // check if exists blocked in current page
+            var pageIdLen   = comps[currentPage].length;
+            for(var i = 0; (countAllPages+countCurrentPage) > 3 && i < pageIdLen; i++){
+                if(comps[currentPage][i].status == statusEnum.VISIBLE){
+                    console.log("update current page from visible to blocked");
+                    comps[currentPage][i].status = statusEnum.BLOCKED;
+                    dataRelease.push(comps[currentPage][i]);
+                    countCurrentPage--;
+                }
+            }
+        }
+
+        // trigger widget with the new status of comps
+        if(dataRelease && dataRelease.length){
+            for(var z = 0; z < dataRelease.length; z++){
+                sendAllowWidget(dataRelease[z].compId, dataRelease[z].status, dataRelease[z].allPages);
+            }
+        }
+    }
+
 }(window));

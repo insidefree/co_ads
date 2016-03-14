@@ -59,18 +59,16 @@
                     if (!componentInfo) {
                         return $q.reject();
                     }
-                    return $q.all([wixService.getCurrentPageId(), componentInfo]);
+                    return $q.all([getCurrentPageId(), componentInfo]);
                 })
                 .then(function (values) {
                     var pageId = values[0];
                     var componentInfo = values[1];
                     componentInfo.appPageId = pageId;
-                    $rootScope.$apply(function() {
-                        if (!componentInfo) {
-                            deferred.reject(componentInfo);
-                        }
-                        deferred.resolve(componentInfo);
-                    });
+                    if (!componentInfo) {
+                        deferred.reject(componentInfo);
+                    }
+                    deferred.resolve(componentInfo);
                 });
             return deferred.promise;
         }
@@ -136,6 +134,20 @@
         }
 
         /**
+         *
+         * @param key
+         * @param value
+         * @param options
+         * @param onSuccess
+         * @param onFailure
+         * @description
+         * Set public data
+         */
+        function setPublicData(key, value, options, onSuccess, onFailure){
+            Wix.Data.Public.set(key, value, options, onSuccess, onFailure);
+        }
+
+        /**
          * @description
          * Get view mode
          * @returns {*}
@@ -159,6 +171,7 @@
             getInstanceId                   : getInstanceId,
             setHeight                       : setHeight,
             getViewMode                     : getViewMode,
+            setPublicData                   : setPublicData,
             addEventListener                : addEventListener
         };
     }
