@@ -190,9 +190,9 @@
             }
         }
         // only when user change from specific page to all page, give priority to all pages and blocked specific page comp
-        if(componentInfo.showOnAllPages){
-            blockedVisibleComp(componentInfo.appPageId);
-        }
+        //if(componentInfo.showOnAllPages){
+        //    blockedVisibleComp(componentInfo.appPageId);
+        //}
     }
 
     /**
