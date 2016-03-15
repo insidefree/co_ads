@@ -58,9 +58,19 @@
                             //    $window.location.reload();
                             //}, 4000);
 
-                        }).error(function(){
+                return {
+                    patch: patch
+                };
+            }])
 
-                        });
+        .factory("patchUpdatedDate", ['$http', 'Router',
+            function($http, Router){
+
+                function patch () {
+                    return $http({
+                        method: 'PATCH',
+                        url: Router.path('patchUpdatedDate'),
+                        data : angular.toJson({updated_date: new Date()})
                     });
                 }
 
