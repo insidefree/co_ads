@@ -1,6 +1,4 @@
-/**
- * Created by hagit on 1/18/16.
- */
+
 (function(window) {
     'use strict';
 
@@ -34,21 +32,18 @@
         }
 
         var compExists      = isExists(compId);
-        var statusComp      = getCompStatus(componentInfo);
+        var statusComp      = getDesiredStatus(componentInfo);
         // when comp exists in comps array
         if(compExists){
             // if visible status load widget
             if(compExists.comp.status === statusEnum.VISIBLE && compExists.showOnAllPages === componentInfo.showOnAllPages){
-                console.log("WORKER: exists comp visible comps: ",comps);
                 return sendAllowWidget(compId, statusEnum.VISIBLE, componentInfo.showOnAllPages);
             }
             else if(compExists.showOnAllPages !== componentInfo.showOnAllPages){
                 // when user change from all pages to specific page and from specific page to all pages, update the comp page
-                updateCompPage(compId, compExists.comp, componentInfo);
-                return;
+                return updateCompPage(compId, compExists.comp, componentInfo);
             }
             else{
-                console.log("WORKER: exists with "+ compExists.comp.status+"update to "+ statusComp);
                 // update status of comp
                 updateCompStatus(compId, statusComp, pageId);
             }
@@ -71,8 +66,7 @@
             }
         }
         // trigger widget with status of comp
-        sendAllowWidget(compId, statusComp, componentInfo.showOnAllPages);
-        console.log("WORKER: comps: ",comps);
+        return sendAllowWidget(compId, statusComp, componentInfo.showOnAllPages);
     }, true);
 
     /**
@@ -97,9 +91,10 @@
         if(oldToPage !== eventData.toPage && oldFromPage !== eventData.fromPage){
             oldToPage   = eventData.toPage;
             oldFromPage = eventData.fromPage;
+            // release blocked comps if there aren't 3 visible ads on current page
             releaseBlockedComp(eventData.toPage);
+            // give priority to all pages to be visible and blocked current page visible comps
             blockedVisibleComp(eventData.toPage);
-            console.log("===================release",comps);
         }
     }, true);
 
@@ -179,7 +174,6 @@
 
         for(var i = 0; i <  comps[pageExists.pageId].length; i++){
             if(comps[pageExists.pageId][i].compId == compId){
-                console.log("update page:",pageExists.pageId,componentInfo.pageId);
                 pageToMove = comps[pageExists.pageId][i];
                 comps[pageExists.pageId].splice(i, 1);
                 comps[componentInfo.pageId].push({
@@ -201,10 +195,7 @@
      * @returns {number}
      */
     function getCountVisible(currentPage){
-        var pageCount     = getCountCurrentPageVisible(currentPage);
-        var allPagesCount = getCountAllPagesVisible();
-
-        return allPagesCount + pageCount;
+        return getCountCurrentPageVisible(currentPage) + getCountAllPagesVisible();
     }
 
     /**
@@ -240,16 +231,16 @@
     }
 
     /**
-     * Get comp status, blocked comp when there are more than 3 ads on page
+     * Get desired comp status, blocked comp when there are more than 3 ads on page
      * @param componentInfo
      * @returns {string}
      */
-    function getCompStatus(componentInfo){
+    function getDesiredStatus(componentInfo){
         var currentPage = componentInfo.pageId ? componentInfo.pageId : componentInfo.appPageId;
         releaseBlockedComp(currentPage);
 
         var countComp = getCountVisible(currentPage);
-        // Because we now add another one
+        // Because now add another one
         if( countComp > 2){
             return statusEnum.BLOCKED;
         }
@@ -316,7 +307,6 @@
             var pageIdLen   = comps[currentPage].length;
             for(var i = 0; (countAllPages+countCurrentPage) > 3 && i < pageIdLen; i++){
                 if(comps[currentPage][i].status == statusEnum.VISIBLE){
-                    console.log("update current page from visible to blocked");
                     comps[currentPage][i].status = statusEnum.BLOCKED;
                     dataRelease.push(comps[currentPage][i]);
                     countCurrentPage--;

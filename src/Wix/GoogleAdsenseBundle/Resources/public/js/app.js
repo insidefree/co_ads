@@ -17,21 +17,21 @@
         });
     }])
     .run(['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
-        console.log("SETTINGS before load");
-            var origComp = Wix.Utils.getOrigCompId();
-            Wix.Data.Public.get("statusComp"+origComp,
+            var origComp        = Wix.Utils.getOrigCompId();
+            var $blockSettings  = $('#block_settings');
+
+            Wix.Data.Public.get('statusComp'+origComp,
                 { scope:  'COMPONENT'},
                 function(d) {
-                    var key = ('statusComp' + origComp);
+                    var key = 'statusComp' + origComp;
                     if( d[key] == 'blocked' ){
-                        $('#block_settings').addClass('blocked');
+                        $blockSettings.addClass('blocked');
                     }
                     else if ( d[key] == 'visible' ){
-                        $('#block_settings').removeClass('blocked');
+                        $blockSettings.removeClass('blocked');
                     }
                 },
                 function(f) {
-                    console.log(f);
                 });
     }]);
 }(window));

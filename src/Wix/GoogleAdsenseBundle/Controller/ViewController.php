@@ -61,9 +61,7 @@ class ViewController extends AppController
         }
 
         if ($componentLocal->hasAdUnit()) {
-            $params = array_merge($params, array(
-                'code' => $componentLocal->getAdCode()
-            ));
+            $params['code'] = $componentLocal->getAdCode();
         }
 
         return $params;
@@ -111,33 +109,5 @@ class ViewController extends AppController
         }
 
         return $params;
-    }
-
-
-    /**
-     * When user deletes his app from the editor we mark the component as soft-deleted
-     * When he removed the component but didn't click 'Save' in editor he will get the application again
-     * In such case (and only if the user itself did the action from the editor) we want to remove the
-     * soft-delete flag ("Re-enabled" the app)
-     * @param Component $component
-     */
-    private function checkIfNeedToReprovision(Component $component) {
-        $request = $this->getRequest();
-        $instance = $request->get('instance');
-
-        //Do not re-enable the component if the source of the request is not from the editor
-        if ( !in_array($request->get('viewMode'), array('editor', 'preview')) ) {
-            return;
-        }
-
-        $wixData = $this->get('wix_bridge')->parse($instance);
-
-        if ( $wixData->getPermissions() == "OWNER" ) {
-            if ( $component->getDeletedAt() != '' && $component->getDeletedAt() != null ) {
-                $component->setDeletedAt(null);
-                $this->getDocumentManager()->persist($component);
-                $this->getDocumentManager()->flush();
-            }
-        }
     }
 }

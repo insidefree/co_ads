@@ -9,10 +9,6 @@
         //   FUNCTION DECLARATIONS     =
         //==============================
 
-        function init() {
-
-        }
-
         /**
          * Return obj with all component info attributes
          * @returns Promise

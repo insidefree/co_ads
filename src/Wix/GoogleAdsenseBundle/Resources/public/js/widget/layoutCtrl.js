@@ -9,6 +9,7 @@
             var $body               = $('body');
             var $editorDemo         = $('#editorDemo');
             var $editorBlocked      = $('#editorBlocked');
+            var $liveSiteCode       = $('#liveSiteCode');
             var adsenseContainerId  = 'adsense_container';
             // view mode options
             var viewModeEnum = {
@@ -28,55 +29,48 @@
              */
             wixService.getComponentInfoWithAppPageId()
                 .then(function(componentInfo){
-                    console.log('getComponentInfo=>',componentInfo);
                     if(!componentInfo){
                         return;
                     }
                     // trigger worker
-                    Wix.PubSub.publish("WIDGET_LOAD", {componentInfo: componentInfo}, true);
+                    Wix.PubSub.publish('WIDGET_LOAD', {componentInfo: componentInfo}, true);
                 });
 
             /**
              * After register comp, listen to answer from Worker with status of comp
              */
-            Wix.PubSub.subscribe("ALLOW_WIDGET", function(event){
+            Wix.PubSub.subscribe('ALLOW_WIDGET', function(event){
                 // handle only my responses
                 if(event.data.origin !== myCompId) {
                     return;
                 }
                 is_mobile = isMobile();
-                console.log("WIDGET: ", myCompId, event);
                 // In editor view mode, set status of comp in wix data for using the settings
                 if(wixService.getViewMode() === viewModeEnum.EDITOR ) {
-                    wixService.setPublicData("statusComp" + myCompId,
+                    wixService.setPublicData('statusComp' + myCompId,
                         event.data.status,
                         {scope: 'COMPONENT'},
                         function (d) {
-                            console.log('widget', d, event.data.status);
                         },
                         function (f) {
-                            console.log(f);
                         });
                 }
                 // case live site
                 if(wixService.getViewMode() !== viewModeEnum.EDITOR && wixService.getViewMode() !== viewModeEnum.PREVIEW){
                     // status blocked - when there are more than 3 comp on page
                     if(event.data.status == statusEnum.BLOCKED){
-                        console.log("here: liveSiteEmpty");
                         $body.removeClass('live_site_demo')
                              .addClass('live_site_empty');
                     }
                     // status visible and user connected adsense account
                     else if(window.code){
-                        console.log("here: liveSiteCode");
                         $http.get(Router.url('ad')).success(function(data) {
                             $body.removeClass('live_site_empty');
-                            $('#liveSiteCode').append(data);
+                            $liveSiteCode.append(data);
                         });
                     }
                     // status visible and user is not connected, connected to Wix account
                     else{
-                        console.log("here: liveSiteDemo");
                         $body.removeClass('live_site_empty')
                              .addClass('live_site_demo');
                         $http.get(Router.url('demo')).success(function(data) {
@@ -90,7 +84,7 @@
                         $editorDemo.addClass('mobile');
                         $editorBlocked.addClass('mobile');
                         jQuery(function() {
-                            wixService.setHeight( jQuery('body').height() + 15 );
+                            wixService.setHeight( $body.height() + 15 );
                         });
                     }
                     else{
@@ -99,11 +93,9 @@
                     }
                     $editorDemo.addClass('showDemo');
                     if(event.data.status == statusEnum.BLOCKED){
-                        console.log("here: editorBlocked");
                         $body.addClass('blocked');
                     }
                     else if(event.data.status == statusEnum.VISIBLE){
-                        console.log("here: editorDemo");
                         $body.removeClass('blocked');
                     }
                 }
@@ -114,31 +106,22 @@
              * Handle component deleted
              */
             wixService.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
-                console.log("=============================================WIDGET: component deleted ");
-                var deleteComponent =  $http({
-                    method: 'DELETE',
-                    url: Router.path('deleteComponent')
-                });
-
                 // When component deleted, trigger the Worker to update status of comp.
                 wixService.getComponentInfoWithAppPageId()
                     .then(function(componentInfo){
-                        console.log('getComponentInfo=>',componentInfo);
                         if(!componentInfo){
                             return;
                         }
-                        Wix.PubSub.publish("DELETED_WIDGET", {componentInfo: componentInfo}, true);
+                        Wix.PubSub.publish('DELETED_WIDGET', {componentInfo: componentInfo}, true);
                     });
-                return deleteComponent;
             });
 
             /**
              * Handle user navigate pages
              */
             wixService.addEventListener(Wix.Events.PAGE_NAVIGATION, function(data){
-                console.log("WIDGET: PAGE_NAVIGATION  ");
                 // When user navigate pages, trigger the Worker to release comps, prefer comps all pages.
-                Wix.PubSub.publish("PAGE_NAVIGATION", {compId: wixService.getCompId(), eventData: data}, true);
+                Wix.PubSub.publish('PAGE_NAVIGATION', {compId: wixService.getCompId(), eventData: data}, true);
             });
 
             /**
@@ -166,7 +149,7 @@
                 // width and height
                 window.google_ad_height = height;
                 window.google_ad_width  = width;
-                window.google_ad_client = "pub-1786553880586297";
+                window.google_ad_client = 'pub-1786553880586297';
                 window.google_ad_format = width+'x'+height+'_as';
                 // type of ad
                 if(data.adUnit.type != 'IMAGE'){
