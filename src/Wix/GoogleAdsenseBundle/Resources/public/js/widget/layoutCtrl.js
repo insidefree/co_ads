@@ -4,12 +4,12 @@
     angular.module('adsenseWidget')
         .controller('layoutCtrl', ['$scope', 'wixService', '$q', '$http', 'Router', function($scope, wixService, $q, $http, Router){
 
-            var myCompId         = wixService.getCompId();
-            var is_mobile        = false;
-            var $body            = $('body');
-            var $container       = $('#adsense_container');
-            var $editorDemo      = $('#editorDemo');
-            var $editorBlocked   = $('#editorBlocked');
+            var myCompId            = wixService.getCompId();
+            var is_mobile           = false;
+            var $body               = $('body');
+            var $editorDemo         = $('#editorDemo');
+            var $editorBlocked      = $('#editorBlocked');
+            var adsenseContainerId  = 'adsense_container';
             // view mode options
             var viewModeEnum = {
                 EDITOR   : 'editor',
@@ -80,7 +80,7 @@
                         $body.removeClass('live_site_empty')
                              .addClass('live_site_demo');
                         $http.get(Router.url('demo')).success(function(data) {
-                            loadLiveSiteDemo(data, $container);
+                            loadLiveSiteDemo(data, adsenseContainerId);
                         });
                     }
                 }
@@ -144,9 +144,9 @@
             /**
              * Load google ads connected to wix account demo
              * @param data
-             * @param container
+             * @param containerId
              */
-            function loadLiveSiteDemo(data, container){
+            function loadLiveSiteDemo(data, containerId){
                 var width;
                 var height;
                 if (is_mobile) {
@@ -196,6 +196,7 @@
                 }
 
                 var w = document.write;
+                var container = document.getElementById(containerId);
                 document.write = function (content) {
                     container.innerHTML = content;
                     document.write = w;
