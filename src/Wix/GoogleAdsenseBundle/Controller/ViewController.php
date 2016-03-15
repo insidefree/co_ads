@@ -23,27 +23,18 @@ class ViewController extends AppController
     {
         $componentLocal = $this->getComponentDocument();
         $userLocal      = $this->getUserDocument();
-        if ( $componentLocal->getDeletedAt() ) {
-            $this->checkIfNeedToReprovision($componentLocal);
-        }
 
         $params = array(
             'adUnit' => $componentLocal->getAdUnit(),
             'mobile' => array("width" => 320, "height" => 50, "regular" => array("width" => 202, "height" => 202))
         );
 
-        if ( $componentLocal->getDeletedAt() ) {
-            $params['component_deleted'] = true;
-        }
-
         if ( $userLocal->getDomain() ) {
             $params['domain'] = $userLocal->getDomain();
         }
 
         if ($componentLocal->hasAdUnit()) {
-            $params = array_merge($params, array(
-                'code' => $componentLocal->getAdCode()
-            ));
+            $params['code'] = $componentLocal->getAdCode();
         }
 
         return $params;
