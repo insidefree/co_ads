@@ -157,7 +157,6 @@
         //==============================
 
         return {
-            init                            : init,
             getComponentInfo                : getComponentInfo,
             getCurrentPageId                : getCurrentPageId,
             getComponentInfoWithAppPageId   : getComponentInfoWithAppPageId,
