@@ -1,6 +1,8 @@
 (function (window, undefined) {
 
-    angular.module('adsenseWidget', [])
+    angular.module('adsenseWidget', []);
+
+    angular.module('adsenseWidget')
         .factory('QueryParams', function () {
             // the return value is assigned to QueryString!
             var query_string = {};
@@ -21,6 +23,7 @@
             }
             return query_string;
         })
+        
        /**
         * serves as a router to generate routes to a symfony2 backend. appends the instance for every request if it's available.
         */
@@ -39,69 +42,6 @@
                     return this.path(name, params, true);
                 }
             };
-        }])
-
-        .factory("patchPageId", ['$http', 'Router', '$timeout', '$window',
-            function($http, Router, $timeout, $window){
-
-                function patch(pageId) {
-                    return $http({
-                        method: 'PATCH',
-                        url: Router.path('patchPageId'),
-                        data: angular.toJson({page_id: pageId})
-                    }).success(function(){
-
-                        $timeout(function(){
-                            $window.location.reload();
-                        }, 3000);
-
-                    });
-                }
-
-                return {
-                    patch: patch
-                };
-            }])
-
-        .factory("patchUpdatedDate", ['$http', 'Router',
-            function($http, Router){
-
-                function patch () {
-                    return $http({
-                        method: 'PATCH',
-                        url: Router.path('patchUpdatedDate'),
-                        data : angular.toJson({updated_date: new Date()})
-                    });
-                }
-
-                return {
-                    patch: patch
-                };
-        }])
-        .run(['$http', '$q', 'Router', 'patchUpdatedDate', 'patchPageId', function ($http, $q, Router, patchUpdatedDate, patchPageId) {
-
-            $http.get(Router.path('getComponent')).then(function (response) {
-                response = response.data || {};
-
-                Wix.Utils.getCurrentPageId(function(currentPageid){
-                    if ( !response.hasOwnProperty('page_id') || response.page_id != currentPageid ) {
-                        patchPageId.patch(currentPageid);
-                    }
-                });
-
-                if( !response.hasOwnProperty('updated_date') ){
-                    patchUpdatedDate.patch();
-                }
-            });
-
-            Wix.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
-                return $http({
-                    method: 'DELETE',
-                    url: Router.path('deleteComponent')
-                });
-            });
-            
-        }])
-
+        }]);
 
 }(window));

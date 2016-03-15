@@ -18,3 +18,5 @@ manifest.mf
 .idea/*
 
 app/config/parameters.yml
+
+.sass-cache/

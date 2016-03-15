@@ -15,5 +15,23 @@
         $routeProvider.otherwise({
             redirectTo: '/'
         });
+    }])
+    .run(['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
+            var origComp        = Wix.Utils.getOrigCompId();
+            var $blockSettings  = $('#block_settings');
+
+            Wix.Data.Public.get('statusComp'+origComp,
+                { scope:  'COMPONENT'},
+                function(d) {
+                    var key = 'statusComp' + origComp;
+                    if( d[key] == 'blocked' ){
+                        $blockSettings.addClass('blocked');
+                    }
+                    else if ( d[key] == 'visible' ){
+                        $blockSettings.removeClass('blocked');
+                    }
+                },
+                function(f) {
+                });
     }]);
 }(window));
