@@ -57,16 +57,16 @@
             // if not exists insert comp
             if(componentInfo.showOnAllPages){
                 comps["allPages"].push({
-                    'pageId' : pageId,
-                    'compId' : compId,
-                    'status' : statusComp
+                    pageId : pageId,
+                    compId : compId,
+                    status : statusComp
                 });
             }
             else{
                 comps[pageId].push({
-                    'pageId' : pageId,
-                    'compId' : compId,
-                    'status' : statusComp
+                    pageId : pageId,
+                    compId : compId,
+                    status : statusComp
                 });
             }
         }
@@ -134,9 +134,9 @@
      */
     function sendAllowWidget(compId, status, showOnAllPages){
         var data    =  {
-            'origin'   : compId,
-            'status'   : status,
-            'allPages' : showOnAllPages
+            origin   : compId,
+            status   : status,
+            allPages : showOnAllPages
         };
         Wix.Worker.PubSub.publish('ALLOW_WIDGET', data, true);
     }
@@ -183,16 +183,16 @@
                 pageToMove = comps[pageExists.pageId][i];
                 comps[pageExists.pageId].splice(i, 1);
                 comps[componentInfo.pageId].push({
-                    'pageId' : (componentInfo.pageId == "allPages" ? "" : componentInfo.pageId),
-                    'compId' : compId,
-                    'status' : pageToMove.status
+                    pageId : (componentInfo.pageId == "allPages" ? "" : componentInfo.pageId),
+                    compId : compId,
+                    status : pageToMove.status
                 });
             }
         }
         // only when user change from specific page to all page, give priority to all pages and blocked specific page comp
-        //if(componentInfo.showOnAllPages){
-        //    blockedVisibleComp(componentInfo.appPageId);
-        //}
+        if(componentInfo.showOnAllPages){
+            blockedVisibleComp(componentInfo.appPageId);
+        }
     }
 
     /**
