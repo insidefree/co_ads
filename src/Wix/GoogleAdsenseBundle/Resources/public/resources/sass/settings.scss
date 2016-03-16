@@ -1,7 +1,7 @@
 @import "partials/helper";
 
 //variables
-$bg_main: #f6f6f6;
+$bg_main: #ffffff;
 $border_color: #e6e6e6;
 $color_wixBlue: #0099ff;
 $color_darkGrey: #3a3a3a;
@@ -36,7 +36,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         border: 1px solid $border_color;
         background: #fff;
         padding: 11px 2px 0;
-        margin-top: 17px;
+        margin-top: 10px;
         @include border-radius(7px);
         @include box-sizing("border-box");
 	}
@@ -64,7 +64,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 	padding: $connect_paddingTop 0 $connect_paddingBottom $connect_paddingLeft;
 	@include box-sizing("border-box");
 	p {
-		font-size: 12px;
+		font-size: 14px;
 		margin-right: 20px;
 		color: $color_darkGrey; }
 	p a { text-decoration: underline; }
