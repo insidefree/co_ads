@@ -41,9 +41,9 @@ class ViewController extends AppController
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/ad", name="ad", options={"expose"=true})
      * @Method({"GET"})
-     * @Template("WixGoogleAdsenseBundle:View:ad.html.twig")
      */
     public function getAdAction()
     {
@@ -64,7 +64,7 @@ class ViewController extends AppController
             $params['code'] = $componentLocal->getAdCode();
         }
 
-        return $params;
+        return $this->jsonResponse($params);
     }
 
     /**
