@@ -7,7 +7,10 @@
     <title>Google AdSense Widget</title>
     <style type="text/css">
 
-        body.blocked {
+        body{
+            margin: auto;
+        }
+        body.blocked{
             margin: 0 !important;
         }
         {% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}

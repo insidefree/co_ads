@@ -66,7 +66,8 @@
                     else if(window.code){
                         $http.get(Router.url('ad')).success(function(data) {
                             $body.removeClass('live_site_empty');
-                            $liveSiteCode.append(data);
+                            var containerId = "liveSiteCode";
+                            loadLiveSiteCode(data, containerId);
                         });
                     }
                     // status visible and user is not connected, connected to Wix account
@@ -188,6 +189,22 @@
                 script.type = 'text/javascript';
                 script.src = 'http://pagead2.googlesyndication.com/pagead/show_ads.js';
                 $(container).append(script);
+            }
+
+            /**
+             * Load google ads connected to user account
+             * @param data
+             * @param containerId
+             */
+            function loadLiveSiteCode(data, containerId){
+                window.google_page_url = data.domain;
+                var w = document.write;
+                var container = document.getElementById(containerId);
+                document.write = function (content) {
+                    container.innerHTML = content;
+                    document.write = w;
+                };
+                $(container).append(data.code);
             }
 
             /**
