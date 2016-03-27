@@ -5,11 +5,25 @@
     <meta name="robots" content="noindex, nofollow">
     <meta>
     <title>Google AdSense Widget</title>
-    {% if reachedCompLimit %}
     <style type="text/css">
-        body {
+
+        body{
+            margin: auto;
+        }
+        body.blocked{
             margin: 0 !important;
         }
+        {% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}
+        body{
+            width: {{ adUnit.width ? adUnit.width : 300 }}px;
+            height: {{ adUnit.height ? adUnit.height : 250 }}px;
+        }
+        body.mobile {
+            width: {{ mobile.regular.width ? mobile.regular.width : 200 }}px;
+            height: {{ mobile.regular.width ? mobile.regular.width : 200 }}px;
+        }
+        {% endif %}
+
 
         .comp_limit_container {
             position: absolute;
@@ -37,40 +51,57 @@
         .comp_limit_text span {
             font-size: 13px;
         }
+
+        .mobile .comp_limit_container {
+            width: {{ mobile.regular.width + 2}}px;
+            height: {{ mobile.regular.height + 2 }}px;
+            left: 39px;
+        }
+
+
+        .mobile .comp_limit_text {
+            padding: 8px;
+            padding-bottom: 13px;
+        }
+
+        .showDemo {
+            visibility: visible !important;
+        }
+
+        .live_site_empty{
+            visibility: hidden;
+        }
+        .live_site_empty iframe{
+            visibility: hidden;
+        }
+        .blocked #editorBlocked{
+            visibility: visible !important;
+        }
     </style>
-    {% endif %}
 </head>
-<body>
+<body data-ng-controller="layoutCtrl">
 
     <!-- adsense advertisement -->
-    <div style="text-align: center">
-        {% if component_deleted is not defined %}
-            {% if app.request.get('viewMode') != 'editor' and app.request.get('viewMode') != 'preview' %}
-                {% if reachedCompLimit == true %}
-                    <div class="empty"></div>
-                {% else %}
-                    {% if code is defined  %}
-                        {% include 'WixGoogleAdsenseBundle:View:ad.html.twig' %}
-                    {% else %}
-                        {% include 'WixGoogleAdsenseBundle:View:demo.html.twig' %}
-                    {% endif %}
-                {% endif %}
-            {% else %}
-                {% if reachedCompLimit %}
-                    <div class="comp_limit_container">
-                        <div class="comp_limit_text">
-                            Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br><br>
-                            <span>Note: This message will not be visible in your site</span>
-                        </div>
-                    </div>
-                {% endif %}
+    <div style="text-align: center" id="adsense_container">
+        <div id="liveSiteCode"></div>
+        <div id="liveSiteDemo"></div>
+        <div id="editorBlocked" style="visibility: hidden">
+            <div class="comp_limit_container">
+                <div class="comp_limit_text">Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.
+                    <br><br>
+                    <span>Note: This message will not be visible in your site</span>
+                </div>
+            </div>
+        </div>
+        <div id="editorDemo" style="visibility: hidden">
+            {% if app.request.get('viewMode') == 'editor' or app.request.get('viewMode') == 'preview' %}
                 {% include 'WixGoogleAdsenseBundle:View:placeholder.html.twig' %}
             {% endif %}
-        {% endif %}
-    </div>
+        </div>
+  </div>
 
     <!-- wix sdk -->
-    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.60.0/js/wix.min.js"></script>
+    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.63.0/js/wix.min.js"></script>
     <script>
         (function(i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;
@@ -88,7 +119,7 @@
         ga('send', 'pageview');
 
     </script>
-    <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <!-- fos js routing bundle -->
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
@@ -106,9 +137,23 @@
     {% block javascripts %}
         {% javascripts filter='?yui_js'
         '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular.min.js'
-        '@WixGoogleAdsenseBundle/Resources/public/js/widget/app.js' %}
+        '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular-sanitize.min.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/app.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/wixService.js'
+        '@WixGoogleAdsenseBundle/Resources/public/js/widget/layoutCtrl.js'%}
         <script type="text/javascript" src="{{ asset_url }}"></script>
+
+
         {% endjavascripts %}
+
+        <script type="text/javascript">
+            {% if code is not defined %}
+                window.code = false;
+            {% else %}
+                window.code = true;
+            {% endif %}
+        </script>
     {% endblock %}
+
 </body>
 </html>

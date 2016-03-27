@@ -1,7 +1,7 @@
 @import "partials/helper";
 
 //variables
-$bg_main: #f6f6f6;
+$bg_main: #ffffff;
 $border_color: #e6e6e6;
 $color_wixBlue: #0099ff;
 $color_darkGrey: #3a3a3a;
@@ -9,7 +9,7 @@ $color_lightGrey: #8e8e8e;
 
 $connect_paddingBottom: 8px;
 $connect_paddingTop: 12px;
-$connect_paddingLeft: 20px;
+$connect_paddingLeft: 13px;
 .wix_blue { color: $color_wixBlue; }
 
 /* ******** */
@@ -22,9 +22,9 @@ a:active,
 a { color: $color_wixBlue; }
 ul { list-style: none; padding: 0; margin: 0; }
 #settings_popup {
-	width: 618px;
+	width: 576px;
 	background: $bg_main;
-	padding: 15px 19px;
+	padding: 13px 3px;
 	position: relative;
 	@include box-sizing("border-box");
 	.ajax-loader {
@@ -35,8 +35,8 @@ ul { list-style: none; padding: 0; margin: 0; }
     .box_style {
         border: 1px solid $border_color;
         background: #fff;
-        padding: 11px 11px 0;
-        margin-top: 17px;
+        padding: 11px 2px 0;
+        margin-top: 10px;
         @include border-radius(7px);
         @include box-sizing("border-box");
 	}
@@ -46,11 +46,12 @@ ul { list-style: none; padding: 0; margin: 0; }
 /* *********** */
 .top_section {
 	height: 152px;
-	padding: 12px 20px;
-	margin: 0 0 20px;
+	padding: 12px 4px;
+	margin: 0 0 10px;
 	#logo {
 		height: 100%;
-		padding: 0 20px 0 15px;
+        width: 86px;
+		padding: 0 19px 0 16px;
 		border-right: 1px solid #e7e7e7;
 		img { margin-top: 20px;} }
 }
@@ -59,11 +60,11 @@ ul { list-style: none; padding: 0; margin: 0; }
 .connect {
 	position: relative;
 	height: 100%;
-	width: 430px;
+	width: 438px;
 	padding: $connect_paddingTop 0 $connect_paddingBottom $connect_paddingLeft;
 	@include box-sizing("border-box");
 	p {
-		font-size: 12px;
+		font-size: 14px;
 		margin-right: 20px;
 		color: $color_darkGrey; }
 	p a { text-decoration: underline; }
@@ -82,7 +83,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 		a { color: $color_wixBlue; } }
 	.disconnect, .connect_button {
 		position: absolute;
-		right: 0;
+		right: 16px;
 		bottom: 0; }
    .disconnect[disabled="disabled"]{
     &:hover {
