@@ -38,16 +38,7 @@ class SettingsController extends AppController
      */
     public function indexAction()
     {
-        $component = $this->getComponentDocument();
-
-        $pageComponents = $this->getPageComponents($component);
-
-        $params = array();
-        if ( array_search($component, $pageComponents) > 2 ) {
-            $params['reachedCompLimit'] = true;
-        }
-
-        return $params;
+        return [];
     }
 
     /**
