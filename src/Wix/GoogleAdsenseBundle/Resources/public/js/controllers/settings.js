@@ -2,7 +2,7 @@
     'use strict';
 
     /* Settings Controller */
-    window.SettingsCtrl = function($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, uiDialog) {
+    window.SettingsCtrl = function($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, component, uiDialog) {
         /**
          * represents the ad unit model
          */
@@ -12,6 +12,11 @@
          * represents the user model
          */
         $scope.user = user;
+
+        /**
+         * represents the component model
+         */
+        $scope.component = component;
 
         /**
          * available fonts to choose from
@@ -90,7 +95,7 @@
          * returns true if this user has an active ad unit
          */
         $scope.hasAdUnit = function() {
-            return !!$scope.adUnit.has_ad_unit;
+            return !!$scope.component.ad_unit_id;
         };
 
         /**
@@ -123,7 +128,7 @@
     /**
      * specifying concrete injections
      */
-    window.SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user', 'uiDialog'];
+    window.SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user', 'component', 'uiDialog'];
 
     /**
      * resolving promises
@@ -144,6 +149,15 @@
             return $http.get(Router.path('getUser')).then(function(response) {
                 return response.data;
             });
+        }],
+        /**
+         * resolves a component object
+         */
+        component: ['$http', '$q', 'Router', function($http, $q, Router) {
+            return $http.get(Router.path('getComponent')).then(function(response) {
+                return response.data;
+            });
         }]
+
     };
 }(window));

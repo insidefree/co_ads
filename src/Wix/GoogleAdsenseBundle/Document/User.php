@@ -261,6 +261,7 @@ class User
      */
     public function getClientId()
     {
-        return $this->clientId;
+        $clientId = str_replace( "-mb", "", $this->clientId );
+        return $clientId;
     }
 }
