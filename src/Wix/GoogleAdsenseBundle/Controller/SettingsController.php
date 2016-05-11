@@ -105,7 +105,8 @@ class SettingsController extends AppController
     {
         $this->getUserDocument()
             ->setAccountId(null)
-            ->setClientId(null);
+            ->setClientId(null)
+            ->setIsMbClient(false);
 
         foreach ($this->getAllSiteComponents() as $component) {
             if ( !$component instanceof Component ) {
@@ -339,7 +340,13 @@ class SettingsController extends AppController
         }
 
         $user->setSignedAt(new \DateTime());
-        $user->setClientId($adClients->items[0]->getId());
+        $clientId = $adClients->items[0]->getId();
+        if(strpos($clientId, "-mb") === true){
+            $clientId = str_replace( "-mb", "", $clientId );
+            $user->setIsMbClient(true);
+        }
+        $user->setClientId($clientId);
+
 
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
