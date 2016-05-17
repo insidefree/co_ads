@@ -113,20 +113,17 @@
         margin: 0 auto;
 
         {% if adUnit.width == 300 %}
-        width: 120px;
-        position: absolute;
-        bottom: 0.9em;
-        left: 100px;
+            width: 120px;
+            margin: -6px auto 0;
         {% elseif adUnit.width == 120 %}
-        width: 120px;
-        margin-top: 20px;
+            width: 120px;
+            margin-top: 20px;
         {% else %}
-        display: inline-block;
-        width: 120px;
-        position: absolute;
-        right: 25px;
-        top: 25px;
-        height:20px;
+            display: inline-block;
+            width: 120px;
+            height:20px;
+            float: right;
+            margin-top: -40px
         {% endif %}
 
     }
