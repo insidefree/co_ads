@@ -2,7 +2,8 @@
 
 (function (angular) {
     angular.module('adsenseWidget')
-        .controller('layoutCtrl', ['$scope', 'wixService', '$q', '$http', 'Router', function($scope, wixService, $q, $http, Router){
+        .controller('layoutCtrl', ['$scope', 'wixService', '$q', '$http', 'Router',
+            function($scope, wixService, $q, $http, Router){
 
             var myCompId            = wixService.getCompId();
             var is_mobile           = false;
@@ -23,6 +24,22 @@
                 DELETED  : 'deleted',
                 BLOCKED  : 'blocked'
             };
+
+            wixService.addEventListener('SETTINGS_UPDATED', _settingUpdateHandler);
+
+            function _settingUpdateHandler (oData) {
+                $scope.$apply(function () {
+                    switch (oData.type) {
+                        // Layout widget updates
+                        case 1:
+                            var dim = oData.size == "SIZE_120_600" ? {width: 150} : (oData.size == "SIZE_300_250" ? {width: 360} : {width: 500});
+
+                            wixService.resizeComponent(dim);
+                            break;
+
+                    }
+                });
+            }
 
             /**
              * When widget load trigger the Worker to register comp
