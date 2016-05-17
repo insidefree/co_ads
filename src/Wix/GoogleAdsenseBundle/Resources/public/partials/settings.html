@@ -8,7 +8,7 @@
         <div data-ng-hide="connected()" class="connect">
             <p class="description">You can earn revenue by showing relevant and engaging ads along-side your online content. Just connect
                                    your Google AdSense account.</p>
-            <a data-ng-click="authenticate()" class="connect_button action_links">Get Started</a>
+            <a data-ng-click="authenticate();contributorSection=true;" class="connect_button action_links">Get Started</a>
 
         </div>
         <div data-ng-show="connected()" class="connect">
@@ -19,8 +19,27 @@
             <p>You are now connected to your AdSense account.</p>
 
             <p class="disconnect">
-                <a href="" data-ng-click="disconnect()">Disconnect Account</a>
+                <a href="" data-ng-click="disconnect();contributorSection=true;">Disconnect Account</a>
             </p>
+        </div>
+    </div>
+
+    <!-- contributor -->
+    <div class="box_style contributer_section" data-ng-show="contributorSection && diffUserIDOwnerId">
+
+        <div class="contributer_content">
+
+            <img class="contributer_img" src="/bundles/wixgoogleadsense/images/settings/contributers.png" />
+
+            <p class="contributer_message" >Only site owner has permission to do that</p>
+
+            <div class="close_btn" data-ng-click="closeContributor()">
+
+                <svg class="symbol symbol-headerCloseButton" width="25px" height="25px" viewBox="0 0 25 25" version="1.1" data-reactid=".0.0.6.3.0.$=1$=011=02$tpa=001compPanels=001tpaSettings6=20:0.0.2.0"><path d="M11.7928932,12.5 L8.14644661,8.85355339 L7.79289322,8.5 L8.5,7.79289322 L8.85355339,8.14644661 L12.5,11.7928932 L16.1464466,8.14644661 L16.5,7.79289322 L17.2071068,8.5 L16.8535534,8.85355339 L13.2071068,12.5 L16.8535534,16.1464466 L17.2071068,16.5 L16.5,17.2071068 L16.1464466,16.8535534 L12.5,13.2071068 L8.85355339,16.8535534 L8.5,17.2071068 L7.79289322,16.5 L8.14644661,16.1464466 L11.7928932,12.5 Z"></path></svg>
+
+            </div>
+
+
         </div>
     </div>
 
