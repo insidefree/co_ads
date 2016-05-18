@@ -3,6 +3,7 @@
 namespace Wix\GoogleAdsenseBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Wix\GoogleAdsenseBundle\Document\AdUnit;
 
@@ -54,6 +55,10 @@ class SettingsController extends AppController
             throw new  MissingParametersException('websiteUrl query string parameter is missing.');
         }
 
+        if ( $this->getRequest()->query->get('userId') !== $this->getRequest()->query->get('siteOwnerId')) {
+            throw new AccessDeniedHttpException('no permission would be brought to user contributor.');
+        }
+
         $session = $this->getService()->associationsessions->start(
             'AFC', $websiteUrl
         );
@@ -103,6 +108,10 @@ class SettingsController extends AppController
      */
     public function disconnectAction()
     {
+        if ( $this->getRequest()->query->get('userId') != $this->getRequest()->query->get('siteOwnerId')) {
+            throw new  AccessDeniedHttpException('no permission would be brought to user contributor.');
+        }
+
         $this->getUserDocument()
             ->setAccountId(null)
             ->setClientId(null)

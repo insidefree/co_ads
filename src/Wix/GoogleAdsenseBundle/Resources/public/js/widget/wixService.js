@@ -152,6 +152,26 @@
             return Wix.Utils.getViewMode();
         }
 
+        /**
+         * Resize the Widget component, can control width and height
+         * @param obj
+         * @returns {*|promise}
+         */
+        function resizeComponent(obj) {
+
+            var defer = $q.defer();
+
+            if ( getViewMode() === "editor" ) {
+                Wix.resizeComponent(obj, function(result){
+                    defer.resolve(result[0]);
+                });
+            } else {
+                defer.reject("resizeComponent Can be used only in editor mode!");
+            }
+
+            return defer.promise;
+        }
+
         //==============================
         //        PUBLIC API           =
         //==============================
@@ -167,7 +187,8 @@
             setHeight                       : setHeight,
             getViewMode                     : getViewMode,
             setPublicData                   : setPublicData,
-            addEventListener                : addEventListener
+            addEventListener                : addEventListener,
+            resizeComponent                 : resizeComponent
         };
     }
   ]);

@@ -2,7 +2,7 @@
     'use strict';
 
     /* Settings Controller */
-    window.SettingsCtrl = function($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, component, uiDialog) {
+    window.SettingsCtrl = function($scope, $q, $window, $http, Router, WixSDK, QueryParams, adUnit, user, component, uiDialog, $timeout) {
         /**
          * represents the ad unit model
          */
@@ -43,6 +43,47 @@
         };
 
         /**
+         * set wix site owner id
+         */
+        $scope.siteOwnerId = WixSDK.Utils.getSiteOwnerId();
+
+        /**
+         * set wix user id
+         */
+        $scope.userId = WixSDK.Utils.getUid();
+
+        $scope.diffUserIDOwnerId = ($scope.siteOwnerId !== $scope.userId);
+        /**
+         * show contributor section only on contributor site and when user click on btn
+         */
+        $scope.contributorSection = false;
+
+        /**
+         * close contributor section
+         */
+        $scope.closeContributor = function() {
+            $scope.contributorSection = false;
+        };
+
+        /**
+         * listens to contributor section, show only 8 sec.
+         */
+        $scope.$watch(function(){ return $scope.contributorSection}, function(newVal, oldVal) {
+
+            if (newVal === oldVal) {
+                return;
+            }
+
+            if(newVal) {
+                $timeout(function () {
+                    $scope.contributorSection = false;
+                }, 8000);
+            }
+
+        }, true);
+
+
+        /**
          * listens to changes on the ad unit model and sends a request to save it on the server
          */
         $scope.$watch('adUnit', function(adUnit, oldAdUnit) {
@@ -55,22 +96,44 @@
                 });
         }, true);
 
+        $scope.$watch(function() {
+            return $scope.adUnit.size;
+        }, function(newValue, oldValue){
+                if(newValue !== oldValue){
+                    WixSDK.Settings.triggerSettingsUpdatedEvent({type: 1, size: newValue}, WixSDK.Utils.getOrigCompId());
+                }
+            }, true);
+
         /**
          * opens an authentication window
          */
         $scope.authenticate = function() {
+
+            // check if contributor not allow to connect account
+            if( $scope.userId !== $scope.siteOwnerId ) {
+                return;
+            }
+
             if (!$scope.websiteUrl) {
                 uiDialog.alert('/bundles/wixgoogleadsense/partials/publish.html');
                 return;
             }
 
-            $window.open(Router.path('authenticate', { websiteUrl: $scope.websiteUrl }), 'authenticate', 'height=615, width=1000');
+            $window.open(Router.path('authenticate',
+                { websiteUrl: $scope.websiteUrl }),
+                'authenticate', 'height=615, width=1000');
         };
 
         /**
          * disconnects the user's account
          */
         $scope.disconnect = function() {
+
+            // check if contributor not allow to disconnect account
+            if( $scope.userId !== $scope.siteOwnerId ) {
+                return;
+            }
+
             $http.post(Router.path('disconnect')).success(function() {
                 reload();
             });
@@ -128,7 +191,7 @@
     /**
      * specifying concrete injections
      */
-    window.SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user', 'component', 'uiDialog'];
+    window.SettingsCtrl.$inject = ['$scope', '$q', '$window', '$http', 'Router', 'WixSDK', 'QueryParams', 'adUnit', 'user', 'component', 'uiDialog', '$timeout'];
 
     /**
      * resolving promises
