@@ -91,6 +91,14 @@
                 });
         }, true);
 
+        $scope.$watch(function() {
+            return $scope.adUnit.size;
+        }, function(newValue, oldValue){
+                if(newValue !== oldValue){
+                    WixSDK.Settings.triggerSettingsUpdatedEvent({type: 1, size: newValue}, WixSDK.Utils.getOrigCompId());
+                }
+            }, true);
+
         /**
          * opens an authentication window
          */
