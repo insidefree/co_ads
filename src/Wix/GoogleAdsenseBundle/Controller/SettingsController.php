@@ -350,12 +350,11 @@ class SettingsController extends AppController
 
         $user->setSignedAt(new \DateTime());
         $clientId = $adClients->items[0]->getId();
-        if(strpos($clientId, "-mb") === true){
+        if(strpos($clientId, "-mb") > -1){
             $clientId = str_replace( "-mb", "", $clientId );
             $user->setIsMbClient(true);
         }
         $user->setClientId($clientId);
-
 
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
