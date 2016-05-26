@@ -1,6 +1,6 @@
 <div id="settings_popup" class="clearfix" xmlns="http://www.w3.org/1999/html">
     <!-- connect account -->
-    <div class="box_style top_section inline_block">
+    <div class="box_style top_section inline_block" data-ng-show="!hasAdUnit()">
         <a target="_blank" href="https://www.google.com/adsense" id="logo">
             <img src="/bundles/wixgoogleadsense/images/settings/logo.png" alt="Google AdSense">
         </a>
@@ -25,7 +25,7 @@
     </div>
 
     <!-- contributor -->
-    <div class="box_style contributer_section" data-ng-show="contributorSection && diffUserIDOwnerId">
+    <div class="box_style contributer_section" data-ng-show="contributorSection && diffUserIDOwnerId && !hasAdUnit()">
 
         <div class="contributer_content">
 
@@ -44,7 +44,7 @@
     </div>
 
     <!-- accordion -->
-    <div data-ui-accordion data-ui-height-style="content" data-ui-header="div > h2">
+    <div data-ui-accordion data-ui-height-style="content" data-ui-header="div > h2" data-ng-show="!hasAdUnit()">
         <!-- contents settings -->
         <div class="box_style clearfix settings_layout">
             <h2 class="box_title" data-ng-class="adUnit.type|lowercase">Content</h2>
@@ -164,8 +164,9 @@
         </div>
     </div>
 
-    <div class="bottom_section">
-        <div data-ng-show="connected() && !hasAdUnit()">
+    <!-- only for users are connected and did not clicked submit -->
+    <div class="bottom_section" data-ng-show="connected() && !hasAdUnit()" >
+        <div>
             <p class="warning">After submit, Ad setting cannot be changed. To make changes, you will need to delete the existing Ad and
                                create a new one.</p>
             <a data-ng-click="submit()" class="submit_ad action_links">Submit</a>
@@ -175,5 +176,16 @@
     <!-- loader -->
     <div class="ajax-loader">
         <img src="/bundles/wixgoogleadsense/images/loader.gif" width="20" height="20" alt="loader"/>
+    </div>
+
+    <!-- only for users are connected and clicked submit -->
+    <div class="submitted_settings" data-ng-show="connected() && hasAdUnit()">
+        <img src="/bundles/wixgoogleadsense/images/settings/logo.png" alt="Google AdSense">
+        <p>
+            Your ad is now busy making money for you.
+        </p>
+        <p>
+            If you need to make changes to the ad, you'll need to delete this ad and create a new one.
+        </p>
     </div>
 </div>
