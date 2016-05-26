@@ -62,6 +62,12 @@ class User
     protected $clientId;
 
     /**
+     * @MongoDB\Bool
+     */
+    protected $isMbClient;
+
+
+    /**
      * @param $instanceId
      */
     public function __construct($instanceId)
@@ -261,6 +267,29 @@ class User
      */
     public function getClientId()
     {
-        return $this->clientId;
+        $clientId = str_replace( "-mb", "", $this->clientId );
+        return $clientId;
+    }
+
+    /**
+     * Set isMbClient
+     *
+     * @param bool $isMbClient
+     * @return \User
+     */
+    public function setIsMbClient($isMbClient)
+    {
+        $this->isMbClient = $isMbClient;
+        return $this;
+    }
+
+    /**
+     * Get isMbClient
+     *
+     * @return bool $isMbClient
+     */
+    public function getIsMbClient()
+    {
+        return $this->isMbClient;
     }
 }

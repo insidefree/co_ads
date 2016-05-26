@@ -30,14 +30,16 @@
         /**
          * serves as a router to generate routes to a symfony2 backend. appends the instance for every request if it's available.
          */
-        .factory('Router', ['$window', 'QueryParams', function($window, QueryParams) {
+        .factory('Router', ['$window', 'QueryParams', 'WixSDK', function($window, QueryParams, WixSDK) {
             return {
                 path: function(name, params, absolute) {
                     params = params || {};
 
-                    params.instance = QueryParams.instance || null;
-                    params.compId = QueryParams.compId || null;
-                    params.origCompId = QueryParams.origCompId || null;
+                    params.instance    = QueryParams.instance || null;
+                    params.compId      = QueryParams.compId || null;
+                    params.origCompId  = QueryParams.origCompId || null;
+                    params.userId      =  WixSDK.Utils.getUid();
+                    params.siteOwnerId =  WixSDK.Utils.getSiteOwnerId();
 
                     return $window.Routing.generate(name, params, absolute);
                 },

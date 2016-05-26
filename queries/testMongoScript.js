@@ -25,4 +25,3 @@ for each(var row in result){
 var o0 = db.components.aggregate([{ $match: {"updatedDate": { $exists: true }, "deletedAt": {$exists: false} } }, { $group: { _id: { instanceId: '$instanceId', pageId: '$pageId' } } }, { $sort: { '_id.pageId': -1 } } ]);
 var o1 = o0.result.map(function(i){ return { instanceId: i._id.instanceId, pageId: i._id.pageId }; });
 db.components.remove({ "adCode": { $exists: false}, "updatedDate": { $exists: false}, "deletedAt": { $exists: false}, $or: o1 });
-

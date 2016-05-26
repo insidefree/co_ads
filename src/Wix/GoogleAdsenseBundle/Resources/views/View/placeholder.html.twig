@@ -1,7 +1,5 @@
 <style type="text/css">
-    body {
-        background: transparent;
-    }
+
 
     .container {
         background: #{{ adUnit.backgroundColor }};
@@ -10,21 +8,69 @@
         margin: 0 auto;
     }
 
+    .title_container {
+        margin-top: 8px;
+    {% if (adUnit.width == 468 or adUnit.width == 120) %}
+        text-align: left;
+        margin-left: 8px
+    {% elseif adUnit.width == 300 %}
+    text-align: center;
+    {% endif %}
+    }
+
+    .description_container {
+    {% if adUnit.width == 300 %}
+        text-align: center;
+    {% elseif adUnit.width == 468 %}
+        text-align: left;
+        margin-left: 8px;
+        margin-top:0;
+        margin-bottom:0;
+    {% elseif adUnit.width == 120 %}
+        text-align: left;
+        margin-left: 8px;
+        margin-top:25px;
+        margin-bottom:25px;
+    {% endif %}
+    }
+
+    .description {
+        color: #{{ adUnit.textColor }};
+        font-family: {{ adUnit.fontFamily }}, arial, sans-serif;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        font-size: 14px;
+    {% if adUnit.width == 300 %}
+        font-size: 22px;
+        max-width:270px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 0;
+    {% elseif adUnit.width == 120 %}
+        font-size: 18px;
+    {% elseif adUnit.width == 468 %}
+        font-size: 12px;
+        max-width: 300px;
+        margin-top: 0;
+    {% endif %}
+
+    }
+
+    .image_placeholder img {
+        width: {{ adUnit.width }}px;
+        height: {{ adUnit.height }}px;
+    }
+
+    body {
+        background: transparent;
+    }
+
     .text_placeholder {
         background: url('/bundles/wixgoogleadsense/images/widget/bg_diag_stripe_trans05.png');
         border: 1px solid #{{adUnit.borderColor}};
         width:100%;
         height:100%;
-    }
-
-    .title_container {
-        margin-top: 8px;
-        {% if (adUnit.width == 468 or adUnit.width == 120) %}
-        text-align: left;
-        margin-left: 8px
-        {% elseif adUnit.width == 300 %}
-        text-align: center;
-        {% endif %}
     }
 
     .title {
@@ -38,45 +84,6 @@
         {% endif %}
         color: #{{ adUnit.titleColor }};
         font-family: {{ adUnit.fontFamily }}, arial, sans-serif;
-    }
-
-    .description_container {
-        {% if adUnit.width == 300 %}
-        text-align: center;
-        {% elseif adUnit.width == 468 %}
-        text-align: left;
-        margin-left: 8px;
-        margin-top:0;
-        margin-bottom:0;
-        {% elseif adUnit.width == 120 %}
-        text-align: left;
-        margin-left: 8px;
-        margin-top:25px;
-        margin-bottom:25px;
-        {% endif %}
-    }
-
-    .description {
-        color: #{{ adUnit.textColor }};
-        font-family: {{ adUnit.fontFamily }}, arial, sans-serif;
-        margin-top: 8px;
-        margin-bottom: 8px;
-        font-size: 14px;
-        {% if adUnit.width == 300 %}
-        font-size: 22px;
-        max-width:270px;
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 0;
-        {% elseif adUnit.width == 120 %}
-        font-size: 18px;
-        {% elseif adUnit.width == 468 %}
-        font-size: 12px;
-        max-width: 300px;
-        margin-top: 0;
-        {% endif %}
-
     }
 
     .bullets_container {
@@ -106,20 +113,17 @@
         margin: 0 auto;
 
         {% if adUnit.width == 300 %}
-        width: 120px;
-        position: absolute;
-        bottom: 0.9em;
-        left: 100px;
+            width: 120px;
+            margin: -6px auto 0;
         {% elseif adUnit.width == 120 %}
-        width: 120px;
-        margin-top: 20px;
+            width: 120px;
+            margin-top: 20px;
         {% else %}
-        display: inline-block;
-        width: 120px;
-        position: absolute;
-        right: 25px;
-        top: 25px;
-        height:20px;
+            display: inline-block;
+            width: 120px;
+            height:20px;
+            float: right;
+            margin-top: -40px
         {% endif %}
 
     }
@@ -150,9 +154,69 @@
         color: #{{ adUnit.titleColor }};
     }
 
-    .image_placeholder img {
-        width: {{ adUnit.width }}px;
-        height: {{ adUnit.height }}px;
+    .mobile .container{
+        background: #{{ adUnit.backgroundColor }};
+        width: {{ mobile.regular.width }}px !important;
+        height: {{ mobile.regular.height }}px !important;
+        margin: 0 auto;
+    }
+
+    .mobile .title_container {
+        margin: 8px 4px;
+        text-align: left;
+    }
+
+    .mobile .title{
+        font-size: 24px;
+    }
+
+    .mobile .description_container {
+        text-align: left;
+        margin: 0 4px;
+    }
+
+    .mobile .description {
+        color: #{{ adUnit.textColor }};
+        font-family: {{ adUnit.fontFamily }}, arial, sans-serif;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .mobile .image_placeholder img {
+        width: {{ mobile.regular.width }}px !important;
+        height: {{ mobile.regular.height }}px !important;
+    }
+
+    .mobile .button_container {
+        text-align: center;
+        margin: 0 auto;
+        width: 140px;
+        margin-top: 0px;
+        position: static;
+        bottom: auto;
+        left: 0px;
+        right: 25px;
+        top: 25px;
+        height: 20px;
+        display: inline-block;
+    }
+
+    .mobile .bullets_container {
+        width: 30px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .mobile .button_container button {
+        border: none;
+        border-radius: 10px;
+        background: #{{ adUnit.urlColor }};
+        font-size: 27px;
+        width:85px;
+        height:36px;
+        margin-top: 0px;
     }
 
     {#{{ adUnit.urlColor }}#}

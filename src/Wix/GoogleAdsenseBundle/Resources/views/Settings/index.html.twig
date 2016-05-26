@@ -19,30 +19,34 @@
     {% endblock %}
 </head>
 <body>
-
+<style>
+    #block_settings{
+        position: absolute;
+        background-color: rgba(255,255,255,0.92);
+        width: 100%;
+        height: 100%;
+        z-index: 200000;
+        text-align: left;
+        padding-top: 200px;
+        color: #000;
+        visibility: hidden;
+    }
+    .blocked{
+        visibility: visible !important;
+    }
+</style>
 {% block body %}
-    {% if reachedCompLimit is defined %}
-    <div style="
-    position: absolute;
-    background-color: rgba(255,255,255,0.92);
-    width: 100%;
-    height: 100%;
-    z-index: 200000;
-    text-align: left;
-    padding-top: 200px;
-    color: #000;
-    ">
+    <div id="block_settings">
         <div style="margin:1em; margin-top: 3em; text-align: center; font-size: 18px; font-weight: normal;">
             Sorry, Google does not allow more than 3 ads per page, so we recommend that you delete it.<br /><br />
         </div>
     </div>
-    {% endif %}
     <div data-ng-view></div>
 {% endblock %}
 
 {# scritps #}
 {% block javascripts %}
-    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.44.0/js/wix.min.js"></script>
+    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.63.0/js/wix.min.js"></script>
 
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>

@@ -3,6 +3,7 @@
 namespace Wix\GoogleAdsenseBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Wix\GoogleAdsenseBundle\Document\AdUnit;
 
@@ -38,16 +39,7 @@ class SettingsController extends AppController
      */
     public function indexAction()
     {
-        $component = $this->getComponentDocument();
-
-        $pageComponents = $this->getPageComponents($component);
-
-        $params = array();
-        if ( array_search($component, $pageComponents) > 2 ) {
-            $params['reachedCompLimit'] = true;
-        }
-
-        return $params;
+        return [];
     }
 
     /**
@@ -61,6 +53,10 @@ class SettingsController extends AppController
     {
         if (!$websiteUrl = $this->getRequest()->query->get('websiteUrl')) {
             throw new  MissingParametersException('websiteUrl query string parameter is missing.');
+        }
+
+        if ( $this->getRequest()->query->get('userId') !== $this->getRequest()->query->get('siteOwnerId')) {
+            throw new AccessDeniedHttpException('no permission would be brought to user contributor.');
         }
 
         $session = $this->getService()->associationsessions->start(
@@ -112,9 +108,14 @@ class SettingsController extends AppController
      */
     public function disconnectAction()
     {
+        if ( $this->getRequest()->query->get('userId') != $this->getRequest()->query->get('siteOwnerId')) {
+            throw new  AccessDeniedHttpException('no permission would be brought to user contributor.');
+        }
+
         $this->getUserDocument()
             ->setAccountId(null)
-            ->setClientId(null);
+            ->setClientId(null)
+            ->setIsMbClient(false);
 
         foreach ($this->getAllSiteComponents() as $component) {
             if ( !$component instanceof Component ) {
@@ -348,7 +349,12 @@ class SettingsController extends AppController
         }
 
         $user->setSignedAt(new \DateTime());
-        $user->setClientId($adClients->items[0]->getId());
+        $clientId = $adClients->items[0]->getId();
+        if(strpos($clientId, "-mb") > -1){
+            $clientId = str_replace( "-mb", "", $clientId );
+            $user->setIsMbClient(true);
+        }
+        $user->setClientId($clientId);
 
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
