@@ -4,3 +4,7 @@ services:
         arguments: [@annotation_reader, @wix_bridge]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    wix_google_adsense.adsense_service:
+        class: Wix\GoogleAdsenseBundle\Services\AdsenseService
+        arguments: [@google_api.oauth2.adsense_host_service, @doctrine.odm.mongodb.document_manager]

@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Wix\GoogleAdsenseBundle\Document\Component;
 use Wix\GoogleAdsenseBundle\Document\User;
+use Wix\GoogleAdsenseBundle\Services\AdsenseService;
 
 /**
  * @Route("/view")
@@ -33,8 +34,18 @@ class ViewController extends AppController
             $params['domain'] = $userLocal->getDomain();
         }
 
-        if ($componentLocal->hasAdUnit()) {
+        if ( $componentLocal->hasAdUnit() ) {
             $params['code'] = $componentLocal->getAdCode();
+        }
+
+        if( $userLocal->getIsMbClient() && ! $componentLocal->hasAdUnit() ){
+            $adsenseService = $this->get("wix_google_adsense.adsense_service");
+            if( !$adsenseService instanceof AdsenseService)
+            {
+                return false;
+            }
+            $adUnit = $componentLocal->getAdUnit();
+            $adsenseService->insertAdUnit($adUnit, $componentLocal, $userLocal);
         }
 
         return $params;
