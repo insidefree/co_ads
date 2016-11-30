@@ -204,7 +204,7 @@
                 };
                 var script = document.createElement('script');
                 script.type = 'text/javascript';
-                script.src = 'http://pagead2.googlesyndication.com/pagead/show_ads.js';
+                script.src = 'https://pagead2.googlesyndication.com/pagead/show_ads.js';
                 $(container).append(script);
             }
 
