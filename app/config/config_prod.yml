@@ -36,7 +36,7 @@ google_apio_auth2:
         refresh_token: 1/9QrmGVvG6zOu9Jna1UDBHon-1Mww_pL9NEzRJl_aY0k
 
     urls:
-        redirect_uri: http://www.adsense.apps.wix.com/settings/redirect
+        redirect_uri: https://www.adsense.apps.wix.com/settings/redirect
 
     scopes:
         [ https://www.googleapis.com/auth/adsensehost ]

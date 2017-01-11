@@ -36,12 +36,12 @@ wix_api:
 # Google OAuth2 Configuration
 google_apio_auth2:
     keys:
-        client_id: 417424657964.apps.googleusercontent.com
-        client_secret: R1R9PiJd4j9kVT-X4xQf1y76
+        client_id: 945840538324.apps.googleusercontent.com
+        client_secret: hD3pGqJf-xa5FxIfBm_5nhGd
         refresh_token: 1/-tOgUd17_soJ1an9Z99Nv9vbfeCBvhAQNPeMkKA7oUo
 
     urls:
-        redirect_uri: http://adsense.wix.codeoasis.com/settings/redirect
+        redirect_uri: https://adsense.wix.codeoasis.com/settings/redirect
 
     scopes:
         [ https://www.googleapis.com/auth/adsensehost ]
