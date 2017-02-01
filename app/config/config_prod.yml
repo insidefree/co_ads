@@ -48,16 +48,3 @@ ekino_new_relic:
     application_name: Google AdSense
     api_key: "%ekino_new_relic_api_key%"
     log_exceptions: true
-
-# MongoDB ODM Configuration
-doctrine_mongodb:
-    connections:
-        default:
-            server: %mongodb_server%
-            options:
-              replicaSet: ~
-              connect: true
-    default_database: %mongodb_name%
-    document_managers:
-        default:
-            auto_mapping: true

@@ -12,14 +12,3 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
-
-# MongoDB ODM Configuration
-doctrine_mongodb:
-    connections:
-        default:
-            server: %mongodb_server%
-            options: {}
-    default_database: %mongodb_name%
-    document_managers:
-        default:
-            auto_mapping: true
