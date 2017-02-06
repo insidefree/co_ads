@@ -101,7 +101,7 @@
   </div>
 
     <!-- wix sdk -->
-    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.63.0/js/wix.min.js"></script>
+    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.74.0/js/wix.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <!-- fos js routing bundle -->
@@ -137,6 +137,12 @@
             {% endif %}
         </script>
     {% endblock %}
+
+    <script type="text/javascript">
+        window.onload = function() {
+            Wix.Performance.applicationLoaded();
+        };
+    </script>
 
 </body>
 </html>
