@@ -222,6 +222,7 @@
                     document.write = w;
                 };
                 $(container).append(data.code);
+                wixService.applicationLoadingStep(1, '');
             }
 
             /**
