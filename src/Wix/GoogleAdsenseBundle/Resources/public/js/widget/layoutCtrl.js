@@ -121,9 +121,19 @@
             }, true);
 
             /**
+             * Delete a component data.
+             * @return {{method}}
+             * @private
+             */
+            function _deleteComponentData() {
+                return $http.delete(Router.url('deleteComponent'));
+            }
+
+            /**
              * Handle component deleted
              */
             wixService.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
+                _deleteComponentData();
                 // When component deleted, trigger the Worker to update status of comp.
                 wixService.getComponentInfoWithAppPageId()
                     .then(function(componentInfo){
