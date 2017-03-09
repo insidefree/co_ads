@@ -172,6 +172,16 @@
             return defer.promise;
         }
 
+        /**
+         * Allows a component app to report on a loading step.
+         * @param {Number} stageNumber
+         * @param [stageDescription]
+         */
+        function applicationLoadingStep(stageNumber, stageDescription) {
+            stageDescription = stageDescription || "";
+            Wix.Performance.applicationLoadingStep(stageNumber, stageDescription);
+        }
+
         //==============================
         //        PUBLIC API           =
         //==============================
@@ -188,7 +198,8 @@
             getViewMode                     : getViewMode,
             setPublicData                   : setPublicData,
             addEventListener                : addEventListener,
-            resizeComponent                 : resizeComponent
+            resizeComponent                 : resizeComponent,
+            applicationLoadingStep          : applicationLoadingStep
         };
     }
   ]);
