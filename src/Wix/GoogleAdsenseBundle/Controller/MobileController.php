@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class MobileController extends AppController
 {
 	/**
-	 * @Route("/", name="mobile", options={"expose"=true})
+	 * @Route("", name="mobile", options={"expose"=true})
 	 * @Template()
 	 */
 	public function indexAction()

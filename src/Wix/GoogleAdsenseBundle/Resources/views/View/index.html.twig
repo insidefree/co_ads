@@ -78,6 +78,9 @@
             visibility: visible !important;
         }
     </style>
+
+    <!-- wix sdk -->
+    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.75.0/js/wix.min.js"></script>
 </head>
 <body data-ng-controller="layoutCtrl">
 
@@ -100,25 +103,6 @@
         </div>
   </div>
 
-    <!-- wix sdk -->
-    <script type="text/javascript" src="//static.parastorage.com/services/js-sdk/1.63.0/js/wix.min.js"></script>
-    <script>
-        (function(i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function() {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-47138354-1', 'wix.com');
-        ga('send', 'pageview');
-
-    </script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <!-- fos js routing bundle -->
@@ -154,6 +138,12 @@
             {% endif %}
         </script>
     {% endblock %}
+
+    <script type="text/javascript">
+        window.onload = function() {
+            Wix.Performance.applicationLoaded();
+        };
+    </script>
 
 </body>
 </html>

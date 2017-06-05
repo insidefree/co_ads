@@ -17,7 +17,7 @@ use Wix\GoogleAdsenseBundle\Services\AdsenseService;
 class ViewController extends AppController
 {
     /**
-     * @Route("/", name="view", options={"expose"=true})
+     * @Route("", name="view", options={"expose"=true})
      * @Template()
      */
     public function indexAction()

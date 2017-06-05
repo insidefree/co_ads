@@ -32,7 +32,7 @@ class SettingsController extends AppController
     /**
      * sends the initial angularjs application.
      *
-     * @Route("/", name="settings", options={"expose"=true})
+     * @Route("", name="settings", options={"expose"=true})
      * @Method({"GET"})
      * @Permission({"OWNER"})
      * @Template()
@@ -196,9 +196,8 @@ class SettingsController extends AppController
             throw new NotFoundHttpException("Component not found");
         }
 
-        $component->setDeletedAt(new \DateTime());
-        $this->getDocumentManager()->persist($component);
-        $this->getDocumentManager()->flush($component);
+        $this->getDocumentManager()->remove($component);
+        $this->getDocumentManager()->flush();
 
         return new Response();
     }

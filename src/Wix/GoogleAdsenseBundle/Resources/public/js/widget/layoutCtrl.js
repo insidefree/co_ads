@@ -121,9 +121,19 @@
             }, true);
 
             /**
+             * Delete a component data.
+             * @return {{method}}
+             * @private
+             */
+            function _deleteComponentData() {
+                return $http.delete(Router.url('deleteComponent'));
+            }
+
+            /**
              * Handle component deleted
              */
             wixService.addEventListener(Wix.Events.COMPONENT_DELETED, function(){
+                _deleteComponentData();
                 // When component deleted, trigger the Worker to update status of comp.
                 wixService.getComponentInfoWithAppPageId()
                     .then(function(componentInfo){
@@ -204,7 +214,7 @@
                 };
                 var script = document.createElement('script');
                 script.type = 'text/javascript';
-                script.src = 'http://pagead2.googlesyndication.com/pagead/show_ads.js';
+                script.src = 'https://pagead2.googlesyndication.com/pagead/show_ads.js';
                 $(container).append(script);
             }
 
@@ -222,6 +232,7 @@
                     document.write = w;
                 };
                 $(container).append(data.code);
+                wixService.applicationLoadingStep(1, '');
             }
 
             /**
