@@ -65,12 +65,7 @@
                 // In editor view mode, set status of comp in wix data for using the settings
                 if(wixService.getViewMode() === viewModeEnum.EDITOR ) {
                     wixService.setPublicData('statusComp' + myCompId,
-                        event.data.status,
-                        {scope: 'COMPONENT'},
-                        function (d) {
-                        },
-                        function (f) {
-                        });
+                        event.data.status, {scope: 'COMPONENT'}, function (d) {}, function (f) {});
                 }
                 // case live site
                 if(wixService.getViewMode() !== viewModeEnum.EDITOR && wixService.getViewMode() !== viewModeEnum.PREVIEW){
@@ -101,8 +96,13 @@
                     if(is_mobile){
                         $editorDemo.addClass('mobile');
                         $editorBlocked.addClass('mobile');
-                        jQuery(function() {
-                            wixService.setHeight( $body.height() + 15 );
+                        // jQuery(function() {
+                        //     wixService.setHeight( $body.height() + 15 );
+                        // });
+                        $http.get(Router.url('demo')).success(function(data) {
+                            var dim = data.adUnit.size == "SIZE_120_600" ? {width: 65, height: 305} : 
+                                (data.adUnit.size == "SIZE_300_250" ? {width: 285, height: 238} : {width: 285, height: 40});
+                            wixService.resizeComponent(dim);
                         });
                     }
                     else{
@@ -161,8 +161,18 @@
                 var width;
                 var height;
                 if (is_mobile) {
-                    width  = data.mobile.regular.width;
-                    height = data.mobile.regular.height;
+                    if (data.adUnit.size == "SIZE_120_600") {
+                        width = 60;
+                        height = 300;
+                    }
+                    else if (data.adUnit.size == "SIZE_300_250") {
+                        width = 280; 
+                        height = 233;
+                    } 
+                    else {
+                        width = 280;
+                        height = 35;
+                    };
                     $body.addClass('mobile');
                 }
                 else{
