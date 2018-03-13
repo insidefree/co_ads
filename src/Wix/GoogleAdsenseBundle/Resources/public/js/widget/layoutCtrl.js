@@ -32,7 +32,7 @@
                     switch (oData.type) {
                         // Layout widget updates
                         case 1:
-                            var dim = oData.size == "SIZE_120_600" ? {width: 150} : (oData.size == "SIZE_300_250" ? {width: 360} : {width: 500});
+                            var dim = oData.size == 'SIZE_120_600' ? {width: 150} : (oData.size == 'SIZE_300_250' ? {width: 360} : {width: 500});
 
                             wixService.resizeComponent(dim);
                             break;
@@ -78,8 +78,8 @@
                     else if(window.code){
                         $http.get(Router.url('ad')).success(function(data) {
                             $body.removeClass('live_site_empty');
-                            var containerId = "liveSiteCode";
-                            loadLiveSiteCode(data, containerId);
+                            var containerId = 'liveSiteCode';
+                            loadLiveSiteCode(data, containerId, is_mobile);
                         });
                     }
                     // status visible and user is not connected, connected to Wix account
@@ -87,7 +87,7 @@
                         $body.removeClass('live_site_empty')
                              .addClass('live_site_demo');
                         $http.get(Router.url('demo')).success(function(data) {
-                            loadLiveSiteDemo(data, adsenseContainerId);
+                            loadLiveSiteDemo(data, adsenseContainerId, is_mobile);
                         });
                     }
                 }
@@ -100,9 +100,9 @@
                         //     wixService.setHeight( $body.height() + 15 );
                         // });
                         $http.get(Router.url('demo')).success(function(data) {
-                            var dim = data.adUnit.size == "SIZE_120_600" ? {width: 65, height: 305} : 
-                                (data.adUnit.size == "SIZE_300_250" ? {width: 285, height: 238} : {width: 285, height: 40});
-                            wixService.resizeComponent(dim);
+                            var dim = data.adUnit.size == 'SIZE_120_600' ? {width: 60, height: 300} : 
+                                (data.adUnit.size == 'SIZE_300_250' ? {width: 280, height: 236} : {width: 280, height: 36});
+                            wixService.setHeight(dim.height);
                         });
                     }
                     else{
@@ -156,22 +156,26 @@
              * Load google ads connected to wix account demo
              * @param data
              * @param containerId
+             * @param is_mobile
              */
-            function loadLiveSiteDemo(data, containerId){
+            function loadLiveSiteDemo(data, containerId, is_mobile){
                 var width;
                 var height;
                 if (is_mobile) {
-                    if (data.adUnit.size == "SIZE_120_600") {
+                    var dim = data.adUnit.size == 'SIZE_120_600' ? {width: 60, height: 300} : 
+                        (data.adUnit.size == 'SIZE_300_250' ? {width: 280, height: 236} : {width: 280, height: 36});
+                    wixService.setHeight(dim.height);
+                    if (data.adUnit.size == 'SIZE_120_600') {
                         width = 60;
                         height = 300;
                     }
-                    else if (data.adUnit.size == "SIZE_300_250") {
+                    else if (data.adUnit.size == 'SIZE_300_250') {
                         width = 280; 
-                        height = 233;
+                        height = 236;
                     } 
                     else {
                         width = 280;
-                        height = 35;
+                        height = 36;
                     };
                     $body.addClass('mobile');
                 }
@@ -232,8 +236,15 @@
              * Load google ads connected to user account
              * @param data
              * @param containerId
+             * @param is_mobile
              */
-            function loadLiveSiteCode(data, containerId){
+            function loadLiveSiteCode(data, containerId, is_mobile){
+                if(is_mobile) {
+                    var dim = data.adUnit.size == 'SIZE_120_600' ? {width: 60, height: 300} : 
+                        (data.adUnit.size == 'SIZE_300_250' ? {width: 280, height: 236} : {width: 280, height: 36});
+                    wixService.setHeight(dim.height);
+                    $body.addClass('mobile');
+                }
                 window.google_page_url = data.domain;
                 var w = document.write;
                 var container = document.getElementById(containerId);

@@ -21,10 +21,10 @@
         body.mobile {
             {% if adUnit.width == 300 %}
                 width:280px !important;
-                height:233px !important;
+                height:236px !important;
             {% elseif adUnit.width == 468 %}
                 width: 280px !important;
-                height: 35px !important;
+                height: 36px !important;
             {% else %}
                 width:60px !important;
                 height:300px !important;
@@ -72,21 +72,22 @@
             padding-bottom: 13px;
         }
 
-        .mobile {
+        .mobile #adsense_container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .mobile #liveSiteCode {
             {% if adUnit.width == 468 %}
-                width: 100%;
-                .liveSiteCode {
-                    transform: scale(0.555);
-                    transform-origin: left;
-                }
+                transform: scale(0.6);
+                transform-origin: left top;
             {% elseif adUnit.width == 120 %}
-                width: 100%;
-                .liveSiteCode {
-                    transform: scale(0.33);
-                    transform-origin: top;
-                }
+                transform: scale(0.5);
+                transform-origin: top left;
+            {% else %}
+                transform: scale(0.93);
+                transform-origin: top left;
             {% endif %}
-            
         }
 
         .showDemo {
