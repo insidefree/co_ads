@@ -19,8 +19,16 @@
             height: {{ adUnit.height ? adUnit.height : 250 }}px;
         }
         body.mobile {
-            width: {{ mobile.regular.width ? mobile.regular.width : 200 }}px;
-            height: {{ mobile.regular.width ? mobile.regular.width : 200 }}px;
+            {% if adUnit.width == 300 %}
+                width:280px !important;
+                height:236px !important;
+            {% elseif adUnit.width == 468 %}
+                width: 280px !important;
+                height: 36px !important;
+            {% else %}
+                width:60px !important;
+                height:300px !important;
+            {% endif %}
         }
         {% endif %}
 
@@ -62,6 +70,24 @@
         .mobile .comp_limit_text {
             padding: 8px;
             padding-bottom: 13px;
+        }
+
+        .mobile #adsense_container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .mobile #liveSiteCode {
+            {% if adUnit.width == 468 %}
+                transform: scale(0.6);
+                transform-origin: left top;
+            {% elseif adUnit.width == 120 %}
+                transform: scale(0.5);
+                transform-origin: top left;
+            {% else %}
+                transform: scale(0.93);
+                transform-origin: top left;
+            {% endif %}
         }
 
         .showDemo {
@@ -119,7 +145,7 @@
     {% endif %}
 
     {% block javascripts %}
-        {% javascripts filter='?yui_js'
+        {% javascripts
         '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular.min.js'
         '@WixGoogleAdsenseBundle/Resources/public/lib/angular/angular-sanitize.min.js'
         '@WixGoogleAdsenseBundle/Resources/public/js/widget/app.js'

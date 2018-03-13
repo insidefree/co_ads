@@ -173,6 +173,23 @@
         }
 
         /**
+         * The following call will resize the widget's window
+         * @param width
+         * @param height
+         * @returns {*|promise}
+         */
+        function resizeWindow(width, height) {
+
+            var defer = $q.defer();
+            console.log('resize window');
+            Wix.resizeWindow(width, height, function(result){
+                defer.resolve(result[0]);
+            });
+           
+            return defer.promise;
+        }
+
+        /**
          * Allows a component app to report on a loading step.
          * @param {Number} stageNumber
          * @param [stageDescription]
@@ -199,6 +216,7 @@
             setPublicData                   : setPublicData,
             addEventListener                : addEventListener,
             resizeComponent                 : resizeComponent,
+            resizeWindow                    : resizeWindow,
             applicationLoadingStep          : applicationLoadingStep
         };
     }
